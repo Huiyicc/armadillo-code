@@ -130,6 +130,9 @@ class op_prod;
 class op_range;
 class op_all;
 class op_any;
+class op_sp_plus;
+class op_sp_minus_pre;
+class op_sp_minus_post;
 
 
 class eop_conj;
