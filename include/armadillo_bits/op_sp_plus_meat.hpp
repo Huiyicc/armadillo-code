@@ -21,7 +21,7 @@
 template<typename T1>
 inline
 void
-op_sp_plus::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_plus>& in)
+op_sp_plus::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_plus>& in)
   {
   arma_extra_debug_sigprint();
 
@@ -45,7 +45,7 @@ op_sp_plus::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_plus>& in)
 template<typename T1>
 inline
 void
-op_sp_plus::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_plus>& in)
+op_sp_plus::apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_plus>& in)
   {
   arma_extra_debug_sigprint();
 
@@ -72,7 +72,7 @@ op_sp_plus::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_plus>& i
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_plus::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_plus>& y)
+op_sp_plus::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_plus>& y)
   {
   arma_extra_debug_sigprint();
 
@@ -95,7 +95,7 @@ op_sp_plus::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_p
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_plus::apply_inside_div(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_plus>& y)
+op_sp_plus::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_plus>& y)
   {
   arma_extra_debug_sigprint();
 

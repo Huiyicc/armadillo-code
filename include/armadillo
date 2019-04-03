@@ -197,6 +197,7 @@ namespace arma
   #include "armadillo_bits/Op_bones.hpp"
   #include "armadillo_bits/OpCube_bones.hpp"
   #include "armadillo_bits/SpOp_bones.hpp"
+  #include "armadillo_bits/SpToDOp_bones.hpp"
   
   #include "armadillo_bits/eOp_bones.hpp"
   #include "armadillo_bits/eOpCube_bones.hpp"
@@ -560,6 +561,7 @@ namespace arma
   #include "armadillo_bits/Op_meat.hpp"
   #include "armadillo_bits/OpCube_meat.hpp"
   #include "armadillo_bits/SpOp_meat.hpp"
+  #include "armadillo_bits/SpToDOp_meat.hpp"
   
   #include "armadillo_bits/mtOp_meat.hpp"
   #include "armadillo_bits/mtOpCube_meat.hpp"

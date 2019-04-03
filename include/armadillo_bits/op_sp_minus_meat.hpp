@@ -22,7 +22,7 @@
 template<typename T1>
 inline
 void
-op_sp_minus_pre::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_minus_pre>& in)
+op_sp_minus_pre::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in)
   {
   arma_extra_debug_sigprint();
 
@@ -46,13 +46,11 @@ op_sp_minus_pre::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_minus
 template<typename T1>
 inline
 void
-op_sp_minus_pre::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_minus_pre>& in)
+op_sp_minus_pre::apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in)
   {
   arma_extra_debug_sigprint();
 
   typedef typename T1::elem_type eT;
-
-  const uword k   = in.aux_uword_a;
 
   // Note that T1 will be a sparse type, so we use SpProxy.
   SpProxy<T1> proxy(in.m);
@@ -74,7 +72,7 @@ op_sp_minus_pre::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_min
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_minus_pre::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_minus_pre>& y)
+op_sp_minus_pre::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y)
   {
   arma_extra_debug_sigprint();
 
@@ -97,7 +95,7 @@ op_sp_minus_pre::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, op
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_minus_pre::apply_inside_div(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_minus_pre>& y)
+op_sp_minus_pre::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_pre>& y)
   {
   arma_extra_debug_sigprint();
 
@@ -120,7 +118,7 @@ op_sp_minus_pre::apply_inside_div(SpMat<eT>& out, const T2& x, const Op<T3, op_s
 template<typename T1>
 inline
 void
-op_sp_minus_post::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_minus_post>& in)
+op_sp_minus_post::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in)
   {
   arma_extra_debug_sigprint();
 
@@ -144,13 +142,11 @@ op_sp_minus_post::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_sp_minu
 template<typename T1>
 inline
 void
-op_sp_minus_post::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_minus_post>& in)
+op_sp_minus_post::apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in)
   {
   arma_extra_debug_sigprint();
 
   typedef typename T1::elem_type eT;
-
-  const uword k   = in.aux_uword_a;
 
   // Note that T1 will be a sparse type, so we use SpProxy.
   SpProxy<T1> proxy(in.m);
@@ -172,7 +168,7 @@ op_sp_minus_post::apply(SpMat<typename T1::elem_type>& out, const Op<T1,op_sp_mi
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_minus_post::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_minus_post>& y)
+op_sp_minus_post::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y)
   {
   arma_extra_debug_sigprint();
 
@@ -195,7 +191,7 @@ op_sp_minus_post::apply_inside_schur(SpMat<eT>& out, const T2& x, const Op<T3, o
 template<typename eT, typename T2, typename T3>
 inline
 void
-op_sp_minus_post::apply_inside_div(SpMat<eT>& out, const T2& x, const Op<T3, op_sp_minus_post>& y)
+op_sp_minus_post::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3, op_sp_minus_post>& y)
   {
   arma_extra_debug_sigprint();
 

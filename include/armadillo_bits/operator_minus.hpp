@@ -364,7 +364,7 @@ operator-
 template<typename T1>
 arma_inline
 typename
-enable_if2< is_arma_sparse_type<T1>::value, const Op<T1, op_sp_minus_post> >::result
+enable_if2< is_arma_sparse_type<T1>::value, const SpToDOp<T1, op_sp_minus_post> >::result
 operator-
   (
   const T1&                    X,
@@ -373,7 +373,7 @@ operator-
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_sp_minus_post>(X, k);
+  return SpToDOp<T1, op_sp_minus_post>(X, k);
   }
 
 
@@ -382,7 +382,7 @@ operator-
 template<typename T1>
 arma_inline
 typename
-enable_if2< is_arma_sparse_type<T1>::value, const Op<T1, op_sp_minus_pre> >::result
+enable_if2< is_arma_sparse_type<T1>::value, const SpToDOp<T1, op_sp_minus_pre> >::result
 operator-
   (
   const typename T1::elem_type k,
@@ -391,7 +391,7 @@ operator-
   {
   arma_extra_debug_sigprint();
   
-  return Op<T1, op_sp_minus_pre>(X, k);
+  return SpToDOp<T1, op_sp_minus_pre>(X, k);
   }
 
 
@@ -405,11 +405,11 @@ enable_if2
   (is_arma_sparse_type<T1>::value &&
       (is_same_type<op_type, op_sp_plus>::value ||
        is_same_type<op_type, op_sp_minus_post>::value)),
-  const Op<T1, op_sp_minus_post>
+  const SpToDOp<T1, op_sp_minus_post>
   >::result
 operator-
   (
-  const Op<T1, op_type> x,
+  const SpToDOp<T1, op_type> x,
   const typename T1::elem_type   k
   )
   {
@@ -417,7 +417,7 @@ operator-
 
   const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? -x.aux : x.aux;
 
-  return Op<T1, op_sp_minus_post>(x.m, aux + k);
+  return SpToDOp<T1, op_sp_minus_post>(x.m, aux + k);
   }
 
 
@@ -431,19 +431,19 @@ enable_if2
   (is_arma_sparse_type<T1>::value &&
       (is_same_type<op_type, op_sp_plus>::value ||
        is_same_type<op_type, op_sp_minus_post>::value)),
-  const Op<T1, op_sp_minus_pre>
+  const SpToDOp<T1, op_sp_minus_pre>
   >::result
 operator-
   (
   const typename T1::elem_type   k,
-  const Op<T1, op_type> x
+  const SpToDOp<T1, op_type> x
   )
   {
   arma_extra_debug_sigprint();
 
   const typename T1::elem_type aux = (is_same_type<op_type, op_sp_plus>::value) ? -x.aux : x.aux;
 
-  return Op<T1, op_sp_minus_pre>(x.m, k + aux);
+  return SpToDOp<T1, op_sp_minus_pre>(x.m, k + aux);
   }
 
 
@@ -456,17 +456,17 @@ enable_if2
   <
   (is_arma_sparse_type<T1>::value &&
        is_same_type<op_type, op_sp_minus_pre>::value),
-  const Op<T1, op_sp_minus_pre>
+  const SpToDOp<T1, op_sp_minus_pre>
   >::result
 operator-
   (
-  const Op<T1, op_type> x,
+  const SpToDOp<T1, op_type> x,
   const typename T1::elem_type   k
   )
   {
   arma_extra_debug_sigprint();
 
-  return Op<T1, op_sp_minus_pre>(x.m, x.aux - k);
+  return SpToDOp<T1, op_sp_minus_pre>(x.m, x.aux - k);
   }
 
 
@@ -479,17 +479,17 @@ enable_if2
   <
   (is_arma_sparse_type<T1>::value &&
        is_same_type<op_type, op_sp_minus_pre>::value),
-  const Op<T1, op_sp_plus>
+  const SpToDOp<T1, op_sp_plus>
   >::result
 operator-
   (
   const typename T1::elem_type   k,
-  const Op<T1, op_type> x
+  const SpToDOp<T1, op_type> x
   )
   {
   arma_extra_debug_sigprint();
 
-  return Op<T1, op_sp_plus>(x.m, k - x.aux);
+  return SpToDOp<T1, op_sp_plus>(x.m, k - x.aux);
   }
 
 

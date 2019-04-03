@@ -801,9 +801,9 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
 
 
 template<typename eT>
-template<typename T1>
+template<typename T1, typename op_type>
 inline
-SpMat<eT>::SpMat(const Op<T1, op_sp_plus>& expr)
+SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -820,57 +820,7 @@ SpMat<eT>::SpMat(const Op<T1, op_sp_plus>& expr)
   // Make sure the type is compatible.
   arma_type_check(( is_same_type< eT, T >::no ));
 
-  op_sp_plus::apply(*this, expr);
-  }
-
-
-
-template<typename eT>
-template<typename T1>
-inline
-SpMat<eT>::SpMat(const Op<T1, op_sp_minus_pre>& expr)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
-  {
-  arma_extra_debug_sigprint_this(this);
-
-  typedef typename T1::elem_type T;
-
-  // Make sure the type is compatible.
-  arma_type_check(( is_same_type< eT, T >::no ));
-
-  op_sp_minus_pre::apply(*this, expr);
-  }
-
-
-
-template<typename eT>
-template<typename T1>
-inline
-SpMat<eT>::SpMat(const Op<T1, op_sp_minus_post>& expr)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(NULL)
-  , row_indices(NULL)
-  , col_ptrs(NULL)
-  {
-  arma_extra_debug_sigprint_this(this);
-
-  typedef typename T1::elem_type T;
-
-  // Make sure the type is compatible.
-  arma_type_check(( is_same_type< eT, T >::no ));
-
-  op_sp_minus_post::apply(*this, expr);
+  op_type::apply(*this, expr);
   }
 
 
