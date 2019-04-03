@@ -14,26 +14,31 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup mtGlueCube
+//! \addtogroup mtSpGlue
 //! @{
 
 
 
-template<typename out_eT, typename T1, typename T2, typename glue_type>
-class mtGlueCube : public BaseCube<out_eT, mtGlueCube<out_eT, T1, T2, glue_type> >
+template<typename out_eT, typename T1, typename T2, typename spglue_type>
+class mtSpGlue : public SpBase<out_eT, mtSpGlue<out_eT, T1, T2, spglue_type> >
   {
   public:
   
   typedef          out_eT                       elem_type;
   typedef typename get_pod_type<out_eT>::result pod_type;
   
-  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B);
-  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B, const uword in_aux_uword);
-  arma_inline ~mtGlueCube();
+  static const bool is_row  = spglue_type::template traits<T1,T2>::is_row;
+  static const bool is_col  = spglue_type::template traits<T1,T2>::is_col;
+  static const bool is_xvec = spglue_type::template traits<T1,T2>::is_xvec;
   
-  arma_aligned const T1&   A;         //!< first operand;  must be derived from BaseCube
-  arma_aligned const T2&   B;         //!< second operand; must be derived from BaseCube
-  arma_aligned       uword aux_uword; //!< storage of auxiliary data, uword format
+  inline  mtSpGlue(const T1& in_A, const T2& in_B);
+  inline ~mtSpGlue();
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const SpMat<eT2>& X) const;
+  
+  const T1& A;    //!< first operand;  must be derived from SpBase
+  const T2& B;    //!< second operand; must be derived from SpBase
   };
 
 

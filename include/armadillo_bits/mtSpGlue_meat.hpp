@@ -14,27 +14,39 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup mtGlueCube
+//! \addtogroup mtSpGlue
 //! @{
 
 
 
-template<typename out_eT, typename T1, typename T2, typename glue_type>
-class mtGlueCube : public BaseCube<out_eT, mtGlueCube<out_eT, T1, T2, glue_type> >
+template<typename out_eT, typename T1, typename T2, typename spglue_type>
+inline
+mtSpGlue<out_eT,T1,T2,spglue_type>::mtSpGlue(const T1& in_A, const T2& in_B)
+  : A(in_A)
+  , B(in_B)
   {
-  public:
-  
-  typedef          out_eT                       elem_type;
-  typedef typename get_pod_type<out_eT>::result pod_type;
-  
-  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B);
-  arma_inline  mtGlueCube(const T1& in_A, const T2& in_B, const uword in_aux_uword);
-  arma_inline ~mtGlueCube();
-  
-  arma_aligned const T1&   A;         //!< first operand;  must be derived from BaseCube
-  arma_aligned const T2&   B;         //!< second operand; must be derived from BaseCube
-  arma_aligned       uword aux_uword; //!< storage of auxiliary data, uword format
-  };
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename out_eT, typename T1, typename T2, typename spglue_type>
+inline
+mtSpGlue<out_eT,T1,T2,spglue_type>::~mtSpGlue()
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename out_eT, typename T1, typename T2, typename spglue_type>
+template<typename eT2>
+arma_inline
+bool
+mtSpGlue<out_eT,T1,T2,spglue_type>::is_alias(const SpMat<eT2>& X) const
+  {
+  return (A.is_alias(X) || B.is_alias(X));
+  }
 
 
 
