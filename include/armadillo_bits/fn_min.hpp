@@ -217,20 +217,20 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::value),
   Mat<typename T1::elem_type>
   >::result
 min
   (
-  const T2& y,
-  const T1& x
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
   
   Mat< typename T1::elem_type > out;
   
-  spglue_min_mixed::dense_sparse_min(out, x, y);
+  spglue_min_mixed::dense_sparse_min(out, y, x);
   
   return out;
   }
@@ -269,20 +269,20 @@ inline
 typename
 enable_if2
   <
-  (is_arma_type<T1>::value && is_arma_sparse_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
+  (is_arma_sparse_type<T1>::value && is_arma_type<T2>::value && is_same_type<typename T1::elem_type, typename T2::elem_type>::no),
   Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result >
   >::result
 min
   (
-  const T2& y,
-  const T1& x
+  const T1& x,
+  const T2& y
   )
   {
   arma_extra_debug_sigprint();
   
   Mat< typename promote_type<typename T1::elem_type, typename T2::elem_type>::result > out;
   
-  spglue_min_mixed::dense_sparse_min(out, x, y);
+  spglue_min_mixed::dense_sparse_min(out, y, x);
   
   return out;
   }

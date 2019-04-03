@@ -20,7 +20,6 @@
 
 
 template<typename T1, typename T2>
-arma_hot
 inline
 void
 spglue_max::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_max>& X)
@@ -51,14 +50,13 @@ spglue_max::apply(SpMat<typename T1::elem_type>& out, const SpGlue<T1,T2,spglue_
 
 
 template<typename eT, typename T1, typename T2>
-arma_hot
 inline
 void
 spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T2>& pb)
   {
   arma_extra_debug_sigprint();
   
-  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "addition");
+  arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "elementwise max");
   
   if(pa.get_n_nonzero() == 0)  { out = pb.Q; return; }
   if(pb.get_n_nonzero() == 0)  { out = pa.Q; return; }
@@ -92,7 +90,7 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
     
     if(x_it == y_it)
       {
-      out_val = std::max(eT(*x_it), eT(*y_it));
+      out_val = (std::max)(eT(*x_it), eT(*y_it));
       
       ++x_it;
       ++y_it;
@@ -101,13 +99,13 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
       {
       if((x_it_col < y_it_col) || ((x_it_col == y_it_col) && (x_it_row < y_it_row))) // if y is closer to the end
         {
-        out_val = std::max(eT(*x_it), eT(0));
+        out_val = (std::max)(eT(*x_it), eT(0));
         
         ++x_it;
         }
       else
         {
-        out_val = std::max(eT(*y_it), eT(0));
+        out_val = (std::max)(eT(*y_it), eT(0));
         
         ++y_it;
         
@@ -157,7 +155,6 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
 
 
 template<typename eT>
-arma_hot
 inline
 void
 spglue_max::apply_noalias(SpMat<eT>& out, const SpMat<eT>& A, const SpMat<eT>& B)
@@ -287,7 +284,7 @@ spglue_max_mixed::dense_sparse_max(Mat< typename promote_type<typename T1::elem_
     {
     for (size_t r = 0; r < pb.get_n_rows(); ++r)
       {
-      out.at(r, c) = std::max(out.at(r, c), (out_eT) pb.at(r, c));
+      out.at(r, c) = (std::max)(out.at(r, c), (out_eT) pb.at(r, c));
       }
     }
   }
