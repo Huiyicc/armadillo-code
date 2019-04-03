@@ -81,7 +81,7 @@ op_sp_minus_pre::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<T
 
   arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "elementwise multiplication");
 
-  out.zeros(x.n_rows, x.n_cols);
+  out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
 
   for (typename SpProxy<T2>::const_iterator_type it = proxy2.begin(); it != proxy2.end(); ++it)
     {
@@ -104,7 +104,7 @@ op_sp_minus_pre::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3,
 
   arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "elementwise multiplication");
 
-  out.zeros(x.n_rows, x.n_cols);
+  out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
 
   for (typename SpProxy<T2>::const_iterator_type it = proxy2.begin(); it != proxy2.end(); ++it)
     {
@@ -177,7 +177,7 @@ op_sp_minus_post::apply_inside_schur(SpMat<eT>& out, const T2& x, const SpToDOp<
 
   arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "elementwise multiplication");
 
-  out.zeros(x.n_rows, x.n_cols);
+  out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
 
   for (typename SpProxy<T2>::const_iterator_type it = proxy2.begin(); it != proxy2.end(); ++it)
     {
@@ -200,7 +200,7 @@ op_sp_minus_post::apply_inside_div(SpMat<eT>& out, const T2& x, const SpToDOp<T3
 
   arma_debug_assert_same_size(proxy2.get_n_rows(), proxy2.get_n_cols(), proxy3.get_n_rows(), proxy3.get_n_cols(), "elementwise multiplication");
 
-  out.zeros(x.n_rows, x.n_cols);
+  out.zeros(proxy2.get_n_rows(), proxy2.get_n_cols());
 
   for (typename SpProxy<T2>::const_iterator_type it = proxy2.begin(); it != proxy2.end(); ++it)
     {
