@@ -306,10 +306,7 @@ spglue_max_mixed::dense_sparse_max(Mat< typename promote_type<typename T1::elem_
     {
     for (size_t r = 0; r < pb.get_n_rows(); ++r)
       {
-      if (is_cx<out_eT>::no)
-        out.at(r, c) = ( out.at(r, c) > (out_eT) pb.at(r, c) ) ? out.at(r, c) : (out_eT) pb.at(r, c);
-      else
-        out.at(r, c) = ( std::abs(out.at(r, c)) > std::abs((out_eT) pb.at(r, c)) ) ? out.at(r, c) : (out_eT) pb.at(r, c);
+      out.at(r, c) = elem_max((out_eT) out.at(r, c), (out_eT) pb.at(r, c));
       }
     }
   }
