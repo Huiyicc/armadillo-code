@@ -90,7 +90,6 @@ spglue_max::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
     
     if(x_it == y_it)
       {
-      // This check is compiled away.
       out_val = elem_max(eT(*x_it), eT(*y_it));
       
       ++x_it;
