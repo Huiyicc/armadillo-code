@@ -476,3 +476,6 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 * RcppArmadillo: integration of Armadillo with the R system and environment  
   http://dirk.eddelbuettel.com/code/rcpp.armadillo.html
+
+* GDB Armadillo Helpers: Some GDB pretty printers that make debugging code using armadillo much easier.  
+  https://github.com/darcamo/gdb_armadillo_helpers
