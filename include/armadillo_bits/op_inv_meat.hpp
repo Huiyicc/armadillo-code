@@ -72,8 +72,8 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     }
   else
     {
-    const bool is_trimatu = glue_solve_gen::is_triu(A);
-    const bool is_trimatl = (is_trimatu == false) ? glue_solve_gen::is_tril(A) : false;
+    const bool is_trimatu = trimat_helper::is_triu(A);
+    const bool is_trimatl = (is_trimatu == false) ? trimat_helper::is_tril(A) : false;
     
     if(is_trimatu || is_trimatl)
       {
