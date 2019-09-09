@@ -79,6 +79,22 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_gen::apply(): detected square system");
     
+    const bool is_trimatu = glue_solve_gen::is_triu(A);
+    const bool is_trimatl = (is_trimatu == false) ? glue_solve_gen::is_tril(A) : false;
+    
+    if(is_trimatu || is_trimatl)
+      {
+      if(is_trimatu)  { arma_extra_debug_print("detected upper triangular matrix"); }
+      if(is_trimatl)  { arma_extra_debug_print("detected lower triangular matrix"); }
+      
+      uword flags2 = flags;
+      
+      if(is_trimatu)  { flags2 |= solve_opts::flag_triu; }
+      if(is_trimatl)  { flags2 |= solve_opts::flag_triu; }
+      
+      return glue_solve_tri::apply(out, A, B_expr, flags2);
+      }
+    
     uword KL = 0;
     uword KU = 0;
     
@@ -230,6 +246,92 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   if(status == false)  { out.soft_reset(); }
   
   return status;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+glue_solve_gen::is_triu(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming that A has a square size
+  
+  const uword N = A.n_rows;
+  
+  if(N < 2)  { return false; }
+  
+  const eT* A_mem   = A.memptr();
+  const eT  eT_zero = eT(0);
+  
+  // quickly check bottom-left corner
+  const eT* A_col0 = A_mem;
+  const eT* A_col1 = A_col0 + N;
+  
+  if( (A_col0[N-2] != eT_zero) || (A_col0[N-1] != eT_zero) || (A_col1[N-1] != eT_zero) )  { return false; }
+  
+  // if we got to this point, do a thorough check
+  
+  const eT*   A_col = A_mem;
+  const uword Nm1   = N-1;
+  
+  for(uword j=0; j < Nm1; ++j)
+    {
+    for(uword i=(j+1); i < N; ++i)
+      {
+      const eT A_ij = A_col[i];
+      
+      if(A_ij != eT_zero) { return false; }
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+glue_solve_gen::is_tril(const Mat<eT>& A)
+  {
+  arma_extra_debug_sigprint();
+  
+  // NOTE: assuming that A has a square size
+  
+  const uword N = A.n_rows;
+  
+  if(N < 2)  { return false; }
+  
+  const eT eT_zero = eT(0);
+  
+  // quickly check top-right corner
+  const eT* A_colNm2 = A.colptr(N-2);
+  const eT* A_colNm1 = A_colNm2 + N;
+  
+  if( (A_colNm2[0] != eT_zero) || (A_colNm1[0] != eT_zero) || (A_colNm1[1] != eT_zero) )  { return false; }
+  
+  // if we got to this point, do a thorough check
+  
+  const eT* A_col = A.memptr();
+  
+  for(uword j=1; j < N; ++j)
+    {
+    for(uword i=0; i < j; ++i)
+      {
+      const eT A_ij = A_col[i];
+      
+      if(A_ij != eT_zero) { return false; }
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
   }
 
 
