@@ -317,7 +317,7 @@ glue_solve_gen::is_tril(const Mat<eT>& A)
   
   // if we got to this point, do a thorough check
   
-  const eT* A_col = A.memptr();
+  const eT* A_col = A.memptr() + N;
   
   for(uword j=1; j < N; ++j)
     {
