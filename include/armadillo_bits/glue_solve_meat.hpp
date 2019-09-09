@@ -56,6 +56,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const bool no_sympd     = bool(flags & solve_opts::flag_no_sympd    );
   const bool allow_ugly   = bool(flags & solve_opts::flag_allow_ugly  );
   const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
+  const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
   
   arma_extra_debug_print("glue_solve_gen::apply(): enabled flags:");
   
@@ -66,6 +67,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   if(no_sympd    )  { arma_extra_debug_print("no_sympd");     }
   if(allow_ugly  )  { arma_extra_debug_print("allow_ugly");   }
   if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
+  if(no_trimat   )  { arma_extra_debug_print("no_trimat");    }
   
   arma_debug_check( (fast     && equilibrate ), "solve(): options 'fast' and 'equilibrate' are mutually exclusive"        );
   arma_debug_check( (no_sympd && likely_sympd), "solve(): options 'no_sympd' and 'likely_sympd' are mutually exclusive"   );
@@ -79,22 +81,6 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     {
     arma_extra_debug_print("glue_solve_gen::apply(): detected square system");
     
-    const bool is_trimatu = glue_solve_gen::is_triu(A);
-    const bool is_trimatl = (is_trimatu == false) ? glue_solve_gen::is_tril(A) : false;
-    
-    if(is_trimatu || is_trimatl)
-      {
-      if(is_trimatu)  { arma_extra_debug_print("detected upper triangular matrix"); }
-      if(is_trimatl)  { arma_extra_debug_print("detected lower triangular matrix"); }
-      
-      uword flags2 = flags;
-      
-      if(is_trimatu)  { flags2 |= solve_opts::flag_triu; }
-      if(is_trimatl)  { flags2 |= solve_opts::flag_tril; }
-      
-      return glue_solve_tri::apply(out, A, B_expr, flags2);
-      }
-    
     uword KL = 0;
     uword KU = 0;
     
@@ -103,6 +89,25 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     #else
       const bool is_band  = false;
     #endif
+    
+    if( (is_band == false) && (no_trimat == false) )
+      {
+      const bool is_trimatu = glue_solve_gen::is_triu(A);
+      const bool is_trimatl = (is_trimatu == false) ? glue_solve_gen::is_tril(A) : false;
+      
+      if(is_trimatu || is_trimatl)
+        {
+        if(is_trimatu)  { arma_extra_debug_print("detected upper triangular matrix"); }
+        if(is_trimatl)  { arma_extra_debug_print("detected lower triangular matrix"); }
+        
+        uword flags2 = flags;
+        
+        if(is_trimatu)  { flags2 |= solve_opts::flag_triu; }
+        if(is_trimatl)  { flags2 |= solve_opts::flag_tril; }
+        
+        return glue_solve_tri::apply(out, A, B_expr, flags2);
+        }
+      }
     
     #if defined(ARMA_OPTIMISE_SOLVE_SYMPD)
       const bool try_sympd = ((no_sympd == false) && (auxlib::crippled_lapack(A) == false) && (is_band == false)) ? (likely_sympd ? true : sympd_helper::guess_sympd(A)) : false;
@@ -370,6 +375,7 @@ glue_solve_tri::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   const bool triu         = bool(flags & solve_opts::flag_triu        );
   const bool tril         = bool(flags & solve_opts::flag_tril        );
   const bool likely_sympd = bool(flags & solve_opts::flag_likely_sympd);
+  const bool no_trimat    = bool(flags & solve_opts::flag_no_trimat   );
   
   arma_extra_debug_print("glue_solve_tri::apply(): enabled flags:");
   
@@ -379,6 +385,13 @@ glue_solve_tri::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
   if(triu        )  { arma_extra_debug_print("triu");         }
   if(tril        )  { arma_extra_debug_print("tril");         }
   if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
+  if(no_trimat   )  { arma_extra_debug_print("no_trimat");    }
+  
+  
+  if(no_trimat)
+    {
+    return glue_solve_gen::apply(out, A_expr, B_expr, flags);
+    }
   
   bool status = false;
   
