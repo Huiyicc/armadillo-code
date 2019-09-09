@@ -97,8 +97,8 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       
       if(is_trimatu || is_trimatl)
         {
-        if(is_trimatu)  { arma_extra_debug_print("detected upper triangular matrix"); }
-        if(is_trimatl)  { arma_extra_debug_print("detected lower triangular matrix"); }
+        if(is_trimatu)  { arma_extra_debug_print("glue_solve_gen::apply(): detected upper triangular matrix"); }
+        if(is_trimatl)  { arma_extra_debug_print("glue_solve_gen::apply(): detected lower triangular matrix"); }
         
         uword flags2 = flags;
         
