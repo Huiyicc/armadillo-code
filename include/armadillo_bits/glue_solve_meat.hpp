@@ -90,7 +90,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       uword flags2 = flags;
       
       if(is_trimatu)  { flags2 |= solve_opts::flag_triu; }
-      if(is_trimatl)  { flags2 |= solve_opts::flag_triu; }
+      if(is_trimatl)  { flags2 |= solve_opts::flag_tril; }
       
       return glue_solve_tri::apply(out, A, B_expr, flags2);
       }
