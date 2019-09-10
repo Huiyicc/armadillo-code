@@ -90,10 +90,16 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       const bool is_band  = false;
     #endif
     
-    if( (is_band == false) && (no_trimat == false) )
+    const bool is_trimatu_tentative = is_band && (KL == 0);
+    const bool is_trimatl_tentative = is_band && (KU == 0);
+    
+    if( (no_trimat == false) && ((is_band == false) || is_trimatu_tentative || is_trimatl_tentative) )
       {
-      const bool is_trimatu = trimat_helper::is_triu(A);
-      const bool is_trimatl = (is_trimatu == false) ? trimat_helper::is_tril(A) : false;
+      bool is_trimatu = is_trimatu_tentative;
+      bool is_trimatl = is_trimatl_tentative;
+      
+      is_trimatu = ((is_trimatl == false) && (is_trimatu == false)) ? trimat_helper::is_triu(A) : is_trimatu;
+      is_trimatl = ((is_trimatl == false) && (is_trimatu == false)) ? trimat_helper::is_tril(A) : is_trimatl;
       
       if(is_trimatu || is_trimatl)
         {
