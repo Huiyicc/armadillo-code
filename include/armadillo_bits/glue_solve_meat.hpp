@@ -98,8 +98,8 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
       bool is_trimatu = is_trimatu_tentative;
       bool is_trimatl = is_trimatl_tentative;
       
-      is_trimatu = ((is_trimatl == false) && (is_trimatu == false)) ? trimat_helper::is_triu(A) : is_trimatu;
-      is_trimatl = ((is_trimatl == false) && (is_trimatu == false)) ? trimat_helper::is_tril(A) : is_trimatl;
+      is_trimatu = ((is_trimatu == false) && (is_trimatl == false)) ? trimat_helper::is_triu(A) : is_trimatu;
+      is_trimatl = ((is_trimatu == false) && (is_trimatl == false)) ? trimat_helper::is_tril(A) : is_trimatl;
       
       if(is_trimatu || is_trimatl)
         {
