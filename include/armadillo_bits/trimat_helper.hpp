@@ -32,23 +32,23 @@ is_triu(const Mat<eT>& A)
   
   // NOTE: assuming that A has a square size
   
-  const uword N = A.n_rows;
+  const uword N   = A.n_rows;
+  const uword Nm1 = N-1;
   
   if(N < 2)  { return false; }
   
-  const eT* A_mem   = A.memptr();
-  const eT  eT_zero = eT(0);
+  const eT*   A_mem   = A.memptr();
+  const eT    eT_zero = eT(0);
   
   // quickly check bottom-left corner
   const eT* A_col0 = A_mem;
   const eT* A_col1 = A_col0 + N;
   
-  if( (A_col0[N-2] != eT_zero) || (A_col0[N-1] != eT_zero) || (A_col1[N-1] != eT_zero) )  { return false; }
+  if( (A_col0[N-2] != eT_zero) || (A_col0[Nm1] != eT_zero) || (A_col1[Nm1] != eT_zero) )  { return false; }
   
   // if we got to this point, do a thorough check
   
-  const eT*   A_col = A_mem;
-  const uword Nm1   = N-1;
+  const eT* A_col = A_mem;
   
   for(uword j=0; j < Nm1; ++j)
     {
