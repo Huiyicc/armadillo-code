@@ -50,7 +50,7 @@ OPT = -O2
 ## Not recommended unless your code has been first thoroughly tested!
 
 
-CXXFLAGS = $(ARMA_INCLUDE_FLAG) $(DEBUG) $(FINAL) $(OPT) $(EXTRA_OPT) 
+CXXFLAGS = $(DEBUG) $(FINAL) $(OPT) $(EXTRA_OPT)
 
 all: example1
 
