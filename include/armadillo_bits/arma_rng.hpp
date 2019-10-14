@@ -27,6 +27,9 @@
   #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
+#if defined(ARMA_USE_CXX11)
+  #define ARMA_USE_EXTERN_CXX11_RNG
+#endif
 
 #if defined(ARMA_USE_EXTERN_CXX11_RNG)
   extern thread_local arma_rng_cxx11 arma_rng_cxx11_instance;

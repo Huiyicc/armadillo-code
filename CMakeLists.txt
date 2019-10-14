@@ -27,7 +27,7 @@
 ## NOTE: More details: http://arma.sourceforge.net/faq.html
 
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
@@ -168,6 +168,11 @@ if(APPLE)
   message(STATUS "macOS detected. Added '-framework Accelerate' to compiler flags")
   
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    message(STATUS "Clang compiler on macOS detected. Added '-stdlib=libc++' to compiler flags")
+  endif()
+
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     message(STATUS "Clang compiler on macOS detected. Added '-stdlib=libc++' to compiler flags")
   endif()
@@ -379,6 +384,21 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   endif()
 endif()
 
+if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 5.0)
+    set(ARMA_USE_EXTERN_CXX11_RNG true)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    message(STATUS "Detected Clang 5.0 or later. Added '-std=c++11' to compiler flags")
+  endif()
+endif()
+
+if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0)
+    set(ARMA_USE_EXTERN_CXX11_RNG true)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    message(STATUS "Detected AppleClang 8.0 or later. Added '-std=c++11' to compiler flags")
+  endif()
+endif()
 
 message(STATUS "Copying ${PROJECT_SOURCE_DIR}/include/ to ${PROJECT_BINARY_DIR}/tmp/include/")
 file(COPY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${PROJECT_BINARY_DIR}/tmp/include/)
