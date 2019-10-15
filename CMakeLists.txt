@@ -27,7 +27,8 @@
 ## NOTE: More details: http://arma.sourceforge.net/faq.html
 
 
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_policy(SET CMP0025 NEW)
 
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
@@ -174,7 +175,7 @@ if(APPLE)
 
   if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    message(STATUS "Clang compiler on macOS detected. Added '-stdlib=libc++' to compiler flags")
+    message(STATUS "AppleClang compiler on macOS detected. Added '-stdlib=libc++' to compiler flags")
   endif()
   
   set(CMAKE_MACOSX_RPATH 1)
@@ -388,7 +389,7 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0)
     set(ARMA_USE_EXTERN_CXX11_RNG true)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    message(STATUS "Detected Clang 5.0 or later. Added '-std=c++11' to compiler flags")
+    message(STATUS "Detected Clang 6.0 or later. Added '-std=c++11' to compiler flags")
   endif()
 endif()
 
