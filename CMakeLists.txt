@@ -28,7 +28,10 @@
 
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
-cmake_policy(SET CMP0025 NEW)
+
+if (POLICY CMP0025)
+  cmake_policy(SET CMP0025 NEW)
+endif()
 
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
