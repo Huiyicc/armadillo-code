@@ -2,7 +2,7 @@
 # The defaults are for a Linux system and may need to be changed for other systems (eg. Mac OS X).
 
 
-CXX=g++ -std=c++11
+CXX=g++
 
 #CXX=CC
 ## When using the Sun Studio compiler
