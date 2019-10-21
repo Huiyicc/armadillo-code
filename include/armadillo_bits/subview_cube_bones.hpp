@@ -109,6 +109,11 @@ class subview_cube : public BaseCube<eT, subview_cube<eT> >
   inline void ones();
   inline void randu();
   inline void randn();
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename URNG> inline void randu(URNG& g);
+    template<typename URNG> inline void randn(URNG& g);
+  #endif
   
   inline arma_warn_unused bool is_finite() const;
   

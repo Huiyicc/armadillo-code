@@ -1333,6 +1333,54 @@ subview_cube<eT>::randn()
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  void
+  subview_cube<eT>::randu(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword local_n_rows   = n_rows;
+    const uword local_n_cols   = n_cols;
+    const uword local_n_slices = n_slices;
+    
+    for(uword slice = 0; slice < local_n_slices; ++slice)
+      {
+      for(uword col = 0; col < local_n_cols; ++col)
+        {
+        arma_rng::randu<eT>::fill( slice_colptr(slice,col), local_n_rows, g );
+        }
+      }
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  void
+  subview_cube<eT>::randn(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword local_n_rows   = n_rows;
+    const uword local_n_cols   = n_cols;
+    const uword local_n_slices = n_slices;
+    
+    for(uword slice = 0; slice < local_n_slices; ++slice)
+      {
+      for(uword col = 0; col < local_n_cols; ++col)
+        {
+        arma_rng::randn<eT>::fill( slice_colptr(slice,col), local_n_rows, g );
+        }
+      }
+    }
+
+#endif
+
 
 template<typename eT>
 inline
