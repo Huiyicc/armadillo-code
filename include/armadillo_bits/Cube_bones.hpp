@@ -70,6 +70,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   
   template<typename fill_type> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Cube(const SizeCube& s,                                               const fill::fill_class<fill_type>& f);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG> inline Cube(const uword in_rows, const uword in_cols, const uword in_slices, const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Cube(const SizeCube& s,                                               const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   #if defined(ARMA_USE_CXX11)
   inline            Cube(Cube&& m);
@@ -348,6 +353,16 @@ class Cube : public BaseCube< eT, Cube<eT> >
   inline const Cube& randn();
   inline const Cube& randn(const uword in_rows, const uword in_cols, const uword in_slices);
   inline const Cube& randn(const SizeCube& s);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename URNG> inline const Cube& randu(URNG& g);
+    template<typename URNG> inline const Cube& randu(const uword in_rows, const uword in_cols, const uword in_slices, URNG& g);
+    template<typename URNG> inline const Cube& randu(const SizeCube& s, URNG& g);
+    
+    template<typename URNG> inline const Cube& randn(URNG& g);
+    template<typename URNG> inline const Cube& randn(const uword in_rows, const uword in_cols, const uword in_slices, URNG& g);
+    template<typename URNG> inline const Cube& randn(const SizeCube& s, URNG& g);
+  #endif
   
   inline void      reset();
   inline void soft_reset();
@@ -468,6 +483,10 @@ class Cube<eT>::fixed : public Cube<eT>
   template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const BaseCube<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const BaseCube<pod_type,T1>& A, const BaseCube<pod_type,T2>& B);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG>       inline fixed(const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   using Cube<eT>::operator=;
   using Cube<eT>::operator();

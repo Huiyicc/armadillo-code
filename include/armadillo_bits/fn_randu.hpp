@@ -38,6 +38,26 @@ randu()
   return eT(arma_rng::randu<eT>());
   }
 
+template<typename URNG>
+arma_warn_unused
+inline
+double
+randu(URNG& g)
+{
+    return double(arma_rng::randu<double>()(g));
+}
+
+
+
+template<typename eT, typename URNG>
+arma_warn_unused
+inline
+typename arma_real_or_cx_only<eT>::result
+randu(URNG& g)
+{
+    return arma_rng::randu<eT>()(g);
+}
+
 
 
 //! Generate a vector with all elements set to random values in the [0,1] interval (uniform distribution)

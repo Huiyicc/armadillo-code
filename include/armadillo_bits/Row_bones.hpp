@@ -41,6 +41,12 @@ class Row : public Mat<eT>
   template<typename fill_type> inline Row(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Row(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
   
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG> inline Row(const uword n_elem,                       const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Row(const uword in_rows, const uword in_cols, const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Row(const SizeMat& s,                         const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
+
   inline            Row(const char*        text);
   inline Row& operator=(const char*        text);
   
@@ -200,6 +206,10 @@ class Row<eT>::fixed : public Row<eT>
   template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG>       inline fixed(const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   inline fixed(const eT* aux_mem);
   

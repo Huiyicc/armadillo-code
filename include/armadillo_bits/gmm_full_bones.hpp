@@ -61,6 +61,11 @@ class gmm_full
   
   inline Col<eT> generate()              const;
   inline Mat<eT> generate(const uword N) const;
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename URNG> inline Col<eT> generate(URNG& g)                const;
+    template<typename URNG> inline Mat<eT> generate(const uword N, URNG& g) const;
+  #endif
   
   template<typename T1> inline eT      log_p(const T1& expr, const gmm_empty_arg& junk1 = gmm_empty_arg(), typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == true ))>::result* junk2 = 0) const;
   template<typename T1> inline eT      log_p(const T1& expr, const uword gaus_id,                          typename enable_if<((is_arma_type<T1>::value) && (resolves_to_colvector<T1>::value == true ))>::result* junk2 = 0) const;

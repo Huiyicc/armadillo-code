@@ -21,6 +21,12 @@
 #endif
 
 
+#if (defined(__APPLE__) && (__cplusplus >= 201402L))
+  #undef ARMA_USE_CXX11
+  #define ARMA_USE_CXX11
+#endif
+
+
 // MS really can't get its proverbial shit together
 #if (defined(_MSVC_LANG) && (_MSVC_LANG >= 201402L))
   #undef  ARMA_USE_CXX11

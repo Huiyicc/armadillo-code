@@ -153,6 +153,62 @@ Cube<eT>::Cube(const SizeCube& s, const fill::fill_class<fill_type>&)
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Cube<eT>::Cube(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : n_rows(in_n_rows)
+    , n_cols(in_n_cols)
+    , n_elem_slice(in_n_rows*in_n_cols)
+    , n_slices(in_n_slices)
+    , n_elem(in_n_rows*in_n_cols*in_n_slices)
+    , mem_state(0)
+    , mem()
+    , mat_ptrs(0)
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    init_cold();
+    
+    if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+    if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+    if(is_same_type<fill_type, fill::fill_randu_cxx11>::yes)  (*this).randu(g);
+    if(is_same_type<fill_type, fill::fill_randn_cxx11>::yes)  (*this).randn(g);
+    
+    if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
+    }
+
+
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Cube<eT>::Cube(const SizeCube& s, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : n_rows(s.n_rows)
+    , n_cols(s.n_cols)
+    , n_elem_slice(s.n_rows*s.n_cols)
+    , n_slices(s.n_slices)
+    , n_elem(s.n_rows*s.n_cols*s.n_slices)
+    , mem_state(0)
+    , mem()
+    , mat_ptrs(0)
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    init_cold();
+    
+    if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+    if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+    if(is_same_type<fill_type, fill::fill_randu_cxx11>::yes)  (*this).randu(g);
+    if(is_same_type<fill_type, fill::fill_randn_cxx11>::yes)  (*this).randn(g);
+    
+    if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::Cube(): unsupported fill type"); }
+    }
+
+#endif
+
 
 #if defined(ARMA_USE_CXX11)
   
@@ -4144,6 +4200,94 @@ Cube<eT>::randn(const SizeCube& s)
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randu(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_rng::randu<eT>::fill( memptr(), n_elem, g);
+    
+    return *this;
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randu(const uword in_rows, const uword in_cols, const uword in_slices, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_rows, in_cols, in_slices);
+    
+    return (*this).randu(g);
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randu(const SizeCube& s, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    return (*this).randu(s.n_rows, s.n_cols, s.n_slices, g);
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randn(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_rng::randn<eT>::fill( memptr(), n_elem, g);
+    
+    return *this;
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randn(const uword in_rows, const uword in_cols, const uword in_slices, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_rows, in_cols, in_slices);
+    
+    return (*this).randn(g);
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Cube<eT>&
+  Cube<eT>::randn(const SizeCube& s, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    return (*this).randn(s.n_rows, s.n_cols, s.n_slices, g);
+    }
+
+#endif
+
 
 template<typename eT>
 inline
@@ -5164,6 +5308,28 @@ Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const fill::f
   if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fixed::fixed(): unsupported fill type"); }
   }
 
+
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
+  template<typename fill_type, typename URNG>
+  inline
+  Cube<eT>::fixed<fixed_n_rows, fixed_n_cols, fixed_n_slices>::fixed(const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    mem_setup();
+    
+    if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+    if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+    if(is_same_type<fill_type, fill::fill_randu_cxx11>::yes)  (*this).randu(g);
+    if(is_same_type<fill_type, fill::fill_randn_cxx11>::yes)  (*this).randn(g);
+    
+    if(is_same_type<fill_type, fill::fill_eye  >::yes)  { arma_debug_check(true, "Cube::fixed::fixed(): unsupported fill type"); }
+    }
+
+#endif
 
 
 template<typename eT>

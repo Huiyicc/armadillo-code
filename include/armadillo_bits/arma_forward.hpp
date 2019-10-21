@@ -456,6 +456,18 @@ namespace fill
   static const fill_class<fill_eye  > eye;
   static const fill_class<fill_randu> randu;
   static const fill_class<fill_randn> randn;
+
+
+  struct fill_randu_cxx11 {};
+  struct fill_randn_cxx11 {};
+
+  template<typename fill_type>
+  struct fill_class_cxx11 {
+      inline fill_class_cxx11() {}
+  };
+
+  static const fill_class_cxx11<fill_randu_cxx11> randu_cxx11;
+  static const fill_class_cxx11<fill_randn_cxx11> randn_cxx11;
   }
 
 //! @}

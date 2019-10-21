@@ -443,6 +443,90 @@ gmm_full<eT>::generate(const uword N_vec) const
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  Col<eT>
+  gmm_full<eT>::generate(URNG& g) const
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword N_dims = means.n_rows;
+    const uword N_gaus = means.n_cols;
+    
+    Col<eT> out( (N_gaus > 0) ? N_dims : uword(0)                       );
+    Col<eT> tmp( (N_gaus > 0) ? N_dims : uword(0), fill::randn_cxx11, g );
+    
+    if(N_gaus > 0)
+      {
+      const double val = randu<double>(g);
+      
+      double csum    = double(0);
+      uword  gaus_id = 0;
+      
+      for(uword j=0; j < N_gaus; ++j)
+        {
+        csum += hefts[j];
+        
+        if(val <= csum)  { gaus_id = j; break; }
+        }
+      
+      out  = chol_fcovs.slice(gaus_id) * tmp;
+      out += means.col(gaus_id);
+      }
+    
+    return out;
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  Mat<eT>
+  gmm_full<eT>::generate(const uword N_vec, URNG& g) const
+    {
+    arma_extra_debug_sigprint();
+
+    const uword N_dims = means.n_rows;
+    const uword N_gaus = means.n_cols;
+    
+    Mat<eT> out( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec                       );
+    Mat<eT> tmp( ( (N_gaus > 0) ? N_dims : uword(0) ), N_vec, fill::randn_cxx11, g );
+
+    if(N_gaus > 0)
+      {
+      const eT* hefts_mem = hefts.memptr();
+      
+      for(uword i=0; i < N_vec; ++i)
+        {
+        const double val = randu<double>(g);
+        
+        double csum    = double(0);
+        uword  gaus_id = 0;
+        
+        for(uword j=0; j < N_gaus; ++j)
+          {
+          csum += hefts_mem[j];
+          
+          if(val <= csum)  { gaus_id = j; break; }
+          }
+        
+        Col<eT> out_vec(out.colptr(i), N_dims, false, true);
+        Col<eT> tmp_vec(tmp.colptr(i), N_dims, false, true);
+        
+        out_vec  = chol_fcovs.slice(gaus_id) * tmp_vec;
+        out_vec += means.col(gaus_id);
+        }
+      }
+    
+    return out;
+    }
+
+#endif
+
 
 template<typename eT>
 template<typename T1>
