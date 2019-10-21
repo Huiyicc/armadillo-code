@@ -26,26 +26,41 @@ class arma_rng_cxx11
   public:
   
   typedef std::mt19937_64::result_type seed_type;
-  
+
   inline void set_seed(const seed_type val);
+
+  inline void reset();
   
-  arma_inline int    randi_val();
-  arma_inline double randu_val();
-  arma_inline double randn_val();
+                          arma_inline int    randi_val();
+  template<typename URNG> arma_inline int    randi_val(URNG& g);
+  
+                          arma_inline double randu_val();
+  template<typename URNG> arma_inline double randu_val(URNG& g);
+  
+                          arma_inline double randn_val();
+  template<typename URNG> arma_inline double randn_val(URNG& g);
   
   template<typename eT>
   arma_inline void randn_dual_val(eT& out1, eT& out2);
+  template<typename eT, typename URNG>
+  arma_inline void randn_dual_val(eT& out1, eT& out2, URNG& g);
   
   template<typename eT>
   inline void randi_fill(eT* mem, const uword N, const int a, const int b);
-  
+  template<typename eT, typename URNG>
+  inline void randi_fill(eT* mem, const uword N, const int a, const int b, URNG& g);
+    
   inline static int randi_max_val();
   
   template<typename eT>
   inline void randg_fill_simple(eT* mem, const uword N, const double a, const double b);
+  template<typename eT, typename URNG>
+  inline void randg_fill_simple(eT* mem, const uword N, const double a, const double b, URNG& g);
   
   template<typename eT>
   inline void randg_fill(eT* mem, const uword N, const double a, const double b);
+  template<typename eT, typename URNG>
+  inline void randg_fill(eT* mem, const uword N, const double a, const double b, URNG& g);
   
   
   private:
@@ -71,7 +86,16 @@ arma_rng_cxx11::set_seed(const arma_rng_cxx11::seed_type val)
   u_distr.reset();
   n_distr.reset();
   }
-
+  
+  
+inline
+void
+arma_rng_cxx11::reset()
+  {
+  i_distr.reset();
+  u_distr.reset();
+  n_distr.reset(); 
+  }
 
 
 arma_inline
@@ -82,6 +106,14 @@ arma_rng_cxx11::randi_val()
   }
 
 
+template<typename URNG>
+arma_inline
+int
+arma_rng_cxx11::randi_val(URNG& g)
+{
+    return i_distr(g);
+}
+
 
 arma_inline
 double
@@ -91,6 +123,14 @@ arma_rng_cxx11::randu_val()
   }
 
 
+template<typename URNG>
+arma_inline
+double
+arma_rng_cxx11::randu_val(URNG& g)
+{
+    return u_distr(g);
+}
+
 
 arma_inline
 double
@@ -99,6 +139,14 @@ arma_rng_cxx11::randn_val()
   return n_distr(engine);
   }
 
+
+template<typename URNG>
+arma_inline
+double
+arma_rng_cxx11::randn_val(URNG& g)
+{
+    return n_distr(g);
+}
 
 
 template<typename eT>
@@ -110,6 +158,15 @@ arma_rng_cxx11::randn_dual_val(eT& out1, eT& out2)
   out2 = eT( n_distr(engine) );
   }
 
+
+template<typename eT, typename URNG>
+arma_inline
+void
+arma_rng_cxx11::randn_dual_val(eT& out1, eT& out2, URNG& g)
+  {
+  out1 = eT( n_distr(g) );
+  out2 = eT( n_distr(g) );
+  }
 
 
 template<typename eT>
@@ -125,6 +182,19 @@ arma_rng_cxx11::randi_fill(eT* mem, const uword N, const int a, const int b)
     }
   }
 
+
+template<typename eT, typename URNG>
+inline
+void
+arma_rng_cxx11::randi_fill(eT* mem, const uword N, const int a, const int b, URNG& g)
+  {
+  std::uniform_int_distribution<int> local_i_distr(a, b);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    mem[i] = eT(local_i_distr(g));
+    }
+  }
 
 
 inline
@@ -146,6 +216,20 @@ arma_rng_cxx11::randg_fill_simple(eT* mem, const uword N, const double a, const 
   for(uword i=0; i<N; ++i)
     {
     mem[i] = eT(g_distr(engine));
+    }
+  }
+
+
+template<typename eT, typename URNG>
+inline
+void
+arma_rng_cxx11::randg_fill_simple(eT* mem, const uword N, const double a, const double b, URNG& g)
+  {
+  std::gamma_distribution<double> g_distr(a,b);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    mem[i] = eT(g_distr(g));
     }
   }
 
@@ -203,6 +287,62 @@ arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double 
   #else
     {
     (*this).randg_fill_simple(mem, N, a, b);
+    }
+  #endif
+  }
+
+template<typename eT, typename URNG>
+inline
+void
+arma_rng_cxx11::randg_fill(eT* mem, const uword N, const double a, const double b, URNG& g)
+  {
+  #if defined(ARMA_USE_OPENMP)
+    {
+    if((N < 512) || omp_in_parallel())  { (*this).randg_fill_simple(mem, N, a, b, g); return; }
+    
+    typedef URNG                             motor_type;
+    typedef URNG::result_type                ovum_type;
+    typedef std::gamma_distribution<double>  distr_type;
+    
+    const uword n_threads = uword( mp_thread_limit::get() );
+    
+    std::vector<motor_type> g_motor(n_threads);
+    std::vector<distr_type> g_distr(n_threads);
+    
+    const distr_type g_distr_base(a,b);
+    
+    for(uword t=0; t < n_threads; ++t)
+      {
+      motor_type& g_motor_t = g_motor[t];
+      distr_type& g_distr_t = g_distr[t];
+      
+      g_motor_t.seed( ovum_type(t) + ovum_type((*this).randi_val(g)) );
+      
+      g_distr_t.param( g_distr_base.param() );
+      }
+    
+    const uword chunk_size = N / n_threads;
+    
+    #pragma omp parallel for schedule(static) num_threads(int(n_threads))
+    for(uword t=0; t < n_threads; ++t)
+      {
+      const uword start = (t+0) * chunk_size;
+      const uword endp1 = (t+1) * chunk_size;
+      
+      motor_type& g_motor_t = g_motor[t];
+      distr_type& g_distr_t = g_distr[t];
+      
+      for(uword i=start; i < endp1; ++i)  { mem[i] = eT( g_distr_t(g_motor_t)); }
+      }
+    
+    motor_type& g_motor_0 = g_motor[0];
+    distr_type& g_distr_0 = g_distr[0];
+    
+    for(uword i=(n_threads*chunk_size); i < N; ++i)  { mem[i] = eT( g_distr_0(g_motor_0)); }
+    }
+  #else
+    {
+    (*this).randg_fill_simple(mem, N, a, b, g);
     }
   #endif
   }
