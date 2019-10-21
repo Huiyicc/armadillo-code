@@ -118,6 +118,52 @@ Col<eT>::Col(const SizeMat& s, const fill::fill_class<fill_type>& f)
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Col<eT>::Col(const uword in_n_elem, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : Mat<eT>(arma_vec_indicator(), in_n_elem, 1, 1)
+    {
+    arma_extra_debug_sigprint();
+    
+    (*this).fill(f, g);
+    }
+
+
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Col<eT>::Col(const uword in_n_rows, const uword in_n_cols, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::init_warm(in_n_rows, in_n_cols);
+    
+    (*this).fill(f, g);
+    }
+
+
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Col<eT>::Col(const SizeMat& s, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : Mat<eT>(arma_vec_indicator(), 0, 0, 1)
+    {
+    arma_extra_debug_sigprint();
+    
+    Mat<eT>::init_warm(s.n_rows, s.n_cols);
+    
+    (*this).fill(f, g);
+    }
+
+#endif
+
+
 
 template<typename eT>
 inline
@@ -1160,6 +1206,26 @@ Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class<fill_type>&)
   if(is_same_type<fill_type, fill::fill_randn>::yes)  (*this).randn();
   }
 
+
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<uword fixed_n_elem>
+  template<typename fill_type, typename URNG>
+  inline
+  Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : Col<eT>( arma_fixed_indicator(), fixed_n_elem, ((use_extra) ? mem_local_extra : Mat<eT>::mem_local) )
+    {
+    arma_extra_debug_sigprint_this(this);
+    
+    if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+    if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+    if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
+    if(is_same_type<fill_type, fill::fill_randu_cxx11>::yes)  (*this).randu(g);
+    if(is_same_type<fill_type, fill::fill_randn_cxx11>::yes)  (*this).randn(g);
+    }
+
+#endif
 
 
 template<typename eT>

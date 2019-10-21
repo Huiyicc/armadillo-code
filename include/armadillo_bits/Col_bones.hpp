@@ -40,6 +40,12 @@ class Col : public Mat<eT>
   template<typename fill_type> inline Col(const uword n_elem,                       const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Col(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Col(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG> inline Col(const uword n_elem,                       const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Col(const uword in_rows, const uword in_cols, const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Col(const SizeMat& s,                         const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   inline            Col(const char*        text);
   inline Col& operator=(const char*        text);
@@ -200,6 +206,10 @@ class Col<eT>::fixed : public Col<eT>
   template<typename fill_type>       inline fixed(const fill::fill_class<fill_type>& f);
   template<typename T1>              inline fixed(const Base<eT,T1>& A);
   template<typename T1, typename T2> inline fixed(const Base<pod_type,T1>& A, const Base<pod_type,T2>& B);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG>       inline fixed(const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   inline fixed(const eT* aux_mem);
   
