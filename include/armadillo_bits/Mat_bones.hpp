@@ -62,6 +62,11 @@ class Mat : public Base< eT, Mat<eT> >
   
   template<typename fill_type> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class<fill_type>& f);
   template<typename fill_type> inline Mat(const SizeMat& s,                         const fill::fill_class<fill_type>& f);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG> inline Mat(const uword in_rows, const uword in_cols, const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+    template<typename fill_type, typename URNG> inline Mat(const SizeMat& s,                         const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   inline arma_cold            Mat(const char*        text);
   inline arma_cold Mat& operator=(const char*        text);
@@ -475,6 +480,11 @@ class Mat : public Base< eT, Mat<eT> >
   
   template<typename fill_type>
   inline const Mat& fill(const fill::fill_class<fill_type>& f);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename fill_type, typename URNG>
+    inline const Mat& fill(const fill::fill_class_cxx11<fill_type>& f, URNG& g);
+  #endif
   
   inline const Mat& zeros();
   inline const Mat& zeros(const uword in_elem);
@@ -495,6 +505,18 @@ class Mat : public Base< eT, Mat<eT> >
   inline const Mat& randn(const uword in_elem);
   inline const Mat& randn(const uword in_rows, const uword in_cols);
   inline const Mat& randn(const SizeMat& s);
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename URNG> inline const Mat& randu(URNG& g);
+    template<typename URNG> inline const Mat& randu(const uword in_elem, URNG& g);
+    template<typename URNG> inline const Mat& randu(const uword in_rows, const uword in_cols, URNG& g);
+    template<typename URNG> inline const Mat& randu(const SizeMat& s, URNG& g);
+    
+    template<typename URNG> inline const Mat& randn(URNG& g);
+    template<typename URNG> inline const Mat& randn(const uword in_elem, URNG& g);
+    template<typename URNG> inline const Mat& randn(const uword in_rows, const uword in_cols, URNG& g);
+    template<typename URNG> inline const Mat& randn(const SizeMat& s, URNG& g);
+  #endif
   
   inline const Mat& eye();
   inline const Mat& eye(const uword in_rows, const uword in_cols);

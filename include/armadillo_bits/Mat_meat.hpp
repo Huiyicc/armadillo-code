@@ -127,6 +127,49 @@ Mat<eT>::Mat(const SizeMat& s, const fill::fill_class<fill_type>& f)
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  //! construct the matrix to have user specified dimensions and fill with specified pattern
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Mat<eT>::Mat(const uword in_n_rows, const uword in_n_cols, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : n_rows(in_n_rows)
+    , n_cols(in_n_cols)
+    , n_elem(in_n_rows*in_n_cols)
+    , vec_state(0)
+    , mem_state(0)
+    , mem()
+    {
+      arma_extra_debug_sigprint_this(this);
+
+      init_cold();
+
+      (*this).fill(f, g);
+    }
+
+
+
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  Mat<eT>::Mat(const SizeMat& s, const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+    : n_rows(s.n_rows)
+    , n_cols(s.n_cols)
+    , n_elem(s.n_rows*s.n_cols)
+    , vec_state(0)
+    , mem_state(0)
+    , mem()
+    {
+      arma_extra_debug_sigprint_this(this);
+
+      init_cold();
+
+      (*this).fill(f, g);
+    }
+    
+#endif
+
 
 //! constructor used by Row and Col classes
 template<typename eT>
@@ -6867,6 +6910,27 @@ Mat<eT>::fill(const fill::fill_class<fill_type>&)
   return *this;
   }
 
+#if defined(ARMA_USE_CXX11)
+
+  //! fill the matrix with the specified value
+  template<typename eT>
+  template<typename fill_type, typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::fill(const fill::fill_class_cxx11<fill_type>& f, URNG& g)
+  {
+    arma_extra_debug_sigprint();
+
+    if(is_same_type<fill_type, fill::fill_zeros>::yes)  (*this).zeros();
+    if(is_same_type<fill_type, fill::fill_ones >::yes)  (*this).ones();
+    if(is_same_type<fill_type, fill::fill_eye  >::yes)  (*this).eye();
+    if(is_same_type<fill_type, fill::fill_randu_cxx11>::yes)  (*this).randu(g);
+    if(is_same_type<fill_type, fill::fill_randn_cxx11>::yes)  (*this).randn(g);
+
+    return *this;
+  }
+
+#endif
 
 
 template<typename eT>
@@ -7081,6 +7145,117 @@ Mat<eT>::randn(const SizeMat& s)
   return (*this).randn(s.n_rows, s.n_cols);
   }
 
+
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randu(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_rng::randu<eT>::fill( memptr(), n_elem, g);
+    
+    return *this;
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randu(const uword in_elem, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_elem);
+    
+    return (*this).randu(g);
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randu(const uword in_rows, const uword in_cols, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_rows, in_cols);
+    
+    return (*this).randu(g);
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randu(const SizeMat& s, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    return (*this).randu(s.n_rows, s.n_cols, g);
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randn(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    arma_rng::randn<eT>::fill( memptr(), n_elem, g);
+    
+    return *this;
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randn(const uword in_elem, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_elem);
+    
+    return (*this).randn(g);
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randn(const uword in_rows, const uword in_cols, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    set_size(in_rows, in_cols);
+    
+    return (*this).randn(g);
+    }
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  const Mat<eT>&
+  Mat<eT>::randn(const SizeMat& s, URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    return (*this).randn(s.n_rows, s.n_cols, g);
+    }
+
+#endif
 
 
 template<typename eT>
