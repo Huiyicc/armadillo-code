@@ -1088,6 +1088,66 @@ subview<eT>::randn()
   }
 
 
+#if defined(ARMA_USE_CXX11)
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  void
+  subview<eT>::randu(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword local_n_rows = n_rows;
+    const uword local_n_cols = n_cols;
+    
+    if(local_n_rows == 1)
+      {
+      for(uword ii=0; ii < local_n_cols; ++ii)
+        {
+        at(0,ii) = arma_rng::randu<eT>(g);
+        }
+      }
+    else
+      {
+      for(uword ii=0; ii < local_n_cols; ++ii)
+        {
+        arma_rng::randu<eT>::fill( colptr(ii), local_n_rows, g );
+        }
+      }
+    }
+
+
+
+  template<typename eT>
+  template<typename URNG>
+  inline
+  void
+  subview<eT>::randn(URNG& g)
+    {
+    arma_extra_debug_sigprint();
+    
+    const uword local_n_rows = n_rows;
+    const uword local_n_cols = n_cols;
+    
+    if(local_n_rows == 1)
+      {
+      for(uword ii=0; ii < local_n_cols; ++ii)
+        {
+        at(0,ii) = arma_rng::randn<eT>(g);
+        }
+      }
+    else
+      {
+      for(uword ii=0; ii < local_n_cols; ++ii)
+        {
+        arma_rng::randn<eT>::fill( colptr(ii), local_n_rows, g );
+        }
+      }
+    }
+    
+#endif
+
 
 template<typename eT>
 inline

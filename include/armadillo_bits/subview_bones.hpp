@@ -107,6 +107,11 @@ class subview : public Base<eT, subview<eT> >
   inline void eye();
   inline void randu();
   inline void randn();
+
+  #if defined(ARMA_USE_CXX11)
+    template<typename URNG> inline void randu(URNG& g);
+    template<typename URNG> inline void randn(URNG& g);
+  #endif
   
   inline eT  at_alt    (const uword ii) const;
   
