@@ -7789,21 +7789,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
   bool load_okay = false;
   std::string err_msg;
   
-  if(do_trans)
-    {
-    Mat<eT> tmp;
-    
-    load_okay = diskio::load_csv_ascii(tmp, spec.filename, err_msg, with_header, (*header_ptr));
-    
-    if(load_okay)
-      {
-      (*this) = tmp.st();
-      }
-    }
-  else
-    {
-    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, with_header, (*header_ptr));
-    }
+  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, do_trans, with_header, (*header_ptr));
   
   if( (print_status == true) && (load_okay == false) )
     {
