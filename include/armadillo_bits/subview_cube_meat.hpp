@@ -495,7 +495,7 @@ subview_cube<eT>::operator= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const quasi_unwrap<T1> tmp(in.get_ref());
   
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
@@ -600,7 +600,7 @@ subview_cube<eT>::operator+= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const quasi_unwrap<T1> tmp(in.get_ref());
   
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
@@ -703,7 +703,7 @@ subview_cube<eT>::operator-= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const quasi_unwrap<T1> tmp(in.get_ref());
   
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
@@ -806,7 +806,7 @@ subview_cube<eT>::operator%= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const quasi_unwrap<T1> tmp(in.get_ref());
   
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
@@ -909,7 +909,7 @@ subview_cube<eT>::operator/= (const Base<eT,T1>& in)
   {
   arma_extra_debug_sigprint();
   
-  const unwrap<T1> tmp(in.get_ref());
+  const quasi_unwrap<T1> tmp(in.get_ref());
   
   const Mat<eT>&          x = tmp.M;
         subview_cube<eT>& t = *this;
