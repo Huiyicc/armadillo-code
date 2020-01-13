@@ -510,14 +510,15 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><a href="#histc">histc</a></td><td>&nbsp;</td><td>histogram of counts with user specified edges</td></tr>
 <tr><td><a href="#princomp">princomp</a></td><td>&nbsp;</td><td>principal component analysis (PCA)</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#normpdf">normpdf</a></td><td>&nbsp;</td><td>probability density function of normal distribution</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#log_normpdf">log_normpdf</a></td><td>&nbsp;</td><td>logarithm version of probability density function of normal distribution</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#normcdf">normcdf</a></td><td>&nbsp;</td><td>cumulative distribution function of normal distribution</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#mvnrnd">mvnrnd</a></td><td>&nbsp;</td><td>random vectors from multivariate normal distribution</td></tr>
+<tr><td><a href="#mvnrnd">mvnrnd</a></td><td>&nbsp;</td><td>random vectors from multivariate normal distribution</td></tr>
 <tr><td><a href="#chi2rnd">chi2rnd</a></td><td>&nbsp;</td><td>random numbers from chi-squared distribution</td></tr>
 <tr><td><a href="#wishrnd">wishrnd</a></td><td>&nbsp;</td><td>random matrix from Wishart distribution</td></tr>
-<tr><td><a href="#iwishrnd">iwishrnd</a></td><td>&nbsp;</td><td>random matrix from inverse Wishart distribution</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#iwishrnd">iwishrnd</a></td><td>&nbsp;</td><td>random matrix from inverse Wishart distribution</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#running_stat">running_stat</a></td><td>&nbsp;</td><td>running statistics of scalars (one dimensional process/signal)</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#running_stat_vec">running_stat_vec</a></td><td>&nbsp;</td><td>running statistics of vectors (multi-dimensional process/signal)</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#kmeans">kmeans</a></td><td>&nbsp;</td><td>cluster data into disjoint sets</td></tr>
+<tr><td><a href="#kmeans">kmeans</a></td><td>&nbsp;</td><td>cluster data into disjoint sets</td></tr>
 <tr><td><a href="#gmm_diag">gmm_diag/gmm_full</a></td><td>&nbsp;</td><td>model and evaluate data using Gaussian Mixture Models (GMMs)</td></tr>
 </tbody>
 </table>
@@ -14303,6 +14304,10 @@ For each scalar <i>x</i> in <i>X</i>, compute its probability density function a
 <li>If <i>M</i> and <i>S</i> are omitted, their values are assumed to be 0 and 1, respectively</li>
 <br>
 <li>
+<b>Caveat:</b> to reduce the incidence of numerical underflows, consider using <a href="#log_normpdf">log_normpdf()</a>
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -14322,8 +14327,85 @@ double P5 = normpdf(1.23, 4.56, 7.89);
 <li>
 See also:
 <ul>
+<li><a href="#log_normpdf">log_normpdf()</a></li>
 <li><a href="#normcdf">normcdf()</a></li>
 <li><a href="#randu_randn_standalone">randn()</a></li>
+<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="log_normpdf"></a>
+<b>log_normpdf(X)</b>
+<br><b>log_normpdf(X, M, S)</b>
+<ul>
+<li>
+For each scalar <i>x</i> in <i>X</i>, compute the logarithm version of probability density function according to a Gaussian (normal) distribution using the corresponding mean value <i>m</i> in <i>M</i> and the corresponding standard deviation value <i>s</i> in <i>S</i>:
+<br>
+<br>
+<ul>
+<code>
+<table style="text-align: left;" border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;&nbsp;&nbsp;1</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td><td>&#9131;</td>
+    </tr>
+    <tr>
+      <td>y&nbsp;=&nbsp;</td><td>log</td><td>&#9130;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;</td><td>&nbsp;exp</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td><td>&#9130;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&#9129;</td><td>s&nbsp;&radic;(2&pi;)</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td><td>&#9133;</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<table style="text-align: left;" border="0" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;=&nbsp;</td><td>&minus;log(s&nbsp;&radic;(2&pi;))</td><td>&nbsp;&plus;&nbsp;</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td>
+    </tr>
+  </tbody>
+</table>
+</code>
+</ul>
+</li>
+<br>
+<li><i>X</i> can be a scalar, vector, or matrix</li>
+<br>
+<li><i>M</i> and <i>S</i> can jointly be either scalars, vectors, or matrices</li>
+<br>
+<li>If <i>M</i> and <i>S</i> are omitted, their values are assumed to be 0 and 1, respectively</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+vec X(10, fill::randu);
+vec M(10, fill::randu);
+vec S(10, fill::randu);
+
+   vec P1 = log_normpdf(X);
+   vec P2 = log_normpdf(X,    M,    S   );
+   vec P3 = log_normpdf(1.23, M,    S   );
+   vec P4 = log_normpdf(X,    4.56, 7.89);
+double P5 = log_normpdf(1.23, 4.56, 7.89);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#normpdf">normpdf()</a></li>
 <li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
