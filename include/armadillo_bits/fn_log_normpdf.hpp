@@ -90,7 +90,8 @@ log_normpdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::ele
 
 
 template<typename eT>
-arma_inline
+inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), eT >::result
 log_normpdf(const eT x)
   {
@@ -103,6 +104,7 @@ log_normpdf(const eT x)
 
 template<typename eT>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), eT >::result
 log_normpdf(const eT x, const eT mu, const eT sigma)
   {
@@ -117,6 +119,7 @@ log_normpdf(const eT x, const eT mu, const eT sigma)
 
 template<typename eT, typename T2, typename T3>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<eT>::value), Mat<eT> >::result
 log_normpdf(const eT x, const Base<eT, T2>& M_expr, const Base<eT, T3>& S_expr)
   {
@@ -136,6 +139,7 @@ log_normpdf(const eT x, const Base<eT, T2>& M_expr, const Base<eT, T3>& S_expr)
 
 template<typename T1>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 log_normpdf(const Base<typename T1::elem_type, T1>& X_expr)
   {
@@ -157,6 +161,7 @@ log_normpdf(const Base<typename T1::elem_type, T1>& X_expr)
 
 template<typename T1>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 log_normpdf(const Base<typename T1::elem_type, T1>& X_expr, const typename T1::elem_type mu, const typename T1::elem_type sigma)
   {
@@ -178,6 +183,7 @@ log_normpdf(const Base<typename T1::elem_type, T1>& X_expr, const typename T1::e
 
 template<typename T1, typename T2, typename T3>
 inline
+arma_warn_unused
 typename enable_if2< (is_real<typename T1::elem_type>::value), Mat<typename T1::elem_type> >::result
 log_normpdf(const Base<typename T1::elem_type, T1>& X_expr, const Base<typename T1::elem_type, T2>& M_expr, const Base<typename T1::elem_type, T3>& S_expr)
   {
