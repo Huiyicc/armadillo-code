@@ -75,7 +75,7 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
           {
           const eT tmp = (X_ea[i] - M_ea[i]) / (S_ea[i] * (-Datum<eT>::sqrt2));
           
-          out_mem[i] = 0.5 * std::erfc(tmp);
+          out_mem[i] = eT(0.5) * std::erfc(tmp);
           }
         }
       #endif
@@ -86,7 +86,7 @@ normcdf_helper(Mat<typename T1::elem_type>& out, const Base<typename T1::elem_ty
         {
         const eT tmp = (X_ea[i] - M_ea[i]) / (S_ea[i] * (-Datum<eT>::sqrt2));
         
-        out_mem[i] = 0.5 * std::erfc(tmp);
+        out_mem[i] = eT(0.5) * std::erfc(tmp);
         }
       }
     }
@@ -108,7 +108,7 @@ normcdf(const eT x)
     }
   #else
     {
-    const eT out = 0.5 * std::erfc( x / (-Datum<eT>::sqrt2) );
+    const eT out = eT(0.5) * std::erfc( x / (-Datum<eT>::sqrt2) );
     
     return out;
     }
@@ -132,7 +132,7 @@ normcdf(const eT x, const eT mu, const eT sigma)
     {
     const eT tmp = (x - mu) / (sigma * (-Datum<eT>::sqrt2));
     
-    const eT out = 0.5 * std::erfc(tmp);
+    const eT out = eT(0.5) * std::erfc(tmp);
     
     return out;
     }
