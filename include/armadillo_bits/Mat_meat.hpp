@@ -7764,7 +7764,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     {
     if(no_header)
       {
-      if(print_status)  { arma_debug_warn("Mat::load(): csv_opts::with_header and csv_opts::sans_header are mutually exclusive"); }
+      if(print_status)  { arma_debug_warn("Mat::load(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
       (*this).soft_reset();
       return false;
       }
