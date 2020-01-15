@@ -6683,6 +6683,10 @@ A.raw_print(cout, "A:");
 <br>
 <br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
 <br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
+<br>
+<br><b>.save( csv_name(</b>filename<b>,</b> settings<b>) )</b>
+<br><b>.save( csv_name(</b>filename<b>,</b> header<b>) )</b>
+<br><b>.save( csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>) )</b>
 </td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td>
@@ -6694,6 +6698,10 @@ A.raw_print(cout, "A:");
 <br>
 <br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
 <br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
+<br>
+<br><b>.load( csv_name(</b>filename<b>,</b> settings<b>) )</b>
+<br><b>.load( csv_name(</b>filename<b>,</b> header<b>) )</b>
+<br><b>.load( csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>) )</b>
 </td>
 </tr>
 </tbody>
@@ -6780,7 +6788,8 @@ Complex numbers are stored in standard C++ notation, which is a tuple surrounded
                         <td style="vertical-align: top;"><br>
                         </td>
                         <td style="vertical-align: top;">
-Numerical data stored in comma separated value (CSV) text format, without a header.
+Numerical data stored in comma separated value (CSV) text format, <b>without</b> a header.
+To save/load <b>with</b> a header, use the <b>csv_name(</b>filename,header<b>)</b> specification instead (more details below).
 Applicable to <i>Mat</i> and <i>SpMat</i>.
 <br>
 <br>
@@ -6887,16 +6896,49 @@ the <i>hdf5.h</i> header file must be available on your system and you will need
 </li>
 <br>
 <li>
+By providing <b>csv_name(</b>filename<b>,</b> settings<b>)</b>, or <b>csv_name(</b>filename<b>,</b> header<b>)</b>, or <b>csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>)</b>,
+the file is assumed to contain data stored in comma separated value (CSV) text format
+<br>
+<br>
+<ul>
+<li>
+the optional <i>header</i> argument specifies the object for storing the elements of the header line; it must have the type <code><a href="#field">field&lt;std::string&gt;</a></code>
+<br>
+<br>
+</li>
+<li>the <i>settings</i> argument is one of the following, or a combination thereof:
+<br>
+<br>
+<table>
+<tr style="vertical-align: top;"><td><code>csv_opts::trans    </code></td><td>&nbsp;&nbsp;&nbsp;</td><td>save/load the data with columns transposed to rows (and vice versa)</td></tr>
+<tr style="vertical-align: top;"><td><code>csv_opts::no_header</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>assume there is no header line</td></tr>
+</table>
+<br>
+the above settings can be combined using the <code>+</code> operator; for example: <code>csv_opts::trans&nbsp;+&nbsp;csv_opts::no_header</code>
+</li>
+</ul>
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
-mat A = randu&lt;mat&gt;(5,5);
+mat A = randu&lt;mat&gt;(5,6);
 
 // default save format is arma_binary
 A.save("A.bin");
 
-// force saving in arma_ascii format
-A.save("A.txt", arma_ascii);
+// save in raw_ascii format
+A.save("A.txt", raw_ascii);
+
+// save in CSV format without a header
+A.save("A.csv", csv_ascii);
+
+// save in CSV format with a header
+field&lt;std::string&gt; header(A.n_cols);
+header(0) = "foo";
+header(1) = "bar";  // etc
+A.save( csv_name("A.csv", header) );
 
 // save in HDF5 format with internal dataset named as "my_data"
 A.save(hdf5_name("A.h5", "my_data"));
@@ -6925,6 +6967,7 @@ if(ok == false)
 <li>See also:
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF</a> in Wikipedia</li>
+<li><a href="https://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> in Wikipedia
 <li><a href="#save_load_field">saving/loading fields</a></li>
 </ul>
 </li>
