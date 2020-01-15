@@ -465,19 +465,19 @@ namespace csv_opts
   // The values can change without notice.
   
   static const flag_type flag_none        = flag_type(0      );
-  static const flag_type flag_no_header   = flag_type(1u << 0);
-  static const flag_type flag_with_header = flag_type(1u << 1);
-  static const flag_type flag_trans       = flag_type(1u << 2);
+  static const flag_type flag_trans       = flag_type(1u << 1);
+  static const flag_type flag_no_header   = flag_type(1u << 2);
+  static const flag_type flag_with_header = flag_type(1u << 3);
   
   struct opts_none        : public opts { inline opts_none()        : opts(flag_none       ) {} };
+  struct opts_trans       : public opts { inline opts_trans()       : opts(flag_trans      ) {} };
   struct opts_no_header   : public opts { inline opts_no_header()   : opts(flag_no_header  ) {} };
   struct opts_with_header : public opts { inline opts_with_header() : opts(flag_with_header) {} };
-  struct opts_trans       : public opts { inline opts_trans()       : opts(flag_trans      ) {} };
   
   static const opts_none        none;
+  static const opts_trans       trans;
   static const opts_no_header   no_header;
   static const opts_with_header with_header;
-  static const opts_trans       trans;
   }
 
 
