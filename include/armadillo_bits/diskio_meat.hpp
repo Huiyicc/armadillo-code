@@ -2284,7 +2284,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
 template<typename eT>
 inline
 bool
-diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name)
+diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name, const bool with_header, const field<std::string>& header)
   {
   arma_extra_debug_sigprint();
   
@@ -2294,15 +2294,30 @@ diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name)
   
   bool save_okay = f.is_open();
   
-  if(save_okay)
+  if(save_okay == false)  { return false; }
+  
+  if(with_header)
     {
-    save_okay = diskio::save_csv_ascii(x, f);
+    arma_extra_debug_print("diskio::save_csv_ascii(): writing header");
     
-    f.flush();
-    f.close();
+    for(uword i=0; i < header.n_elem; ++i)
+      {
+      f << header(i);
+      
+      if(i != (header.n_elem-1))  { f.put(','); }
+      }
     
-    if(save_okay)  { save_okay = diskio::safe_rename(tmp_name, final_name); }
+    f.put('\n');
+    
+    save_okay = f.good();
     }
+  
+  if(save_okay)  { save_okay = diskio::save_csv_ascii(x, f); }
+  
+  f.flush();
+  f.close();
+  
+  if(save_okay)  { save_okay = diskio::safe_rename(tmp_name, final_name); }
   
   return save_okay;
   }
@@ -2552,20 +2567,76 @@ diskio::save_arma_binary(const SpMat<eT>& x, std::ostream& f)
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg)
+diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg, const bool do_trans, const bool with_header, field<std::string>& header)
   {
   arma_extra_debug_sigprint();
   
   std::fstream f;
-  f.open(name.c_str(), std::fstream::in | std::fstream::binary);
+  f.open(name.c_str(), std::fstream::in);
   
   bool load_okay = f.is_open();
   
+  if(load_okay == false)  { return false; }
+  
+  if(with_header)
+    {
+    arma_extra_debug_print("diskio::load_csv_ascii(): reading header");
+    
+    std::string              header_line;
+    std::stringstream        header_stream;
+    std::vector<std::string> header_tokens;
+    
+    std::getline(f, header_line);
+    
+    load_okay = f.good();
+    
+    if(load_okay)
+      {
+      std::string token;
+      
+      header_stream.clear();
+      header_stream.str(header_line);
+      
+      uword header_n_tokens = 0;
+      
+      while(header_stream.good())
+        {
+        std::getline(header_stream, token, ',');
+        ++header_n_tokens;
+        header_tokens.push_back(token);
+        }
+      
+      if(header_n_tokens == uword(0))
+        {
+        header.reset();
+        }
+      else
+        {
+        if(do_trans)  { header.set_size(header_n_tokens,1); }
+        else          { header.set_size(1,header_n_tokens); }
+        
+        for(uword i=0; i < header_n_tokens; ++i)  { header(i) = header_tokens[i]; }
+        }
+      }
+    }
+  
   if(load_okay)
     {
-    load_okay = diskio::load_csv_ascii(x, f, err_msg);
-    f.close();
+    if(do_trans)
+      {
+      SpMat<eT> tmp;
+      
+      load_okay = diskio::load_csv_ascii(tmp, f, err_msg);
+      
+      if(load_okay)  { x = tmp.st(); }
+      }
+   else
+      {
+      load_okay = diskio::load_csv_ascii(x, f, err_msg);
+      }
     }
+  
+  f.close();
   
   return load_okay;
   }

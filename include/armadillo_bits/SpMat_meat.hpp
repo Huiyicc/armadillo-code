@@ -4654,7 +4654,7 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
   switch(type)
     {
     case csv_ascii:
-      save_okay = diskio::save_csv_ascii(*this, name);
+      return (*this).save(csv_name(name), type, print_status);
       break;
     
     case arma_binary:
@@ -4671,6 +4671,98 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
     }
   
   if(print_status && (save_okay == false))  { arma_debug_warn("SpMat::save(): couldn't write to ", name); }
+  
+  return save_okay;
+  }
+
+
+
+template<typename eT>
+inline
+arma_cold
+bool
+SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_status) const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(type != csv_ascii)
+    {
+    arma_debug_check(true, "SpMat::save(): unsupported file type for csv_name()");
+    return false;
+    }
+  
+  const field<std::string>  header_tmp;
+  const field<std::string>* header_ptr = &header_tmp;
+  
+  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
+  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
+  
+  arma_extra_debug_print("SpMat::save(csv_name): enabled flags:");
+  
+  if(with_header)  { arma_extra_debug_print("with_header"); }
+  if(no_header  )  { arma_extra_debug_print("no_header");   }
+  if(do_trans   )  { arma_extra_debug_print("trans");       }
+  
+  if(with_header)
+    {
+    if(no_header)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::save(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
+      return false;
+      }
+    
+    if(spec.header_ptr == NULL)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::save(): csv_opts::with_header specified but header variable not given"); }
+      return false;
+      }
+    
+    header_ptr = spec.header_ptr;
+    
+    if( ((*header_ptr).n_cols != 1) && ((*header_ptr).n_rows != 1) )
+      {
+      if(print_status)  { arma_debug_warn("SpMat::save(): given header must have a vector layout"); }
+      return false;
+      }
+    
+    for(uword i=0; i < (*header_ptr).n_elem; ++i)
+      {
+      const std::string& token = (*header_ptr)(i);
+      
+      if(token.find(',') != std::string::npos)
+        {
+        if(print_status)  { arma_debug_warn("SpMat::save(): token within the header contains a comma: '", token, "'"); }
+        return false;
+        }
+      }
+    
+    const uword save_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if((*header_ptr).n_elem != save_n_cols)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::save(): size mistmach between header and matrix"); }
+      return false;
+      }
+    }
+  
+  bool save_okay = false;
+  
+  if(do_trans)
+    {
+    const SpMat<eT> tmp = (*this).st();
+    
+    save_okay = diskio::save_csv_ascii(tmp, spec.filename, with_header, (*header_ptr));
+    }
+  else
+    {
+    save_okay = diskio::save_csv_ascii(*this, spec.filename, with_header, (*header_ptr));
+    }
+  
+  if((print_status == true) && (save_okay == false))
+    {
+    arma_debug_warn("SpMat::save(): couldn't write to ", spec.filename);
+    }
   
   return save_okay;
   }
@@ -4737,7 +4829,7 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     //   break;
     
     case csv_ascii:
-      load_okay = diskio::load_csv_ascii(*this, name, err_msg);
+      return (*this).load(csv_name(name), type, print_status);
       break;
     
     case arma_binary:
@@ -4770,6 +4862,98 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
     (*this).reset();
     }
     
+  return load_okay;
+  }
+
+
+
+template<typename eT>
+inline
+arma_cold
+bool
+SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_status)
+  {
+  arma_extra_debug_sigprint();
+  
+  if(type != csv_ascii)
+    {
+    arma_debug_check(true, "SpMat::load(): unsupported file type for csv_name()");
+    return false;
+    }
+  
+  field<std::string>  header_tmp;
+  field<std::string>* header_ptr = &header_tmp;
+    
+  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+  const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
+  const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
+  
+  arma_extra_debug_print("SpMat::load(csv_name): enabled flags:");
+  
+  if(with_header)  { arma_extra_debug_print("with_header"); }
+  if(no_header  )  { arma_extra_debug_print("no_header");   }
+  if(do_trans   )  { arma_extra_debug_print("trans");       }
+  
+  if(with_header)
+    {
+    if(no_header)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::load(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
+      (*this).reset();
+      return false;
+      }
+    
+    if(spec.header_ptr == NULL)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::load(): csv_opts::with_header specified but header variable not given"); }
+      (*this).reset();
+      return false;
+      }
+    
+    if(spec.header_ro)
+      {
+      if(print_status)  { arma_debug_warn("SpMat::load(): given header variable is read-only"); }
+      (*this).reset();
+      return false;
+      }
+    
+    header_ptr = spec.header_ptr;
+    }
+  
+  bool load_okay = false;
+  std::string err_msg;
+  
+  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, do_trans, with_header, (*header_ptr));
+  
+  if( (print_status == true) && (load_okay == false) )
+    {
+    if(err_msg.length() > 0)
+      {
+      arma_debug_warn("SpMat::load(): ", err_msg, spec.filename);
+      }
+    else
+      {
+      arma_debug_warn("SpMat::load(): couldn't read ", spec.filename);
+      }
+    }
+  
+  if(load_okay == false)
+    {
+    (*this).reset();
+    
+    if(with_header && (spec.header_ro == false))  { (*header_ptr).reset(); }
+    }
+  else
+  if(print_status)
+    {
+    const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+    
+    if(with_header && ((*header_ptr).n_elem != load_n_cols))
+      {
+      arma_debug_warn("SpMat::load(): size mistmach between header and matrix");
+      }
+    }
+  
   return load_okay;
   }
 

@@ -96,7 +96,7 @@ class diskio
   //
   // sparse matrix saving
   
-  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name);
+  template<typename eT> inline static bool save_csv_ascii  (const SpMat<eT>& x, const std::string& final_name, const bool with_header, const field<std::string>& header);
   template<typename eT> inline static bool save_coord_ascii(const SpMat<eT>& x, const std::string& final_name);
   template<typename eT> inline static bool save_arma_binary(const SpMat<eT>& x, const std::string& final_name);
   
@@ -110,7 +110,7 @@ class diskio
   //
   // sparse matrix loading
   
-  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg);
+  template<typename eT> inline static bool load_csv_ascii  (SpMat<eT>& x, const std::string& name, std::string& err_msg, const bool do_trans, const bool with_header, field<std::string>& header);
   template<typename eT> inline static bool load_coord_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   template<typename eT> inline static bool load_arma_binary(SpMat<eT>& x, const std::string& name, std::string& err_msg);
   
