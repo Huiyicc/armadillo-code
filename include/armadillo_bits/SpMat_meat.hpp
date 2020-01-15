@@ -4696,7 +4696,7 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
   
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
   
   arma_extra_debug_print("SpMat::save(csv_name): enabled flags:");
   
@@ -4704,14 +4704,10 @@ SpMat<eT>::save(const csv_name& spec, const file_type type, const bool print_sta
   if(no_header  )  { arma_extra_debug_print("no_header");   }
   if(with_header)  { arma_extra_debug_print("with_header"); }
   
+  if(no_header)  { with_header = false; }
+  
   if(with_header)
     {
-    if(no_header)
-      {
-      if(print_status)  { arma_debug_warn("SpMat::save(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
-      return false;
-      }
-    
     if(spec.header_ptr == NULL)
       {
       if(print_status)  { arma_debug_warn("SpMat::save(): csv_opts::with_header specified but header variable not given"); }
@@ -4886,13 +4882,15 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
   
   arma_extra_debug_print("SpMat::load(csv_name): enabled flags:");
   
   if(do_trans   )  { arma_extra_debug_print("trans");       }
   if(no_header  )  { arma_extra_debug_print("no_header");   }
   if(with_header)  { arma_extra_debug_print("with_header"); }
+  
+  if(no_header)  { with_header = false; }
   
   if(with_header)
     {

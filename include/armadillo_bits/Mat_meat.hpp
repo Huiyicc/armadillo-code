@@ -7478,7 +7478,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
   
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
   
   arma_extra_debug_print("Mat::save(csv_name): enabled flags:");
   
@@ -7486,14 +7486,10 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
   if(no_header  )  { arma_extra_debug_print("no_header");   }
   if(with_header)  { arma_extra_debug_print("with_header"); }
   
+  if(no_header)  { with_header = false; }
+  
   if(with_header)
     {
-    if(no_header)
-      {
-      if(print_status)  { arma_debug_warn("Mat::save(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
-      return false;
-      }
-    
     if(spec.header_ptr == NULL)
       {
       if(print_status)  { arma_debug_warn("Mat::save(): csv_opts::with_header specified but header variable not given"); }
@@ -7752,7 +7748,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
-  const bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
+        bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
   
   arma_extra_debug_print("Mat::load(csv_name): enabled flags:");
   
@@ -7760,15 +7756,10 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
   if(no_header  )  { arma_extra_debug_print("no_header");   }
   if(with_header)  { arma_extra_debug_print("with_header"); }
   
+  if(no_header)  { with_header = false; }
+  
   if(with_header)
     {
-    if(no_header)
-      {
-      if(print_status)  { arma_debug_warn("Mat::load(): csv_opts::with_header and csv_opts::no_header are mutually exclusive"); }
-      (*this).soft_reset();
-      return false;
-      }
-    
     if(spec.header_ptr == NULL)
       {
       if(print_status)  { arma_debug_warn("Mat::load(): csv_opts::with_header specified but header variable not given"); }
