@@ -6684,7 +6684,6 @@ A.raw_print(cout, "A:");
 <br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
 <br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
 <br>
-<br><b>.save( csv_name(</b>filename<b>,</b> settings<b>) )</b>
 <br><b>.save( csv_name(</b>filename<b>,</b> header<b>) )</b>
 <br><b>.save( csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>) )</b>
 </td>
@@ -6699,7 +6698,6 @@ A.raw_print(cout, "A:");
 <br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
 <br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
 <br>
-<br><b>.load( csv_name(</b>filename<b>,</b> settings<b>) )</b>
 <br><b>.load( csv_name(</b>filename<b>,</b> header<b>) )</b>
 <br><b>.load( csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>) )</b>
 </td>
@@ -6896,22 +6894,22 @@ the <i>hdf5.h</i> header file must be available on your system and you will need
 </li>
 <br>
 <li>
-By providing <b>csv_name(</b>filename<b>,</b> settings<b>)</b>, or <b>csv_name(</b>filename<b>,</b> header<b>)</b>, or <b>csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>)</b>,
-the file is assumed to contain data stored in comma separated value (CSV) text format
+By providing either <b>csv_name(</b>filename<b>,</b> header<b>)</b> or <b>csv_name(</b>filename<b>,</b> header<b>,</b> settings<b>)</b>,
+the file is assumed to have data in comma separated value (CSV) text format
 <br>
 <br>
 <ul>
 <li>
-the optional <i>header</i> argument specifies the object for storing the elements of the header line; it must have the type <code><a href="#field">field&lt;std::string&gt;</a></code>
+the <i>header</i> argument specifies the object which stores the separate elements of the header line; it must have the type <code><a href="#field">field&lt;std::string&gt;</a></code>
 <br>
 <br>
 </li>
-<li>the <i>settings</i> argument is one of the following, or a combination thereof:
+<li>the optional <i>settings</i> argument is one of the following, or a combination thereof:
 <br>
 <br>
 <table>
 <tr style="vertical-align: top;"><td><code>csv_opts::trans    </code></td><td>&nbsp;&nbsp;&nbsp;</td><td>save/load the data with columns transposed to rows (and vice versa)</td></tr>
-<tr style="vertical-align: top;"><td><code>csv_opts::no_header</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>assume there is no header line</td></tr>
+<tr style="vertical-align: top;"><td><code>csv_opts::no_header</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>assume there is no header line; the <i>header</i> argument is not referenced</td></tr>
 </table>
 <br>
 the above settings can be combined using the <code>+</code> operator; for example: <code>csv_opts::trans&nbsp;+&nbsp;csv_opts::no_header</code>
