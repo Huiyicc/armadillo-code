@@ -86,6 +86,9 @@ struct SpBase
   inline arma_warn_unused bool is_hermitian() const;
   inline arma_warn_unused bool is_hermitian(const typename get_pod_type<elem_type>::result tol) const;
   
+  inline arma_warn_unused bool is_zero() const;
+  inline arma_warn_unused bool is_zero(const typename get_pod_type<elem_type>::result tol) const;
+  
   inline arma_warn_unused bool is_trimatu() const;
   inline arma_warn_unused bool is_trimatl() const;
   inline arma_warn_unused bool is_diagmat() const;

@@ -402,6 +402,83 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+SpBase<elem_type,derived>::is_zero() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  if(P.get_n_elem() == 0)  { return false; }
+  
+  if(P.get_n_nonzero() == 0)  { return true; }
+  
+  typename SpProxy<derived>::const_iterator_type it     = P.begin();
+  typename SpProxy<derived>::const_iterator_type it_end = P.end();
+  
+  while(it != it_end)
+    {
+    if((*it) != elem_type(0))  { return false; }
+    ++it;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+SpBase<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  if(tol == T(0))  { return (*this).is_zero(); }
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  if(P.get_n_elem() == 0)  { return false; }
+  
+  typename SpProxy<derived>::const_iterator_type it     = P.begin();
+  typename SpProxy<derived>::const_iterator_type it_end = P.end();
+  
+  if(is_cx<elem_type>::yes)
+    {
+    while(it != it_end)
+      {
+      const elem_type val = (*it);
+      
+      const T val_real = access::tmp_real(val);
+      const T val_imag = access::tmp_imag(val);
+      
+      if(std::abs(val_real) > tol)  { return false; }
+      if(std::abs(val_imag) > tol)  { return false; }
+        
+      ++it;
+      }
+    }
+  else  // not complex
+    {
+    while(it != it_end)
+      {
+      if(std::abs(*it) > tol)  { return false; }
+      
+      ++it;
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 SpBase<elem_type,derived>::is_trimatu() const
   {
   arma_extra_debug_sigprint();
