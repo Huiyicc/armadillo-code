@@ -155,6 +155,136 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
+BaseCube<elem_type,derived>::is_zero() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)  { return false; }
+  
+  if(ProxyCube<derived>::use_at == false)
+    {
+    const typename ProxyCube<derived>::ea_type Pea = P.get_ea();
+    
+    for(uword i=0; i < n_elem; ++i)
+      {
+      if(Pea[i] != elem_type(0))  { return false; }
+      }
+    }
+  else
+    {
+    const uword n_r = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
+    const uword n_s = P.get_n_slices();
+    
+    for(uword s=0; s < n_s; ++s)
+    for(uword c=0; c < n_c; ++c)
+    for(uword r=0; r < n_r; ++r)
+      {
+      if(P.at(r,c,s) != elem_type(0))  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
+BaseCube<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename get_pod_type<elem_type>::result T;
+  
+  if(tol == T(0))  { return (*this).is_zero(); }
+  
+  arma_debug_check( (tol < T(0)), "is_zero(): parameter 'tol' must be >= 0" );
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
+  
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)  { return false; }
+  
+  if(is_cx<elem_type>::yes)
+    {
+    if(ProxyCube<derived>::use_at == false)
+      {
+      const typename ProxyCube<derived>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i<n_elem; ++i)
+        {
+        const elem_type val = Pea[i];
+        
+        const T val_real = access::tmp_real(val);
+        const T val_imag = access::tmp_imag(val);
+        
+        if(std::abs(val_real) > tol)  { return false; }
+        if(std::abs(val_imag) > tol)  { return false; }
+        }
+      }
+    else
+      {
+      const uword n_r = P.get_n_rows();
+      const uword n_c = P.get_n_cols();
+      const uword n_s = P.get_n_slices();
+      
+      for(uword s=0; s < n_s; ++s)
+      for(uword c=0; c < n_c; ++c)
+      for(uword r=0; r < n_r; ++r)
+        {
+        const elem_type val = P.at(r,c,s);
+        
+        const T val_real = access::tmp_real(val);
+        const T val_imag = access::tmp_imag(val);
+        
+        if(std::abs(val_real) > tol)  { return false; }
+        if(std::abs(val_imag) > tol)  { return false; }
+        }
+      }
+    }
+  else  // not complex
+    {
+    if(ProxyCube<derived>::use_at == false)
+      {
+      const typename ProxyCube<derived>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i < n_elem; ++i)
+        {
+        if(std::abs(Pea[i]) > tol)  { return false; }
+        }
+      }
+    else
+      {
+      const uword n_r = P.get_n_rows();
+      const uword n_c = P.get_n_cols();
+      const uword n_s = P.get_n_slices();
+      
+      for(uword s=0; s < n_s; ++s)
+      for(uword c=0; c < n_c; ++c)
+      for(uword r=0; r < n_r; ++r)
+        {
+        if(std::abs(P.at(r,c,s)) > tol)  { return false; }
+        }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
+arma_warn_unused
+bool
 BaseCube<elem_type,derived>::is_empty() const
   {
   arma_extra_debug_sigprint();
