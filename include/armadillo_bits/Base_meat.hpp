@@ -379,55 +379,20 @@ template<typename elem_type, typename derived>
 inline
 arma_warn_unused
 bool
-Base<elem_type,derived>::is_zero() const
-  {
-  arma_extra_debug_sigprint();
-  
-  const Proxy<derived> P( (*this).get_ref() );
-  
-  const uword n_elem = P.get_n_elem();
-  
-  if(n_elem == 0)  { return false; }
-  
-  if(Proxy<derived>::use_at == false)
-    {
-    const typename Proxy<derived>::ea_type Pea = P.get_ea();
-    
-    for(uword i=0; i<n_elem; ++i)
-      {
-      if(Pea[i] != elem_type(0))  { return false; }
-      }
-    }
-  else
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    for(uword col=0; col<n_cols; ++col)
-    for(uword row=0; row<n_rows; ++row)
-      {
-      if(P.at(row,col) != elem_type(0))  { return false; }
-      }
-    }
-  
-  return true;
-  }
-
-
-
-template<typename elem_type, typename derived>
-inline
-arma_warn_unused
-bool
 Base<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result tol) const
   {
   arma_extra_debug_sigprint();
   
   typedef typename get_pod_type<elem_type>::result T;
   
-  if(tol == T(0))  { return (*this).is_zero(); }
-  
   arma_debug_check( (tol < T(0)), "is_zero(): parameter 'tol' must be >= 0" );
+  
+  if(Proxy<derived>::use_at || is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<derived> U( (*this).get_ref() );
+    
+    return arrayops::is_zero( U.M.memptr(), U.M.n_elem, tol );
+    }
   
   const Proxy<derived> P( (*this).get_ref() );
   
@@ -435,62 +400,26 @@ Base<elem_type,derived>::is_zero(const typename get_pod_type<elem_type>::result 
   
   if(n_elem == 0)  { return false; }
   
+  const typename Proxy<derived>::ea_type Pea = P.get_ea();
+  
   if(is_cx<elem_type>::yes)
     {
-    if(Proxy<derived>::use_at == false)
+    for(uword i=0; i<n_elem; ++i)
       {
-      const typename Proxy<derived>::ea_type Pea = P.get_ea();
+      const elem_type val = Pea[i];
       
-      for(uword i=0; i<n_elem; ++i)
-        {
-        const elem_type val = Pea[i];
-        
-        const T val_real = access::tmp_real(val);
-        const T val_imag = access::tmp_imag(val);
-        
-        if(std::abs(val_real) > tol)  { return false; }
-        if(std::abs(val_imag) > tol)  { return false; }
-        }
-      }
-    else
-      {
-      const uword n_rows = P.get_n_rows();
-      const uword n_cols = P.get_n_cols();
+      const T val_real = access::tmp_real(val);
+      const T val_imag = access::tmp_imag(val);
       
-      for(uword col=0; col<n_cols; ++col)
-      for(uword row=0; row<n_rows; ++row)
-        {
-        const elem_type val = P.at(row,col);
-        
-        const T val_real = access::tmp_real(val);
-        const T val_imag = access::tmp_imag(val);
-        
-        if(std::abs(val_real) > tol)  { return false; }
-        if(std::abs(val_imag) > tol)  { return false; }
-        }
+      if(std::abs(val_real) > tol)  { return false; }
+      if(std::abs(val_imag) > tol)  { return false; }
       }
     }
   else  // not complex
     {
-    if(Proxy<derived>::use_at == false)
+    for(uword i=0; i<n_elem; ++i)
       {
-      const typename Proxy<derived>::ea_type Pea = P.get_ea();
-      
-      for(uword i=0; i<n_elem; ++i)
-        {
-        if(std::abs(Pea[i]) > tol)  { return false; }
-        }
-      }
-    else
-      {
-      const uword n_rows = P.get_n_rows();
-      const uword n_cols = P.get_n_cols();
-      
-      for(uword col=0; col<n_cols; ++col)
-      for(uword row=0; row<n_rows; ++row)
-        {
-        if(std::abs(P.at(row,col)) > tol)  { return false; }
-        }
+      if(std::abs(Pea[i]) > tol)  { return false; }
       }
     }
   
