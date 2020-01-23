@@ -1363,6 +1363,31 @@ template<typename eT>
 inline
 arma_warn_unused
 bool
+subview_cube<eT>::is_zero(const typename get_pod_type<eT>::result tol) const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      if(arrayops::is_zero(slice_colptr(slice,col), local_n_rows, tol) == false)  { return false; }
+      }
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+arma_warn_unused
+bool
 subview_cube<eT>::has_inf() const
   {
   arma_extra_debug_sigprint();
