@@ -319,6 +319,7 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><a href="#is_hermitian">.is_hermitian</a></td><td>&nbsp;</td><td>check whether matrix is hermitian</td></tr>
 <tr><td><a href="#is_sympd">.is_sympd</a></td><td>&nbsp;</td><td>check whether matrix is symmetric/hermitian positive definite</td></tr>
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
+<tr><td><a href="#is_zero">.is_zero</a></td><td>&nbsp;</td><td>check whether all elements are zero</td></tr>
 <tr><td><a href="#is_finite">.is_finite</a></td><td>&nbsp;</td><td>check whether all elements are finite</td></tr>
 <tr><td><a href="#has_inf">.has_inf</a></td><td>&nbsp;</td><td>check whether any element is +-Inf</td></tr>
 <tr><td><a href="#has_nan">.has_nan</a></td><td>&nbsp;</td><td>check whether any element is NaN</td></tr>
@@ -2640,6 +2641,7 @@ See also:
 <li><a href="#zeros_standalone">zeros()</a> (standalone function)</li>
 <li><a href="#ones_member">.ones()</a></li>
 <li><a href="#clean">.clean()</a></li>
+<li><a href="#is_zero">.is_zero()</a></li>
 <li><a href="#randu_randn_member">.randu()</a></li>
 <li><a href="#fill">.fill()</a></li>
 <li><a href="#imbue">.imbue()</a></li>
@@ -3055,6 +3057,7 @@ See also:
 <ul>
 <li><a href="#replace">.replace()</a></li>
 <li><a href="#transform">.transform()</a></li>
+<li><a href="#is_zero">.is_zero()</a></li>
 <li><a href="#zeros_member">.zeros()</a></li>
 <li><a href="#clamp">clamp()</a></li>
 <li><a href="#constants">datum::eps</a></li>
@@ -6430,6 +6433,44 @@ See also:
 </ul>
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="is_zero"></a>
+<b>.is_zero()</b>
+<br>
+<b>.is_zero(</b>&nbsp;tolerance&nbsp;<b>)</b>
+<ul>
+<li>For objects with non-complex elements: return <i>true</i> if each element has an absolute value &leq; <i>tolerance</i>; return <i>false</i> otherwise</li>
+<br>
+<li>For objects with complex elements: return <i>true</i> if for each element, each component (real and imaginary) has an absolute value &leq; <i>tolerance</i>; return <i>false</i> otherwise</li>
+<br>
+<li>The argument <i>tolerance</i> is optional; by default <i>tolerance&nbsp;=&nbsp;0</i></li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = zeros&lt;mat&gt;(5,5);
+
+A(0,0) = datum::eps;
+
+cout &lt;&lt; A.is_zero()           &lt;&lt; endl;
+cout &lt;&lt; A.is_zero(datum::eps) &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#clean">.clean()</a></li>
+<li><a href="#all">all()</a></li>
+<li><a href="#constants">datum::eps</a></li>
+<li><a href="#approx_equal">approx_equal()</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="is_finite"></a>
 <a name="is_finite_member"></a>
 <b>.is_finite()</b>
@@ -8063,6 +8104,7 @@ See also:
 <li><a href="#any">any()</a></li>
 <li><a href="#approx_equal">approx_equal()</a></li>
 <li><a href="#find">find()</a></li>
+<li><a href="#is_zero">.is_zero()</a></li>
 <li><a href="#conv_to">conv_to()</a> (convert between matrix/vector types)</li>
 <li><a href="#vectorise">vectorise()</a></li>
 </ul>
@@ -8187,6 +8229,7 @@ See also:
 <li><a href="#all">all()</a></li>
 <li><a href="#any">any()</a></li>
 <li><a href="#find">find()</a></li>
+<li><a href="#is_zero">.is_zero()</a></li>
 <li><a href="#operators">relational operators</a></li>
 </ul>
 </li>
@@ -18639,6 +18682,7 @@ List of additions and changes for each version:
 <li>faster handling of compound expressions by <a href="#diagmat">diagmat</a></li>
 <li>expanded <a href="#save_load_mat">.save()</a> and <a href="#save_load_mat">.load()</a> to handle CSV files with headers via csv_name(filename,header) specification</li>
 <li>added <a href="#log_normpdf">log_normpdf()</a></li>
+<li>added <a href="#is_zero">.is_zero()</a></li>
 </ul>
 </li>
 <br>
