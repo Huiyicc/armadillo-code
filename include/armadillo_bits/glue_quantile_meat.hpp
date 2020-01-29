@@ -27,6 +27,8 @@ glue_quantile::worker(eTb* out_mem, Col<eTa>& Y, const Mat<eTb>& P)
   
   // NOTE: assuming out_mem is an array with P.n_elem elements
   
+  // TODO: ignore non-finite values
+  
   // algorithm based on "Definition 5" in:
   // Rob J. Hyndman and Yanan Fan.
   // Sample Quantiles in Statistical Packages.
