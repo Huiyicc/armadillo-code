@@ -511,7 +511,7 @@
 
 
 #if defined(ARMA_USE_OPENMP) && !defined(ARMA_USE_CXX11)
-  #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 50400)) || (defined(__clang__) && !defined(ARMA_FAKE_CLANG))
+  #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 50400)) || (defined(__clang__) && !defined(ARMA_DETECTED_FAKE_CLANG))
     #undef  ARMA_PRINT_OPENMP_CXX11_WARNING
     #define ARMA_PRINT_OPENMP_CXX11_WARNING
   #endif
@@ -544,8 +544,8 @@
 
 // cleanup
 
-#undef ARMA_FAKE_GCC
-#undef ARMA_FAKE_CLANG
+#undef ARMA_DETECTED_FAKE_GCC
+#undef ARMA_DETECTED_FAKE_CLANG
 #undef ARMA_GCC_VERSION
 #undef ARMA_PRINT_CXX98_WARNING
 #undef ARMA_PRINT_CXX11_WARNING
