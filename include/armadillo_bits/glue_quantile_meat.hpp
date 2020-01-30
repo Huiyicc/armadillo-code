@@ -200,7 +200,7 @@ glue_quantile_default::apply(Mat<typename T2::elem_type>& out, const mtGlue<type
   const quasi_unwrap<T1> UA(expr.A);
   const quasi_unwrap<T2> UB(expr.B);
   
-  const uword dim = (T1::is_row || UA.M.is_rowvec()) ? uword(1) : uword(0);  // TODO: more strict, ala histc() ?
+  const uword dim = (T1::is_xvec) ? uword(UA.M.is_rowvec() ? 1 : 0) : uword((T1::is_row) ? 1 : 0);
   
   if(UA.is_alias(out) || UB.is_alias(out))
     {
