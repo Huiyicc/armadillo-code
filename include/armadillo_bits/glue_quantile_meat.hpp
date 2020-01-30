@@ -92,6 +92,8 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
   
   arma_debug_check( ((P.is_vec() == false) && (P.is_empty() == false)), "quantile(): parameter 'P' must be a vector" );
   
+  if(X.is_empty())  { out.reset(); return; }
+  
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
   
