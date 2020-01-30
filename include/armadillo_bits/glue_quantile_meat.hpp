@@ -90,9 +90,7 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
   {
   arma_extra_debug_sigprint();
   
-  if(X.is_empty() || P.is_empty())  { out.reset(); return; }
-  
-  arma_debug_check( (P.is_vec() == false), "quantile(): parameter 'P' must be a vector" );
+  arma_debug_check( ((P.is_vec() == false) && (P.is_empty() == false)), "quantile(): parameter 'P' must be a vector" );
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -102,6 +100,8 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
   if(dim == 0)
     {
     out.set_size(P_n_elem, X_n_cols);
+    
+    if(out.is_empty())  { return; }
     
     Col<eTa> Y(X_n_rows);
     
@@ -125,6 +125,8 @@ glue_quantile::apply_noalias(Mat<eTb>& out, const Mat<eTa>& X, const Mat<eTb>& P
   if(dim == 1)
     {
     out.set_size(X_n_rows, P_n_elem);
+    
+    if(out.is_empty())  { return; }
     
     Col<eTa> Y(X_n_cols);
     
