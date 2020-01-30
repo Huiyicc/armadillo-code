@@ -14291,20 +14291,25 @@ uvec h = histc(v, linspace&lt;vec&gt;(-2,2,11));
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="quantile"></a>
-<b>quantile( X, P )</b>
+<b>quantile( V, P )</b>
+<br><b>quantile( X, P )</b>
 <br><b>quantile( X, P, dim )</b>
 <ul>
 <li>
-For a datset stored in <i>X</i>,
+For a dataset stored in vector <i>V</i> or matrix <i>X</i>,
 calculate the quantiles corresponding to the cumulative probability values in the given <i>P</i> vector
 </li>
 <br>
 <li>
-If <i>X</i> is a vector, produce a vector with the same orientation as <i>X</i> and the same length as <i>P</i>
+For vector <i>V</i>, produce a vector with the same orientation as <i>V</i> and the same length as <i>P</i>
 </li>
 <br>
 <li>
-If <i>X</i> is a matrix, produce a matrix with the quantiles for each column (<i>dim=0</i>) or each row (<i>dim=0</i>)
+For matrix <i>X</i>, produce a matrix with the quantiles for each column vector (<i>dim=0</i>) or each row vector (<i>dim=0</i>)
+</li>
+<br>
+<li>
+The <i>dim</i> argument is optional; by default <i>dim=0</i>
 </li>
 <br>
 <li>
@@ -14312,11 +14317,8 @@ The <i>P</i> vector must contain values in the [0,1] interval (eg. 0.00, 0.25, 0
 </li>
 <br>
 <li>
-The <i>dim</i> argument is optional; by default <i>dim=0</i> is used for matrices
-</li>
+The algorithm for calculating the quantiles is based on <i>Definition 5</i> in:
 <br>
-<li>
-The algorithm used is based on <i>Definition 5</i> in: 
 Rob J. Hyndman and Yanan Fan.
 Sample Quantiles in Statistical Packages.
 The American Statistician, Vol. 50, No. 4, pp. 361-365, 1996.
@@ -14328,7 +14330,7 @@ Examples:
 <ul>
 <pre>
 vec X = randn&lt;vec&gt;(1000);  // Gaussian distribution
-vec P = {0.00, 0.25, 0.50, 0.75, 1.00};
+vec P = { 0.25, 0.50, 0.75 };
 
 vec Q = quantile(X, P);
 </pre>
