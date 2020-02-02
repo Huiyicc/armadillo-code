@@ -14058,7 +14058,7 @@ See also:
 <li><a href="#min_and_max">min() &amp; max()</a></li>
 <li><a href="#running_stat">running_stat</a> - class for running statistics of scalars</li>
 <li><a href="#running_stat_vec">running_stat_vec</a> - class for running statistics of vectors</li>
-<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="#kmeans">kmeans()</a></li>
 </ul>
 </li>
@@ -14329,10 +14329,10 @@ The American Statistician, Vol. 50, No. 4, pp. 361-365, 1996.
 Examples:
 <ul>
 <pre>
-vec X = randn&lt;vec&gt;(1000);  // Gaussian distribution
+vec V = randn&lt;vec&gt;(1000);  // Gaussian distribution
 vec P = { 0.25, 0.50, 0.75 };
 
-vec Q = quantile(X, P);
+vec Q = quantile(V, P);
 </pre>
 </ul>
 </li>
@@ -14341,6 +14341,7 @@ vec Q = quantile(X, P);
 <ul>
 <li><a href="#hist">hist()</a></li>
 <li><a href="#stats_fns">median()</a></li>
+<li><a href="#normcdf">normcdf()</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Quantile">quantile in Wikipedia</a></li>
 </ul>
 </li>
@@ -14475,7 +14476,7 @@ See also:
 <li><a href="#log_normpdf">log_normpdf()</a></li>
 <li><a href="#normcdf">normcdf()</a></li>
 <li><a href="#randu_randn_standalone">randn()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -14551,7 +14552,7 @@ double P5 = log_normpdf(1.23, 4.56, 7.89);
 See also:
 <ul>
 <li><a href="#normpdf">normpdf()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -14594,9 +14595,10 @@ double P5 = normcdf(1.23, 4.56, 7.89);
 See also:
 <ul>
 <li><a href="#normpdf">normpdf()</a></li>
+<li><a href="#quantile">quantile()</a></li>
 <li><a href="#randu_randn_standalone">randn()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - class for modelling and evaluating data as a Gaussian mixture model</li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Cumulative_distribution_function">cumulative distribution function in Wikipedia</a></li>
 </ul>
 </li>
 <br>
@@ -14655,7 +14657,7 @@ See also:
 <li><a href="#wishrnd">wishrnd()</a></li>
 <li><a href="#cov">cov()</a></li>
 <li><a href="#is_sympd">.is_sympd()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">multivariate normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -15000,7 +15002,7 @@ cout &lt;&lt; "max  = " &lt;&lt; stats.max()  &lt;&lt; endl;
 <ul>
 <li><a href="#running_stat_vec">running_stat_vec</a> (running statistics of vectors)</li>
 <li><a href="#stats_fns">statistics functions</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 </ul>
 </li>
 <br>
@@ -15210,7 +15212,7 @@ cout &lt;&lt; more_stats.cov() / (sd.t() * sd);
 <li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#cov">cov()</a></li>
 <li><a href="#cor">cor()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 </ul>
 </li>
 <br>
@@ -15296,7 +15298,7 @@ means.print("means:");
 <br>
 <li>See also:
 <ul>
-<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
+<li><a href="#gmm_diag">gmm_diag&nbsp;/&nbsp;gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#running_stat_vec">running_stat_vec</a></li>
 <li><a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering in Wikipedia</a></li>
@@ -15360,11 +15362,11 @@ where:
 </li>
 <br>
 <li>
-The <i>gmm_diag</i> class is tailored for diagonal covariance matrices (ie. in each covariance matrix, all entries outside the main diagonal are assumed to be zero)
+The <i>gmm_diag</i> class is tailored for <b>diagonal covariance matrices</b> (ie. in each covariance matrix, all entries outside the main diagonal are assumed to be zero)
 </li>
 <br>
 <li>
-The <i>gmm_full</i> class is tailored for full covariance matrices
+The <i>gmm_full</i> class is tailored for <b>full covariance matrices</b>
 </li>
 <br>
 <li>
