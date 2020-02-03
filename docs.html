@@ -8704,6 +8704,7 @@ See also:
 <li><a href="#symmat">symmatu() / symmatl()</a></li>
 <li><a href="#reshape">reshape()</a></li>
 <li><a href="#vectorise">vectorise()</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Diagonal_matrix">diagonal matrix in Wikipedia</a></li>
 </ul>
 </li>
 <br>
@@ -15328,7 +15329,30 @@ Classes for multivariate data modelling and evaluation via <b>Gaussian Mixture M
 </li>
 <br>
 <li>
-Can also be used for probabilistic clustering and vector quantisation (VQ)
+The <i>gmm_diag</i> class is tailored for <b>diagonal covariance matrices</b> (ie. in each covariance matrix, all entries outside the main diagonal are assumed to be zero)
+</li>
+<br>
+<li>
+The <i>gmm_full</i> class is tailored for <b>full covariance matrices</b>
+</li>
+<br>
+<li>
+The <i>gmm_diag</i> class is typically much faster to train and use than the <i>gmm_full</i> class,
+at the potential cost of some reduction in modelling accuracy
+</li>
+<br>
+<li>
+The <i>gmm_diag</i> and <i>gmm_full</i> classes include dedicated optimisation algorithms for learning (training) the model parameters from data:
+<ul>
+<li>k-means clustering, for quick initial estimates</li>
+<li>Expectation-Maximisation (EM), for maximum-likelihood estimates</li>
+</ul>
+<br>
+The optimisation algorithms are multi-threaded and can run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
+</li>
+<br>
+<li>
+The classes can also be used for probabilistic clustering and vector quantisation (VQ)
 </li>
 <br>
 <li>
@@ -15349,7 +15373,7 @@ Data is modelled as:
 </table>
 where:
 <ul>
-<li><i>n_gaus</i> is the number of Gaussians</li>
+<li><i>n_gaus</i> is the number of Gaussians; <i>n_gaus</i>&nbsp;&geq;1</li>
 <li>N(<small>&nbsp;</small><i>x</i><small>&nbsp;</small>|<small>&nbsp;</small><i>m<sub>g</sub></i><small>&nbsp;</small>,&nbsp;<i>C<sub>g</sub></i><small>&nbsp;</small>) represents a Gaussian (normal) distribution</li>
 <li>each Gaussian <i>g</i> has the following parameters:
 <ul>
@@ -15359,28 +15383,6 @@ where:
 </ul>
 </li>
 </ul>
-</li>
-<br>
-<li>
-The <i>gmm_diag</i> class is tailored for <b>diagonal covariance matrices</b> (ie. in each covariance matrix, all entries outside the main diagonal are assumed to be zero)
-</li>
-<br>
-<li>
-The <i>gmm_full</i> class is tailored for <b>full covariance matrices</b>
-</li>
-<br>
-<li>
-The <i>gmm_diag</i> class is typically much faster to train and use than the <i>gmm_full</i> class,
-at the potential cost of some reduction in modelling accuracy
-</li>
-<br>
-<li>
-The <i>gmm_diag</i> and <i>gmm_full</i> classes include dedicated optimisation algorithms for learning (training) the model parameters from data:
-<ul>
-<li>k-means clustering, for quick initial estimates</li>
-<li>Expectation-Maximisation (EM), for maximum-likelihood estimates</li>
-</ul>
-The optimisation algorithms are multi-threaded and run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
 </li>
 </ul>
 </td>
@@ -16008,7 +16010,6 @@ model.save("my_model.gmm");
 <li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#running_stat_vec">running_stat_vec</a></li>
 <li><a href="#kmeans">kmeans()</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Diagonal_matrix">diagonal matrix in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Covariance_matrix">covariance matrix in Wikipedia</a></li>
 <li><a href="http://mathworld.wolfram.com/CovarianceMatrix.html">covariance matrix in MathWorld</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Mahalanobis_distance">Mahalanobis distance in Wikipedia</a></li>
