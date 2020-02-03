@@ -521,6 +521,53 @@ diskio::convert_naninf(eT& val, const std::string& token)
 
 
 
+template<typename eT>
+inline
+std::streamsize
+diskio::prepare_stream(std::ostream& f)
+  {
+  std::streamsize cell_width = f.width();
+  
+  if(is_real<eT>::value)
+    {
+    f.unsetf(ios::fixed);
+    f.setf(ios::scientific);
+    
+    if(is_float<eT>::value)
+      {
+      f.precision(8);
+      cell_width = 15;
+      }
+    else
+      {
+      f.precision(16);
+      cell_width = 24;
+      }
+    }
+  else
+  if(is_cx<eT>::value)
+    {
+    f.unsetf(ios::fixed);
+    f.setf(ios::scientific);
+    
+    typedef typename get_pod_type<eT>::result T;
+    
+    if(is_float<T>::value)
+      {
+      f.precision(8);
+      }
+    else
+      {
+      f.precision(16);
+      }
+    }
+  
+  return cell_width;
+  }
+  
+
+
+
 //! Save a matrix as raw text (no header, human readable).
 //! Matrices can be loaded in Matlab and Octave, as long as they don't have complex elements.
 template<typename eT>
@@ -560,22 +607,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  uword cell_width;
-  
-  if(is_real<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
-    }
-  
-  if(is_cx<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword row=0; row < x.n_rows; ++row)
     {
@@ -583,7 +615,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
       {
       f.put(' ');
       
-      if(is_real<eT>::value)  { f.width(std::streamsize(cell_width)); }
+      if(is_real<eT>::value)  { f.width(cell_width); }
       
       arma_ostream::print_elem(f, x.at(row,col), false);
       }
@@ -683,22 +715,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   f << diskio::gen_txt_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << '\n';
   
-  uword cell_width;
-  
-  if(is_real<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
-    }
-  
-  if(is_cx<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword row=0; row < x.n_rows; ++row)
     {
@@ -706,7 +723,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
       {
       f.put(' ');
       
-      if(is_real<eT>::value)  { f.width(std::streamsize(cell_width)); }
+      if(is_real<eT>::value)  { f.width(cell_width); }
       
       arma_ostream::print_elem(f, x.at(row,col), false);
       }
@@ -777,12 +794,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
-  if( (is_float<eT>::value) || (is_double<eT>::value) )
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  diskio::prepare_stream<eT>(f);
   
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
@@ -820,12 +832,7 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
-  if( (is_float<T>::value) || (is_double<T>::value) )
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  diskio::prepare_stream<eT>(f);
   
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
@@ -2334,12 +2341,7 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
-  if( (is_float<eT>::value) || (is_double<eT>::value) )
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  diskio::prepare_stream<eT>(f);
   
   x.sync();
   
@@ -2426,19 +2428,16 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
-  if( (is_float<eT>::value) || (is_double<eT>::value) )
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
-    
+  diskio::prepare_stream<eT>(f);
+  
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
   
   for(; iter != iter_end; ++iter)
     {
-    f << iter.row() << ' ' << iter.col() << ' ' << (*iter) << '\n';
+    const eT val = (*iter);
+    
+    f << iter.row() << ' ' << iter.col() << ' ' << val << '\n';
     }
   
   
@@ -2475,12 +2474,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   
   const ios::fmtflags orig_flags = f.flags();
   
-  if( (is_float<T>::value) || (is_double<T>::value) )
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  diskio::prepare_stream<eT>(f);
   
   typename SpMat<eT>::const_iterator iter     = x.begin();
   typename SpMat<eT>::const_iterator iter_end = x.end();
@@ -3141,22 +3135,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  uword cell_width;
-  
-  if(is_real<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
-    }
-  
-  if(is_cx<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword slice=0; slice < x.n_slices; ++slice)
     {
@@ -3166,10 +3145,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
         {
         f.put(' ');
         
-        if(is_real<eT>::value)
-          {
-          f.width(std::streamsize(cell_width));
-          }
+        if(is_real<eT>::value)  { f.width(cell_width); }
         
         arma_ostream::print_elem(f, x.at(row,col,slice), false);
         }
@@ -3270,22 +3246,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   f << diskio::gen_txt_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << ' ' << x.n_slices << '\n';
   
-  uword cell_width;
-  
-  if(is_real<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    cell_width = 22;
-    }
-  
-  if(is_cx<eT>::value)
-    {
-    f.unsetf(ios::fixed);
-    f.setf(ios::scientific);
-    f.precision(14);
-    }
+  const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword slice=0; slice < x.n_slices; ++slice)
     {
@@ -3295,10 +3256,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
         {
         f.put(' ');
         
-        if(is_real<eT>::value)
-          {
-          f.width(std::streamsize(cell_width));
-          }
+        if(is_real<eT>::value)  { f.width(cell_width); }
         
         arma_ostream::print_elem(f, x.at(row,col,slice), false);
         }

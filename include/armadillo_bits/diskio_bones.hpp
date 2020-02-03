@@ -44,6 +44,8 @@ class diskio
   
   template<typename eT> arma_deprecated inline static bool convert_naninf(eT& val, const std::string& token);
   
+  template<typename eT> inline arma_cold static std::streamsize prepare_stream(std::ostream& f);
+  
   
   //
   // matrix saving
