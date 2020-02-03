@@ -7473,9 +7473,6 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     return false;
     }
   
-  const field<std::string>  header_tmp;
-  const field<std::string>* header_ptr = &header_tmp;
-  
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
         bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
@@ -7490,23 +7487,15 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
   
   if(with_header)
     {
-    if(spec.header_ptr == NULL)
-      {
-      if(print_status)  { arma_debug_warn("Mat::save(): csv_opts::with_header specified but header variable not given"); }
-      return false;
-      }
-    
-    header_ptr = spec.header_ptr;
-    
-    if( ((*header_ptr).n_cols != 1) && ((*header_ptr).n_rows != 1) )
+    if( (spec.header_ro.n_cols != 1) && (spec.header_ro.n_rows != 1) )
       {
       if(print_status)  { arma_debug_warn("Mat::save(): given header must have a vector layout"); }
       return false;
       }
     
-    for(uword i=0; i < (*header_ptr).n_elem; ++i)
+    for(uword i=0; i < spec.header_ro.n_elem; ++i)
       {
-      const std::string& token = (*header_ptr)(i);
+      const std::string& token = spec.header_ro(i);
       
       if(token.find(',') != std::string::npos)
         {
@@ -7517,7 +7506,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     
     const uword save_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
     
-    if((*header_ptr).n_elem != save_n_cols)
+    if(spec.header_ro.n_elem != save_n_cols)
       {
       if(print_status)  { arma_debug_warn("Mat::save(): size mistmach between header and matrix"); }
       return false;
@@ -7530,11 +7519,11 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     {
     const Mat<eT> tmp = (*this).st();
     
-    save_okay = diskio::save_csv_ascii(tmp, spec.filename, with_header, (*header_ptr));
+    save_okay = diskio::save_csv_ascii(tmp, spec.filename, with_header, spec.header_ro);
     }
   else
     {
-    save_okay = diskio::save_csv_ascii(*this, spec.filename, with_header, (*header_ptr));
+    save_okay = diskio::save_csv_ascii(*this, spec.filename, with_header, spec.header_ro);
     }
   
   if((print_status == true) && (save_okay == false))
@@ -7743,9 +7732,6 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     return false;
     }
   
-  field<std::string>  header_tmp;
-  field<std::string>* header_ptr = &header_tmp;
-    
   const bool   do_trans  = bool(spec.opts.flags & csv_opts::flag_trans      );
   const bool   no_header = bool(spec.opts.flags & csv_opts::flag_no_header  );
         bool with_header = bool(spec.opts.flags & csv_opts::flag_with_header);
@@ -7758,29 +7744,10 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
   
   if(no_header)  { with_header = false; }
   
-  if(with_header)
-    {
-    if(spec.header_ptr == NULL)
-      {
-      if(print_status)  { arma_debug_warn("Mat::load(): csv_opts::with_header specified but header variable not given"); }
-      (*this).soft_reset();
-      return false;
-      }
-    
-    if(spec.header_ro)
-      {
-      if(print_status)  { arma_debug_warn("Mat::load(): given header variable is read-only"); }
-      (*this).soft_reset();
-      return false;
-      }
-    
-    header_ptr = spec.header_ptr;
-    }
-  
   bool load_okay = false;
   std::string err_msg;
   
-  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, do_trans, with_header, (*header_ptr));
+  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, do_trans, with_header, spec.header_rw);
   
   if( (print_status == true) && (load_okay == false) )
     {
@@ -7798,14 +7765,14 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     {
     (*this).soft_reset();
     
-    if(with_header && (spec.header_ro == false))  { (*header_ptr).reset(); }
+    spec.header_rw.reset();
     }
   else
   if(print_status)
     {
     const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
     
-    if(with_header && ((*header_ptr).n_elem != load_n_cols))
+    if(with_header && (spec.header_rw.n_elem != load_n_cols))
       {
       arma_debug_warn("Mat::load(): size mistmach between header and matrix");
       }

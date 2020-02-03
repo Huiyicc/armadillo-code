@@ -188,7 +188,7 @@ namespace arma
   #include "armadillo_bits/subview_cube_each_bones.hpp"
   #include "armadillo_bits/subview_cube_slices_bones.hpp"
   
-  
+  #include "armadillo_bits/csv_name.hpp"
   #include "armadillo_bits/diskio_bones.hpp"
   #include "armadillo_bits/wall_clock_bones.hpp"
   #include "armadillo_bits/running_stat_bones.hpp"
