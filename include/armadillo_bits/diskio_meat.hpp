@@ -532,6 +532,7 @@ diskio::prepare_stream(std::ostream& f)
     {
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
+    f.fill(' ');
     
     f.precision(16);
     cell_width = 24;
@@ -594,6 +595,8 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
+  const arma_ostream_state stream_state(f);
+  
   const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword row=0; row < x.n_rows; ++row)
@@ -610,7 +613,11 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
     f.put('\n');
     }
   
-  return f.good();
+  const bool save_okay = f.good();
+  
+  stream_state.restore(f);
+  
+  return save_okay;
   }
 
 
@@ -697,7 +704,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   f << diskio::gen_txt_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << '\n';
@@ -720,7 +727,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -779,7 +786,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   diskio::prepare_stream<eT>(f);
   
@@ -800,7 +807,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -817,7 +824,7 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   
   typedef typename std::complex<T> eT;
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   diskio::prepare_stream<eT>(f);
   
@@ -848,7 +855,7 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -2326,7 +2333,7 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   diskio::prepare_stream<eT>(f);
   
@@ -2351,7 +2358,7 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -2413,7 +2420,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   diskio::prepare_stream<eT>(f);
   
@@ -2442,7 +2449,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -2459,7 +2466,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   
   typedef typename std::complex<T> eT;
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   diskio::prepare_stream<eT>(f);
   
@@ -2487,7 +2494,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
@@ -3122,6 +3129,8 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
+  const arma_ostream_state stream_state(f);
+  
   const std::streamsize cell_width = diskio::prepare_stream<eT>(f);
   
   for(uword slice=0; slice < x.n_slices; ++slice)
@@ -3141,7 +3150,11 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
       }
     }
   
-  return f.good();
+  const bool save_okay = f.good();
+  
+  stream_state.restore(f);
+  
+  return save_okay;
   }
 
 
@@ -3228,7 +3241,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   {
   arma_extra_debug_sigprint();
   
-  const ios::fmtflags orig_flags = f.flags();
+  const arma_ostream_state stream_state(f);
   
   f << diskio::gen_txt_header(x) << '\n';
   f << x.n_rows << ' ' << x.n_cols << ' ' << x.n_slices << '\n';
@@ -3254,7 +3267,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
   
   const bool save_okay = f.good();
   
-  f.flags(orig_flags);
+  stream_state.restore(f);
   
   return save_okay;
   }
