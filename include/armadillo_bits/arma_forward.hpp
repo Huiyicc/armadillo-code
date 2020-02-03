@@ -348,17 +348,17 @@ static const injector_end_of_row<> endr = injector_end_of_row<>();
 enum file_type
   {
   file_type_unknown,
-  auto_detect,        //!< Automatically detect the file type
-  raw_ascii,          //!< ASCII format (text), without any other information.
-  arma_ascii,         //!< Armadillo ASCII format (text), with information about matrix type and size
+  auto_detect,        //!< attempt to automatically detect the file type
+  raw_ascii,          //!< raw text (ASCII), without a header
+  arma_ascii,         //!< Armadillo text format, with a header specifying matrix type and size
   csv_ascii,          //!< comma separated values (CSV), without a header
-  raw_binary,         //!< raw binary format, without any other information.
-  arma_binary,        //!< Armadillo binary format, with information about matrix type and size
+  raw_binary,         //!< raw binary format (machine dependent), without a header
+  arma_binary,        //!< Armadillo binary format (machine dependent), with a header specifying matrix type and size
   pgm_binary,         //!< Portable Grey Map (greyscale image)
   ppm_binary,         //!< Portable Pixel Map (colour image), used by the field and cube classes
-  hdf5_binary,        //!< Open binary format, not specific to Armadillo, which can store arbitrary data
-  hdf5_binary_trans,  //!< as per hdf5_binary, but save/load the data with columns transposed to rows
-  coord_ascii         //!< simple co-ordinate format for sparse matrices
+  hdf5_binary,        //!< HDF5: open binary format, not specific to Armadillo, which can store arbitrary data
+  hdf5_binary_trans,  //!< [DO NOT USE - deprecated] as per hdf5_binary, but save/load the data with columns transposed to rows
+  coord_ascii         //!< simple co-ordinate format for sparse matrices (indices start at zero)
   };
 
 
