@@ -533,16 +533,12 @@ diskio::prepare_stream(std::ostream& f)
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     
-    if(is_float<eT>::value)
-      {
-      f.precision(8);
-      cell_width = 15;
-      }
-    else
-      {
-      f.precision(16);
-      cell_width = 24;
-      }
+    f.precision(16);
+    cell_width = 24;
+    
+    // NOTE: for 'float' the optimum settings are f.precision(8) and cell_width = 15
+    // NOTE: however, to avoid introducing errors in case single precision data is loaded as double precision,
+    // NOTE: the same settings must be used for both 'float' and 'double'
     }
   else
   if(is_cx<eT>::value)
@@ -550,16 +546,7 @@ diskio::prepare_stream(std::ostream& f)
     f.unsetf(ios::fixed);
     f.setf(ios::scientific);
     
-    typedef typename get_pod_type<eT>::result T;
-    
-    if(is_float<T>::value)
-      {
-      f.precision(8);
-      }
-    else
-      {
-      f.precision(16);
-      }
+    f.precision(16);
     }
   
   return cell_width;
