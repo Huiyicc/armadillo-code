@@ -7519,11 +7519,11 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     {
     const Mat<eT> tmp = (*this).st();
     
-    save_okay = diskio::save_csv_ascii(tmp, spec.filename, with_header, spec.header_ro);
+    save_okay = diskio::save_csv_ascii(tmp, spec.filename, spec.header_ro, with_header);
     }
   else
     {
-    save_okay = diskio::save_csv_ascii(*this, spec.filename, with_header, spec.header_ro);
+    save_okay = diskio::save_csv_ascii(*this, spec.filename, spec.header_ro, with_header);
     }
   
   if((print_status == true) && (save_okay == false))
@@ -7747,7 +7747,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
   bool load_okay = false;
   std::string err_msg;
   
-  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, do_trans, with_header, spec.header_rw);
+  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header, do_trans);
   
   if( (print_status == true) && (load_okay == false) )
     {

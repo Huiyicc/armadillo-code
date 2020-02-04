@@ -738,7 +738,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
 template<typename eT>
 inline
 bool
-diskio::save_csv_ascii(const Mat<eT>& x, const std::string& final_name, const bool with_header, const field<std::string>& header)
+diskio::save_csv_ascii(const Mat<eT>& x, const std::string& final_name, const field<std::string>& header, const bool with_header)
   {
   arma_extra_debug_sigprint();
   
@@ -1402,7 +1402,7 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg, const bool do_trans, const bool with_header, field<std::string>& header)
+diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header, const bool do_trans)
   {
   arma_extra_debug_sigprint();
   
@@ -2285,7 +2285,7 @@ diskio::load_auto_detect(Mat<eT>& x, std::istream& f, std::string& err_msg)
 template<typename eT>
 inline
 bool
-diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name, const bool with_header, const field<std::string>& header)
+diskio::save_csv_ascii(const SpMat<eT>& x, const std::string& final_name, const field<std::string>& header, const bool with_header)
   {
   arma_extra_debug_sigprint();
   
@@ -2555,7 +2555,7 @@ diskio::save_arma_binary(const SpMat<eT>& x, std::ostream& f)
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg, const bool do_trans, const bool with_header, field<std::string>& header)
+diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header, const bool do_trans)
   {
   arma_extra_debug_sigprint();
   
