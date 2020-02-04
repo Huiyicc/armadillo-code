@@ -756,7 +756,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, const std::string& final_name, const fi
     
     for(uword i=0; i < header.n_elem; ++i)
       {
-      f << header(i);
+      f << header.at(i);
       
       if(i != (header.n_elem-1))  { f.put(','); }
       }
@@ -1450,7 +1450,7 @@ diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg
         if(do_trans)  { header.set_size(header_n_tokens,1); }
         else          { header.set_size(1,header_n_tokens); }
         
-        for(uword i=0; i < header_n_tokens; ++i)  { header(i) = header_tokens[i]; }
+        for(uword i=0; i < header_n_tokens; ++i)  { header.at(i) = header_tokens[i]; }
         }
       }
     }
