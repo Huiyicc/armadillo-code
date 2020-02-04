@@ -607,7 +607,7 @@ diskio::save_raw_ascii(const Mat<eT>& x, std::ostream& f)
       
       if(is_real<eT>::value)  { f.width(cell_width); }
       
-      arma_ostream::print_elem(f, x.at(row,col), false);
+      arma_ostream::raw_print_elem(f, x.at(row,col));
       }
     
     f.put('\n');
@@ -719,7 +719,7 @@ diskio::save_arma_ascii(const Mat<eT>& x, std::ostream& f)
       
       if(is_real<eT>::value)  { f.width(cell_width); }
       
-      arma_ostream::print_elem(f, x.at(row,col), false);
+      arma_ostream::raw_print_elem(f, x.at(row,col));
       }
     
     f.put('\n');
@@ -797,7 +797,7 @@ diskio::save_csv_ascii(const Mat<eT>& x, std::ostream& f)
     {
     for(uword col=0; col < x_n_cols; ++col)
       {
-      arma_ostream::print_elem(f, x.at(row,col), false);
+      arma_ostream::raw_print_elem(f, x.at(row,col));
       
       if( col < (x_n_cols-1) )  { f.put(','); }
       }
@@ -842,9 +842,9 @@ diskio::save_csv_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
       const T    tmp_i_abs = (tmp_i < T(0)) ? T(-tmp_i) : T(tmp_i);
       const char tmp_sign  = (tmp_i < T(0)) ? char('-') : char('+');
       
-      arma_ostream::print_elem(f, tmp_r,     false);
+      arma_ostream::raw_print_elem(f, tmp_r    );
       f.put(tmp_sign);
-      arma_ostream::print_elem(f, tmp_i_abs, false);
+      arma_ostream::raw_print_elem(f, tmp_i_abs);
       f.put('i');
       
       if( col < (x_n_cols-1) )  { f.put(','); }
@@ -2348,7 +2348,7 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f)
       {
       const eT val = x.at(row,col);
       
-      if(val != eT(0))  { arma_ostream::print_elem(f, val, false); }
+      if(val != eT(0))  { arma_ostream::raw_print_elem(f, val); }
       
       if( col < (x_n_cols-1) )  { f.put(','); }
       }
@@ -3143,7 +3143,7 @@ diskio::save_raw_ascii(const Cube<eT>& x, std::ostream& f)
         
         if(is_real<eT>::value)  { f.width(cell_width); }
         
-        arma_ostream::print_elem(f, x.at(row,col,slice), false);
+        arma_ostream::raw_print_elem(f, x.at(row,col,slice));
         }
         
       f.put('\n');
@@ -3258,7 +3258,7 @@ diskio::save_arma_ascii(const Cube<eT>& x, std::ostream& f)
         
         if(is_real<eT>::value)  { f.width(cell_width); }
         
-        arma_ostream::print_elem(f, x.at(row,col,slice), false);
+        arma_ostream::raw_print_elem(f, x.at(row,col,slice));
         }
       
       f.put('\n');
