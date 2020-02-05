@@ -7495,7 +7495,7 @@ Mat<eT>::save(const csv_name& spec, const file_type type, const bool print_statu
     
     for(uword i=0; i < spec.header_ro.n_elem; ++i)
       {
-      const std::string& token = spec.header_ro(i);
+      const std::string& token = spec.header_ro.at(i);
       
       if(token.find(',') != std::string::npos)
         {
