@@ -4893,7 +4893,7 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
       
       if(with_header)
         {
-        // field::set_size() will preserve data if the number of elements hasn't changed
+        // field::set_size() preserves data if the number of elements hasn't changed
         spec.header_rw.set_size(spec.header_rw.n_elem, 1);
         }
       }
@@ -4903,15 +4903,27 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
     }
   
-  if( (print_status == true) && (load_okay == false) )
+  if(print_status == true)
     {
-    if(err_msg.length() > 0)
+    if(load_okay == false)
       {
-      arma_debug_warn("SpMat::load(): ", err_msg, spec.filename);
+      if(err_msg.length() > 0)
+        {
+        arma_debug_warn("SpMat::load(): ", err_msg, spec.filename);
+        }
+      else
+        {
+        arma_debug_warn("SpMat::load(): couldn't read ", spec.filename);
+        }
       }
     else
       {
-      arma_debug_warn("SpMat::load(): couldn't read ", spec.filename);
+      const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
+      
+      if(with_header && (spec.header_rw.n_elem != load_n_cols))
+        {
+        arma_debug_warn("SpMat::load(): size mistmach between header and matrix");
+        }
       }
     }
   
@@ -4920,16 +4932,6 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
     (*this).reset();
     
     if(with_header)  { spec.header_rw.reset(); }
-    }
-  else
-  if(print_status)
-    {
-    const uword load_n_cols = (do_trans) ? (*this).n_rows : (*this).n_cols;
-    
-    if(with_header && (spec.header_rw.n_elem != load_n_cols))
-      {
-      arma_debug_warn("SpMat::load(): size mistmach between header and matrix");
-      }
     }
   
   return load_okay;
