@@ -7765,7 +7765,7 @@ Mat<eT>::load(const csv_name& spec, const file_type type, const bool print_statu
     {
     (*this).soft_reset();
     
-    spec.header_rw.reset();
+    if(with_header)  { spec.header_rw.reset(); }
     }
   else
   if(print_status)
