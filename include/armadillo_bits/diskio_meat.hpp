@@ -1402,7 +1402,7 @@ diskio::load_arma_ascii(Mat<eT>& x, std::istream& f, std::string& err_msg)
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header, const bool do_trans)
+diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header)
   {
   arma_extra_debug_sigprint();
   
@@ -1447,8 +1447,7 @@ diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg
         }
       else
         {
-        if(do_trans)  { header.set_size(header_n_tokens,1); }
-        else          { header.set_size(1,header_n_tokens); }
+        header.set_size(1,header_n_tokens);
         
         for(uword i=0; i < header_n_tokens; ++i)  { header.at(i) = header_tokens[i]; }
         }
@@ -1457,18 +1456,7 @@ diskio::load_csv_ascii(Mat<eT>& x, const std::string& name, std::string& err_msg
   
   if(load_okay)
     {
-    if(do_trans)
-      {
-      Mat<eT> tmp;
-      
-      load_okay = diskio::load_csv_ascii(tmp, f, err_msg);
-      
-      if(load_okay)  { x = tmp.st(); }
-      }
-   else
-      {
-      load_okay = diskio::load_csv_ascii(x, f, err_msg);
-      }
+    load_okay = diskio::load_csv_ascii(x, f, err_msg);
     }
   
   f.close();
@@ -2555,7 +2543,7 @@ diskio::save_arma_binary(const SpMat<eT>& x, std::ostream& f)
 template<typename eT>
 inline
 bool
-diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header, const bool do_trans)
+diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_msg, field<std::string>& header, const bool with_header)
   {
   arma_extra_debug_sigprint();
   
@@ -2600,28 +2588,16 @@ diskio::load_csv_ascii(SpMat<eT>& x, const std::string& name, std::string& err_m
         }
       else
         {
-        if(do_trans)  { header.set_size(header_n_tokens,1); }
-        else          { header.set_size(1,header_n_tokens); }
+        header.set_size(1,header_n_tokens);
         
-        for(uword i=0; i < header_n_tokens; ++i)  { header(i) = header_tokens[i]; }
+        for(uword i=0; i < header_n_tokens; ++i)  { header.at(i) = header_tokens[i]; }
         }
       }
     }
   
   if(load_okay)
     {
-    if(do_trans)
-      {
-      SpMat<eT> tmp;
-      
-      load_okay = diskio::load_csv_ascii(tmp, f, err_msg);
-      
-      if(load_okay)  { x = tmp.st(); }
-      }
-   else
-      {
-      load_okay = diskio::load_csv_ascii(x, f, err_msg);
-      }
+    load_okay = diskio::load_csv_ascii(x, f, err_msg);
     }
   
   f.close();

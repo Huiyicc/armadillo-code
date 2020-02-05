@@ -4881,7 +4881,27 @@ SpMat<eT>::load(const csv_name& spec, const file_type type, const bool print_sta
   bool load_okay = false;
   std::string err_msg;
   
-  load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header, do_trans);
+  if(do_trans)
+    {
+    SpMat<eT> tmp_mat;
+    
+    load_okay = diskio::load_csv_ascii(tmp_mat, spec.filename, err_msg, spec.header_rw, with_header);
+    
+    if(load_okay)
+      {
+      (*this) = tmp_mat.st();
+      
+      if(with_header)
+        {
+        // field::set_size() will preserve data if the number of elements hasn't changed
+        spec.header_rw.set_size(spec.header_rw.n_elem, 1);
+        }
+      }
+    }
+  else
+    {
+    load_okay = diskio::load_csv_ascii(*this, spec.filename, err_msg, spec.header_rw, with_header);
+    }
   
   if( (print_status == true) && (load_okay == false) )
     {
