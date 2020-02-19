@@ -290,6 +290,10 @@
   #undef ARMA_PRINT_HDF5_ERRORS
 #endif
 
+#if defined(ARMA_NO_CRIPPLED_LAPACK)
+  #undef ARMA_CRIPPLED_LAPACK
+#endif
+
 
 // if Armadillo was installed on this system via CMake and ARMA_USE_WRAPPER is not defined,
 // ARMA_AUX_LIBS lists the libraries required by Armadillo on this system, and
