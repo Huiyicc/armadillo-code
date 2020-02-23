@@ -399,7 +399,7 @@ op_logmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     
     bool all_pos = true;
     
-    for(uword i=0; i<N; ++i)  { all_pos = (eigval_mem[i] < T(0)) ? false : all_pos; }
+    for(uword i=0; i<N; ++i)  { all_pos = (eigval_mem[i] <= T(0)) ? false : all_pos; }
     
     if(all_pos == false)  { return false; }
     
