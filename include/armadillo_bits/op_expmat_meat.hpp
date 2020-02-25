@@ -73,8 +73,6 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
-    bool is_sympd = sympd_helper::guess_sympd(A);
-    
     if(sympd_helper::guess_sympd(A))
       {
       // if matrix A is sympd, all its eigenvalues are positive
