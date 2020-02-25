@@ -89,8 +89,8 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
   typedef typename T1::elem_type       in_T;
   typedef typename std::complex<in_T> out_T;
   
-  const quasi_unwrap<T1> U(expr.get_ref());
-  const Mat<in_T>& A   = U.M;
+  const quasi_unwrap<T1> expr_unwrap(expr.get_ref());
+  const Mat<in_T>& A   = expr_unwrap.M;
   
   arma_debug_check( (A.is_square() == false), "logmat(): given matrix must be square sized" );
   
