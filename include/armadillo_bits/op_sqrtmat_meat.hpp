@@ -298,7 +298,7 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     Col< T> eigval;
     Mat<eT> eigvec;
     
-    const bool eig_status = eig_sym_helper(eigval, eigvec, S, 'd', "logmat()");
+    const bool eig_status = eig_sym_helper(eigval, eigvec, S, 'd', "sqrtmat()");
     
     if(eig_status)
       {
