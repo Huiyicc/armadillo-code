@@ -94,28 +94,70 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
   typedef typename T1::elem_type       in_T;
   typedef typename std::complex<in_T> out_T;
   
-  const Proxy<T1> P(expr.get_ref());
+  const quasi_unwrap<T1> expr_unwrap(expr.get_ref());
+  const Mat<in_T>& A   = expr_unwrap.M;
   
-  arma_debug_check( (P.get_n_rows() != P.get_n_cols()), "sqrtmat(): given matrix must be square sized" );
+  arma_debug_check( (A.is_square() == false), "sqrtmat(): given matrix must be square sized" );
   
-  if(P.get_n_elem() == 0)
+  if(A.n_elem == 0)
     {
     out.reset();
     return true;
     }
+  else
+  if(A.n_elem == 1)
+    {
+    out.set_size(1,1);
+    out[0] = std::sqrt( std::complex<in_T>( A[0] ) );
+    return true;
+    }
   
-  typename Proxy<T1>::ea_type Pea = P.get_ea();
+  
+  if(sympd_helper::guess_sympd(A))
+    {
+    // if matrix A is sympd, all its eigenvalues are positive
+    
+    Col<in_T> eigval;
+    Mat<in_T> eigvec;
+    
+    const bool eig_status = eig_sym_helper(eigval, eigvec, A, 'd', "sqrtmat()");
+    
+    if(eig_status)
+      {
+      // ensure each eigenvalue is >= 0
+      
+      const uword N          = eigval.n_elem;
+      const in_T* eigval_mem = eigval.memptr();
+      
+      bool all_pos = true;
+      
+      for(uword i=0; i<N; ++i)  { all_pos = (eigval_mem[i] <= in_T(0)) ? false : all_pos; }
+      
+      if(all_pos)
+        {
+        eigval = sqrt(eigval);
+        
+        out = conv_to< Mat<out_T> >::from( eigvec * diagmat(eigval) * eigvec.t() );
+        
+        return true;
+        }
+      }
+    
+    // fallthrough if eigen decomposition failed or an eigenvalue is zero
+    }
+  
   
   Mat<out_T> U;
-  Mat<out_T> S(P.get_n_rows(), P.get_n_cols());
+  Mat<out_T> S(A.n_rows, A.n_cols);
   
-  out_T* Smem = S.memptr();
+  const  in_T* Amem = A.memptr();
+        out_T* Smem = S.memptr();
   
-  const uword N = P.get_n_elem();
+  const uword n_elem = A.n_elem;
   
-  for(uword i=0; i<N; ++i)
+  for(uword i=0; i<n_elem; ++i)
     {
-    Smem[i] = std::complex<in_T>( Pea[i] );
+    Smem[i] = std::complex<in_T>( Amem[i] );
     }
   
   const bool schur_ok = auxlib::schur(U,S);
@@ -228,18 +270,59 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
   {
   arma_extra_debug_sigprint();
   
+  typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
   Mat<eT> U;
   Mat<eT> S = expr.get_ref();
   
-  if(S.is_empty())
+  arma_debug_check( (S.n_rows != S.n_cols), "sqrtmat(): given matrix must be square sized" );
+  
+  if(S.n_elem == 0)
     {
     out.reset();
     return true;
     }
+  else
+  if(S.n_elem == 1)
+    {
+    out.set_size(1,1);
+    out[0] = std::sqrt(S[0]);
+    return true;
+    }
   
-  arma_debug_check( (S.n_rows != S.n_cols), "sqrtmat(): given matrix must be square sized" );
+  if(sympd_helper::guess_sympd(S))
+    {
+    // if matrix S is sympd, all its eigenvalues are positive
+    
+    Col< T> eigval;
+    Mat<eT> eigvec;
+    
+    const bool eig_status = eig_sym_helper(eigval, eigvec, S, 'd', "logmat()");
+    
+    if(eig_status)
+      {
+      // ensure each eigenvalue is >= 0
+      
+      const uword N          = eigval.n_elem;
+      const T*    eigval_mem = eigval.memptr();
+      
+      bool all_pos = true;
+      
+      for(uword i=0; i<N; ++i)  { all_pos = (eigval_mem[i] <= T(0)) ? false : all_pos; }
+      
+      if(all_pos)
+        {
+        eigval = sqrt(eigval);
+        
+        out = eigvec * diagmat(eigval) * eigvec.t();
+        
+        return true;
+        }
+      }
+    
+    // fallthrough if eigen decomposition failed or an eigenvalue is zero
+    }
   
   const bool schur_ok = auxlib::schur(U, S);
   
