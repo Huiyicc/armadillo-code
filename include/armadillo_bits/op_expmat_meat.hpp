@@ -77,6 +77,8 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     if(sympd_helper::guess_sympd(A))
       {
+      // if matrix A is sympd, all its eigenvalues are positive
+      
       Col< T> eigval;
       Mat<eT> eigvec;
       
@@ -90,6 +92,8 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
         
         return true;
         }
+      
+      // fallthrough if eigen decomposition failed
       }
     
     const T norm_val = arma::norm(A, "inf");
