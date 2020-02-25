@@ -73,6 +73,25 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     arma_debug_check( (A.is_square() == false), "expmat(): given matrix must be square sized" );
     
+    bool is_sympd = sympd_helper::guess_sympd(A);
+    
+    if(sympd_helper::guess_sympd(A))
+      {
+      Col< T> eigval;
+      Mat<eT> eigvec;
+      
+      const bool eig_status = eig_sym_helper(eigval, eigvec, A, 'd', "expmat()");
+      
+      if(eig_status)
+        {
+        eigval = exp(eigval);
+        
+        out = eigvec * diagmat(eigval) * eigvec.t();
+        
+        return true;
+        }
+      }
+    
     const T norm_val = arma::norm(A, "inf");
     
     const double log2_val = (norm_val > T(0)) ? double(eop_aux::log2(norm_val)) : double(0);
