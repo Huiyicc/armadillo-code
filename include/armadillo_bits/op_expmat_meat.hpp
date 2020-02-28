@@ -91,6 +91,8 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
         return true;
         }
       
+      arma_extra_debug_print("warning: sympd optimisation failed");
+      
       // fallthrough if eigen decomposition failed
       }
     
