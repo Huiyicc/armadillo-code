@@ -138,6 +138,8 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
         }
       }
     
+    arma_extra_debug_print("warning: sympd optimisation failed");
+    
     // fallthrough if eigen decomposition failed or an eigenvalue is zero
     }
   
@@ -287,6 +289,8 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
         return true;
         }
       }
+    
+    arma_extra_debug_print("warning: sympd optimisation failed");
     
     // fallthrough if eigen decomposition failed or an eigenvalue is zero
     }
