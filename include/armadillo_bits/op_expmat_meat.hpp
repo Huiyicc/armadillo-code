@@ -136,7 +136,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     if(status == false)  { return false; }
     
-    for(uword i=0; i < s; ++i)  { out = out * out; }
+    for(uword i=0; i < s; ++i)  { out = out * out; }  // TODO: implement dedicated mpower() function
     }
   
   return true;
