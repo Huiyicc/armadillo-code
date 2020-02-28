@@ -143,6 +143,8 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
         }
       }
     
+    arma_extra_debug_print("warning: sympd optimisation failed");
+    
     // fallthrough if eigen decomposition failed or an eigenvalue is zero
     }
   
@@ -320,6 +322,8 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
         return true;
         }
       }
+    
+    arma_extra_debug_print("warning: sympd optimisation failed");
     
     // fallthrough if eigen decomposition failed or an eigenvalue is zero
     }
