@@ -30,9 +30,11 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
   
   const strip_diagmat<T1> strip(X.m);
   
+  bool status = false;
+  
   if(strip.do_diagmat)
     {
-    op_inv::apply_diagmat(out, strip.M);
+    status = op_inv::apply_diagmat(out, strip.M);
     }
   else
     {
@@ -42,14 +44,20 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
       {
       Mat<eT> tmp;
       
-      op_inv::apply_noalias(tmp, U.M);
+      status = op_inv::apply_noalias(tmp, U.M);
       
       out.steal_mem(tmp);
       }
     else
       {
-      op_inv::apply_noalias(out, U.M);
+      status = op_inv::apply_noalias(out, U.M);
       }
+    }
+  
+  if(status == false)
+    {
+    out.soft_reset();
+    arma_stop_runtime_error("inv(): matrix seems singular");
     }
   }
 
@@ -57,7 +65,7 @@ op_inv::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_inv>& X)
 
 template<typename eT>
 inline
-void
+bool
 op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   {
   arma_extra_debug_sigprint();
@@ -81,18 +89,14 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = auxlib::inv(out, A);
     }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    arma_stop_runtime_error("inv(): matrix seems singular");
-    }
+  return status;
   }
 
 
 
 template<typename T1>
 inline
-void
+bool
 op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
   {
   arma_extra_debug_sigprint();
@@ -136,11 +140,7 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
     out.steal_mem(tmp);
     }
   
-  if(status == false)
-    {
-    out.soft_reset();
-    arma_stop_runtime_error("inv(): matrix seems singular");
-    }
+  return status;
   }
 
 
