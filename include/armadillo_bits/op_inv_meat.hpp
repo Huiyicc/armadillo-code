@@ -79,6 +79,11 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = auxlib::inv_tiny(out, A);
     }
   else
+  if(A.is_diagmat())
+    {
+    status = op_inv::apply_diagmat(out, A);
+    }
+  else
   if(sympd_helper::guess_sympd(A))
     {
     status = auxlib::inv_sympd(out, A);
