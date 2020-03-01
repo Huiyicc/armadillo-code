@@ -62,10 +62,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
     
     const uword N = (std::min)(out.n_rows, out.n_cols);
     
-    for(uword i=0; i<N; ++i)
-      {
-      out.at(i,i) = std::exp( out.at(i,i) );
-      }
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = std::exp( out.at(i,i) ); }
     }
   else
     {
@@ -77,10 +74,7 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
       {
       const uword N = (std::min)(A.n_rows, A.n_cols);
       
-      for(uword i=0; i<N; ++i)
-        {
-        out.at(i,i) = std::exp( A.at(i,i) );
-        }
+      for(uword i=0; i<N; ++i)  { out.at(i,i) = std::exp( A.at(i,i) ); }
       }
     else
     if(sympd_helper::guess_sympd(A))
