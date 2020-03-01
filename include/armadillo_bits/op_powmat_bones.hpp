@@ -29,7 +29,7 @@ class op_powmat
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_powmat>& expr);
   
   template<typename eT>
-  inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword y);
+  inline static void apply(Mat<eT>& out, const Mat<eT>& X, const uword y);
   };
 
 

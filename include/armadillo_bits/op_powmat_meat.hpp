@@ -44,7 +44,7 @@ op_powmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_powmat>& expr
       return;
       }
     
-    op_powmat::apply_noalias(out, X_inv, y);
+    op_powmat::apply(out, X_inv, y);
     }
   else
     {
@@ -52,16 +52,7 @@ op_powmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_powmat>& expr
     
     arma_debug_check( (U.M.is_square() == false), "powmat(): given matrix must be square sized" );
     
-    if(U.is_alias(out))
-      {
-      Mat<eT> tmp;
-      op_powmat::apply_noalias(tmp, U.M, y);
-      out.steal_mem(tmp);
-      }
-    else
-      {
-      op_powmat::apply_noalias(out, U.M, y);
-      }
+    op_powmat::apply(out, U.M, y);
     }
   }
 
@@ -70,32 +61,38 @@ op_powmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_powmat>& expr
 template<typename eT>
 inline
 void
-op_powmat::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword y)
+op_powmat::apply(Mat<eT>& out, const Mat<eT>& X, const uword y)
   {
   arma_extra_debug_sigprint();
   
   const uword N = X.n_rows;
   
+  if(y == uword(0))  { out.eye(N,N); return; }
+  if(y == uword(1))  { out = X;      return; }
+  
   if(X.is_diagmat())
     {
-    arma_extra_debug_print("diagmat optimisation");
+    // use temporary array in case we have aliasing
     
-         if(y == uword(0))  { out.eye(N,N); }
-    else if(y == uword(1))  { for(uword i=0; i<N; ++i) { out.at(i,i) = X.at(i,i); } }
-    else                    { for(uword i=0; i<N; ++i) { out.at(i,i) = eop_aux::pow(X.at(i,i), y); } }  // TODO: y may need to converted to int or sword
+    podarray<eT> tmp(N);
+    
+    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow(X.at(i,i), y); }  // TODO: y may need to converted to int or sword
+    
+    out.zeros(N,N);
+    
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = tmp[i]; }
     }
   else
     {
-         if(y == uword(0))  { out.eye(N,N); }
-    else if(y == uword(1))  { out = X;      }
-    else if(y == uword(2))  { out = X*X;    }
-    else if(y == uword(3))  { const Mat<eT> tmp = X*X; out = tmp * X; }
-    else if(y == uword(4))  { const Mat<eT> tmp = X*X; out = tmp*tmp; }
+         if(y == uword(2))  {                          out = X*X;       }
+    else if(y == uword(3))  { const Mat<eT> tmp = X*X; out = X*tmp;     }
+    else if(y == uword(4))  { const Mat<eT> tmp = X*X; out =   tmp*tmp; }
+    else if(y == uword(5))  { const Mat<eT> tmp = X*X; out = X*tmp*tmp; }
     else
       {
-      out = X;
-      
       Mat<eT> tmp = X;
+      
+      out = X;
       
       uword z = y-1;
       
