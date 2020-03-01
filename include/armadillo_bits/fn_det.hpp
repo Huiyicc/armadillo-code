@@ -31,6 +31,11 @@ det(const Base<typename T1::elem_type,T1>& X)
   
   arma_debug_check( (U.M.is_square() == false), "det(): given matrix must be square sized" );
   
+  if( (U.M.n_rows > 4) && (U.M.is_diagmat()) )
+    {
+    return det(diagmat(U.M));  // call the specialised version of det()
+    }
+  
   return auxlib::det(U.M);
   }
 
