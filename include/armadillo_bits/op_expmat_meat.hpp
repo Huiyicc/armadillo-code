@@ -81,7 +81,13 @@ op_expmat::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename T1
       return true;
       }
     
-    if(sympd_helper::guess_sympd_anysize(A))
+    #if defined(ARMA_OPTIMISE_SYMPD)
+      const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
+    #else
+      const bool try_sympd = false;
+    #endif
+    
+    if(try_sympd)
       {
       // if matrix A is sympd, all its eigenvalues are positive
       
