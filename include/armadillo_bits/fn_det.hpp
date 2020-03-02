@@ -114,26 +114,6 @@ det(const Op<T1, op_trimat>& X)
 
 
 
-//! determinant of inv(A), without doing the inverse operation
-template<typename T1>
-arma_warn_unused
-inline
-typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, typename T1::elem_type >::result
-det(const Op<T1,op_inv>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const eT tmp = det(X.m);
-  
-  if(tmp == eT(0))  { arma_debug_warn("det(): denominator is zero" ); }
-  
-  return eT(1) / tmp;
-  }
-
-
-
 //! NOTE: don't use this form: it will be removed
 template<typename T1>
 arma_deprecated
