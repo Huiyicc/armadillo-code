@@ -84,7 +84,7 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     status = op_inv::apply_diagmat(out, A);
     }
   else
-  if(sympd_helper::guess_sympd(A))
+  if(sympd_helper::guess_sympd_anysize(A))
     {
     status = auxlib::inv_sympd(out, A);
     }

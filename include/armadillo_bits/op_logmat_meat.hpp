@@ -108,7 +108,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     }
   
   
-  if(sympd_helper::guess_sympd(A))
+  if(sympd_helper::guess_sympd_anysize(A))
     {
     // if matrix A is sympd, all its eigenvalues are positive
     
@@ -260,7 +260,7 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     return true;
     }
   
-  if(sympd_helper::guess_sympd(S))
+  if(sympd_helper::guess_sympd_anysize(S))
     {
     // if matrix S is sympd, all its eigenvalues are positive
     
