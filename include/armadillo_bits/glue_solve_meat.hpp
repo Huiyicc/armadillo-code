@@ -87,7 +87,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     uword KL = 0;
     uword KU = 0;
     
-    #if defined(ARMA_OPTIMISE_SOLVE_BAND)
+    #if defined(ARMA_OPTIMISE_BAND)
       const bool is_band  = (no_band || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32));
     #else
       const bool is_band  = false;
