@@ -125,9 +125,10 @@
 //// and you will need to link with the hdf5 library (eg. -lhdf5)
 #endif
 
-#if !defined(ARMA_OPTIMISE_SOLVE_BAND)
-  #define ARMA_OPTIMISE_SOLVE_BAND
-  //// Comment out the above line if you don't want optimised handling of band matrices by solve()
+#if !defined(ARMA_OPTIMISE_BAND)
+  #define ARMA_OPTIMISE_BAND
+  //// Comment out the above line if you don't want automatically optimised handling
+  //// of band matrices by solve() and chol()
 #endif
 
 #if !defined(ARMA_OPTIMISE_SYMPD)
@@ -276,8 +277,8 @@
   #undef ARMA_USE_HDF5_ALT
 #endif
 
-#if defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
-  #undef ARMA_OPTIMISE_SOLVE_BAND
+#if defined(ARMA_DONT_OPTIMISE_BAND) || defined(ARMA_DONT_OPTIMISE_SOLVE_BAND)
+  #undef ARMA_OPTIMISE_BAND
 #endif
 
 #if defined(ARMA_DONT_OPTIMISE_SYMPD) || defined(ARMA_DONT_OPTIMISE_SOLVE_SYMPD)
