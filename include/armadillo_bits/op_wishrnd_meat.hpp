@@ -92,7 +92,7 @@ op_wishrnd::apply_noalias_mode1(Mat<eT>& out, const Mat<eT>& S, const eT df)
   
   if(S.is_empty())  { out.reset(); return true; }
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(S) == false))  { return false; }
+  if(auxlib::rudimentary_sym_check(S) == false)  { return false; }
   
   Mat<eT> D;
   
@@ -244,7 +244,7 @@ op_iwishrnd::apply_noalias_mode1(Mat<eT>& out, const Mat<eT>& T, const eT df)
   
   if(T.is_empty())  { out.reset(); return true; }
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(T) == false))  { return false; }
+  if(auxlib::rudimentary_sym_check(T) == false)  { return false; }
   
   Mat<eT> Tinv;
   Mat<eT> Dinv;
