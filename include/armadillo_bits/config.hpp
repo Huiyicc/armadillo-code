@@ -130,9 +130,11 @@
   //// Comment out the above line if you don't want optimised handling of band matrices by solve()
 #endif
 
-#if !defined(ARMA_OPTIMISE_SOLVE_SYMPD)
-  #define ARMA_OPTIMISE_SOLVE_SYMPD
-  //// Comment out the above line if you don't want optimised handling of symmetric/hermitian positive definite matrices by solve()
+#if !defined(ARMA_OPTIMISE_SYMPD)
+  #define ARMA_OPTIMISE_SYMPD
+  //// Comment out the above line if you don't want automatically optimised handling
+  //// of symmetric/hermitian positive definite matrices by various functions:
+  //// solve(), inv(), expmat(), logmat(), sqrtmat(), rcond()
 #endif
 
 // #define ARMA_USE_HDF5_ALT
@@ -278,8 +280,8 @@
   #undef ARMA_OPTIMISE_SOLVE_BAND
 #endif
 
-#if defined(ARMA_DONT_OPTIMISE_SOLVE_SYMPD)
-  #undef ARMA_OPTIMISE_SOLVE_SYMPD
+#if defined(ARMA_DONT_OPTIMISE_SYMPD) || defined(ARMA_DONT_OPTIMISE_SOLVE_SYMPD)
+  #undef ARMA_OPTIMISE_SYMPD
 #endif
 
 #if defined(ARMA_DONT_PRINT_ERRORS)
