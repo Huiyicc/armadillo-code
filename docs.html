@@ -18026,14 +18026,13 @@ Disable use of C++11 features; overrides <i>ARMA_USE_CXX11</i>
   </tr>
   <tr>
     <td style="vertical-align: top;">
-<code>ARMA_OPTIMISE_SOLVE_BAND</code>
+<code>ARMA_DONT_OPTIMISE_BAND</code>
     </td>
     <td style="vertical-align: top;">
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Enable optimised handling of band matrices by <a href="#solve">solve()</a>.
-Enabled by default.
+Disable automatically optimised handling of band matrices by <a href="#solve">solve()</a> and <a href="#chol">chol()</a>
     </td>
   </tr>
   <tr>
@@ -18049,58 +18048,19 @@ Enabled by default.
   </tr>
   <tr>
     <td style="vertical-align: top;">
-<code>ARMA_DONT_OPTIMISE_SOLVE_BAND</code>
+<code>ARMA_DONT_OPTIMISE_SYMPD</code>
     </td>
     <td style="vertical-align: top;">
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Disable optimised handling of band matrices by <a href="#solve">solve()</a>; overrides <i>ARMA_OPTIMISE_SOLVE_BAND</i>
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-<code>ARMA_OPTIMISE_SOLVE_SYMPD</code>
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-Enable optimised handling of symmetric/hermitian positive definite matrices by <a href="#solve">solve()</a>.
-Enabled by default.
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-<code>ARMA_DONT_OPTIMISE_SOLVE_SYMPD</code>
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-Disable optimised handling of symmetric/hermitian positive definite matrices by <a href="#solve">solve()</a>; overrides <i>ARMA_OPTIMISE_SOLVE_SYMPD</i>
+Disable automatically optimised handling of symmetric/hermitian positive definite matrices by
+<a href="#solve">solve()</a>,
+<a href="#inv">inv()</a>,
+<a href="#expmat">expmat()</a>,
+<a href="#logmat">logmat()</a>,
+<a href="#sqrtmat">sqrtmat()</a>,
+<a href="#rcond">rcond()</a>
     </td>
   </tr>
   <tr>
