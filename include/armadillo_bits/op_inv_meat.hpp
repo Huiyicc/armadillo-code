@@ -82,6 +82,8 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   if(A.is_diagmat())
     {
     status = op_inv::apply_diagmat(out, A);
+    
+    if(status == false)  { arma_extra_debug_print("warning: diagmat optimisation failed"); }
     }
   else
     {
@@ -94,6 +96,8 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     if(try_sympd)
       {
       status = auxlib::inv_sympd(out, A);
+      
+      if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
       }
     }
   
