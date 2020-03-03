@@ -405,10 +405,6 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
     const   Mat<eT>& A = UA.M;
     const SpMat<eT>& B = UB.M;
     
-    arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
-    
-    out.zeros(A.n_rows, B.n_cols);
-    
     if(A.is_diagmat())
       {
       const SpMat<eT> tmp(diagmat(A));
@@ -417,6 +413,10 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
       
       return;
       }
+    
+    arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+    
+    out.zeros(A.n_rows, B.n_cols);
     
     if( (A.n_elem > 0) && (B.n_nonzero > 0) )
       {
