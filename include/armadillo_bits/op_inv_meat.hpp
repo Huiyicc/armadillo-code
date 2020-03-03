@@ -87,17 +87,31 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
     }
   else
     {
-    #if defined(ARMA_OPTIMISE_SYMPD)
-      const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
-    #else
-      const bool try_sympd = false;
-    #endif
+    const bool is_triu =                     trimat_helper::is_triu(A);
+    const bool is_tril = (is_triu) ? false : trimat_helper::is_tril(A);
     
-    if(try_sympd)
+    if(is_triu || is_tril)
       {
-      status = auxlib::inv_sympd(out, A);
+      const uword layout = (is_triu) ? uword(0) : uword(1);
       
-      if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
+      status = auxlib::inv_tr(out, A, layout);
+      
+      if(status == false)  { arma_extra_debug_print("warning: tri optimisation failed"); }
+      }
+    else
+      {
+      #if defined(ARMA_OPTIMISE_SYMPD)
+        const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
+      #else
+        const bool try_sympd = false;
+      #endif
+      
+      if(try_sympd)
+        {
+        status = auxlib::inv_sympd(out, A);
+        
+        if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
+        }
       }
     }
   
