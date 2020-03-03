@@ -10173,7 +10173,9 @@ See also:
 <ul>
 <li>Matrix power operation: raise square matrix <i>A</i> to the power of <i>n</i>, where <i>n</i> is an integer</li>
 <br>
-<li>For <i>n&nbsp;&leq;&nbsp;-1</i>, inverse of <i>A</i> is first obtained, followed by raising to the power of <i>abs(n)</i></li>
+<li>For <i>n&nbsp;=&nbsp;0</i>, an identity matrix is generated</li>
+<br>
+<li>For <i>n&nbsp;&leq;&nbsp;-1</i>, inverse of <i>A</i> is raised to the power of <i>abs(n)</i></li>
 <br>
 <li>If <i>A</i> is not square sized, a <i>std::logic_error</i> exception is thrown</li>
 <br>
@@ -10204,6 +10206,7 @@ See also:
 <ul>
 <li><a href="#sqrtmat">sqrtmat()</a></li>
 <li><a href="#inv">inv()</a></li>
+<li><a href="#eye_standalone">eye()</a></li>
 <li><a href="#operators">operators</a></li>
 <li><a href="#misc_fns">miscellaneous element-wise functions</a></li>
 <li><a href="http://mathworld.wolfram.com/MatrixPower.html">matrix power in MathWorld</a></li>

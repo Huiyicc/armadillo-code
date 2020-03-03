@@ -33,4 +33,30 @@ powmat(const Base<typename T1::elem_type,T1>& X, const sword y)
   }
 
 
+
+template<typename T1>
+inline
+typename enable_if2< is_supported_blas_type<typename T1::elem_type>::value, bool >::result
+powmat
+  (
+         Mat<typename T1::elem_type>&    out,
+  const Base<typename T1::elem_type,T1>& X,
+  const sword                            y
+  )
+  {
+  arma_extra_debug_sigprint();
+  
+  try
+    {
+    out = powmat(X,y);
+    }
+  catch(std::runtime_error&)
+    {
+    return false;
+    }
+  
+  return true;
+  }
+
+
 //! @}
