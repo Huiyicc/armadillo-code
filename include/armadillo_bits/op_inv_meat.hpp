@@ -138,7 +138,7 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
       
       out.at(i,i) = eT(1) / val;
       
-      if(val == eT(0))  { status = false; }
+      status = (val == eT(0)) ? false : status;
       }
     }
   else
@@ -151,7 +151,7 @@ op_inv::apply_diagmat(Mat<typename T1::elem_type>& out, const T1& X)
       
       tmp.at(i,i) = eT(1) / val;
       
-      if(val == eT(0))  { status = false; }
+      status = (val == eT(0)) ? false : status;
       }
     
     out.steal_mem(tmp);
