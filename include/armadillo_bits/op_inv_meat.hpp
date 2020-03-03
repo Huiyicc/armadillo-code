@@ -81,9 +81,7 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
   else
   if(A.is_diagmat())
     {
-    status = op_inv::apply_diagmat(out, A);
-    
-    if(status == false)  { arma_extra_debug_print("warning: diagmat optimisation failed"); }
+    return op_inv::apply_diagmat(out, A);
     }
   else
     {
@@ -94,9 +92,7 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
       {
       const uword layout = (is_triu) ? uword(0) : uword(1);
       
-      status = auxlib::inv_tr(out, A, layout);
-      
-      if(status == false)  { arma_extra_debug_print("warning: tri optimisation failed"); }
+      return auxlib::inv_tr(out, A, layout);
       }
     else
       {
@@ -112,6 +108,8 @@ op_inv::apply_noalias(Mat<eT>& out, const Mat<eT>& A)
         
         if(status == false)  { arma_extra_debug_print("warning: sympd optimisation failed"); }
         }
+      
+      // auxlib::inv_sympd() may have failed because A isn't really sympd
       }
     }
   
