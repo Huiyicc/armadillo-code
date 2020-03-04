@@ -50,6 +50,8 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
   {
   arma_extra_debug_sigprint();
   
+  
+  
   typedef typename T1::elem_type T;
   
   const diagmat_proxy<T1> P(expr.m);
@@ -58,7 +60,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
   
   const uword N = P.n_rows;
   
-  out.zeros(N,N);
+  out.zeros(N,N);  // aliasing can't happen as op_logmat is defined as cx_mat = op(mat)
   
   for(uword i=0; i<N; ++i)
     {
@@ -107,6 +109,28 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     return true;
     }
   
+  if(A.is_diagmat())
+    {
+    const uword N = A.n_rows;
+    
+    out.zeros(N,N);  // aliasing can't happen as op_logmat is defined as cx_mat = op(mat)
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const in_T val = A.at(i,i);
+      
+      if(val >= in_T(0))
+        {
+        out.at(i,i) = std::log(val);
+        }
+      else
+        {
+        out.at(i,i) = std::log( out_T(val) );
+        }
+      }
+    
+    return true;
+    }
   
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
