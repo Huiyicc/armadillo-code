@@ -125,7 +125,7 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
     
     if(eig_status)
       {
-      // ensure each eigenvalue is >= 0
+      // ensure each eigenvalue is > 0
       
       const uword N          = eigval.n_elem;
       const in_T* eigval_mem = eigval.memptr();
