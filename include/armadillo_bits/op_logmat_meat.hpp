@@ -50,8 +50,6 @@ op_logmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const 
   {
   arma_extra_debug_sigprint();
   
-  
-  
   typedef typename T1::elem_type T;
   
   const diagmat_proxy<T1> P(expr.m);
