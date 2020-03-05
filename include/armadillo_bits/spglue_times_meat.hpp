@@ -449,8 +449,8 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
         {
         arma_extra_debug_print("using standard multiplication");
         
-        typename SpProxy<T2>::const_iterator_type B_it     = B.begin();
-        typename SpProxy<T2>::const_iterator_type B_it_end = B.end();
+        typename SpMat<eT>::const_iterator B_it     = B.begin();
+        typename SpMat<eT>::const_iterator B_it_end = B.end();
         
         const uword out_n_rows = out.n_rows;
         
