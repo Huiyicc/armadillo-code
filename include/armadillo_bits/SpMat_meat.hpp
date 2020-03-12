@@ -6314,6 +6314,58 @@ SpMat<eT>::size() const
 
 
 template<typename eT>
+arma_inline
+arma_warn_unused
+SpMat_MapMat_val<eT>
+SpMat<eT>::front()
+  {
+  arma_debug_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
+  
+  return SpMat_MapMat_val<eT>((*this), cache, 0, 0);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+SpMat<eT>::front() const
+  {
+  arma_debug_check( (n_elem == 0), "SpMat::front(): matrix is empty" );
+  
+  return get_value(0,0);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+SpMat_MapMat_val<eT>
+SpMat<eT>::back()
+  {
+  arma_debug_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
+  
+  return SpMat_MapMat_val<eT>((*this), cache, n_rows-1, n_cols-1);
+  }
+
+
+
+template<typename eT>
+arma_inline
+arma_warn_unused
+eT
+SpMat<eT>::back() const
+  {
+  arma_debug_check( (n_elem == 0), "SpMat::back(): matrix is empty" );
+  
+  return get_value(n_rows-1, n_cols-1);
+  }
+
+
+
+template<typename eT>
 inline
 arma_hot
 arma_warn_unused
