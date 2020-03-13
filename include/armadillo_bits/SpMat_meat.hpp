@@ -1434,31 +1434,49 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
     
     if(X.n_rows == 1)
       {
-      typename SpMat<eT>::const_row_iterator m_it     = X.m.begin_row(sv_row_start);
-      typename SpMat<eT>::const_row_iterator m_it_end = X.m.end_row(sv_row_start);
-      
       uword count = 0;
       
-      while(m_it != m_it_end)
+      for(uword sv_col = sv_col_start; sv_col <= sv_col_end; ++sv_col)
         {
-        const uword m_it_col = m_it.col();
+        const eT val = X.m.at(sv_row_start, sv_col);  // use binary search
         
-        const bool m_it_inside_box = ((m_it_col >= sv_col_start) && (m_it_col <= sv_col_end));
-        
-        if(m_it_inside_box)
+        if(val != eT(0))
           {
-          const uword m_it_row_adjusted = 0;
-          const uword m_it_col_adjusted = m_it_col - sv_col_start;
+          const uword sv_col_adjusted = sv_col - sv_col_start;
           
-          access::rw(row_indices[count]) = m_it_row_adjusted;
-          access::rw(values[count])      = (*m_it);
-          ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
+          access::rw(row_indices[count]) = 0;
+          access::rw(values[count])      = val;
+          ++access::rw(col_ptrs[sv_col_adjusted + 1]);
           
           count++;
           }
-        
-        ++m_it;
         }
+      
+      // typename SpMat<eT>::const_row_iterator m_it     = X.m.begin_row(sv_row_start);
+      // typename SpMat<eT>::const_row_iterator m_it_end = X.m.end_row(sv_row_start);
+      // 
+      // uword count = 0;
+      // 
+      // while(m_it != m_it_end)
+      //   {
+      //   const uword m_it_col = m_it.col();
+      //   
+      //   const bool m_it_inside_box = ((m_it_col >= sv_col_start) && (m_it_col <= sv_col_end));
+      //   
+      //   if(m_it_inside_box)
+      //     {
+      //     const uword m_it_row_adjusted = 0;
+      //     const uword m_it_col_adjusted = m_it_col - sv_col_start;
+      //     
+      //     access::rw(row_indices[count]) = m_it_row_adjusted;
+      //     access::rw(values[count])      = (*m_it);
+      //     ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
+      //     
+      //     count++;
+      //     }
+      //   
+      //   ++m_it;
+      //   }
       }
     else
       {
