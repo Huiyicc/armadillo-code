@@ -1412,74 +1412,45 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
   
   if(X.n_nonzero == 0)  { zeros(X.n_rows, X.n_cols); return *this; }
   
+  X.m.sync_csc();
+  
   const bool alias = (this == &(X.m));
   
   if(alias)
     {
+    // Create it in a temporary.
     SpMat<eT> tmp(X);
     
     steal_mem(tmp);
     }
   else
     {
-    X.m.sync_csc();
-    
     init(X.n_rows, X.n_cols, X.n_nonzero);
     
-    const uword sv_row_start = X.aux_row1;
-    const uword sv_col_start = X.aux_col1;
-    
-    const uword sv_row_end   = X.aux_row1 + X.n_rows - 1;
-    const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
-    
-    if(X.n_rows == 1)
+    if( (X.n_rows == 1) && (X.n_cols == X.m.n_cols) )
       {
+      typename SpMat<eT>::const_row_iterator m_it     = X.m.begin_row(X.aux_row1);
+      typename SpMat<eT>::const_row_iterator m_it_end = X.m.end_row(X.aux_row1);
+      
       uword count = 0;
       
-      for(uword sv_col = sv_col_start; sv_col <= sv_col_end; ++sv_col)
+      while(m_it != m_it_end)
         {
-        const eT val = X.m.at(sv_row_start, sv_col);  // use binary search
+        access::rw(row_indices[count]) = 0;
+        access::rw(values[count]) = (*m_it);
+        ++access::rw(col_ptrs[m_it.col() + 1]);
         
-        if(val != eT(0))
-          {
-          const uword sv_col_adjusted = sv_col - sv_col_start;
-          
-          access::rw(row_indices[count]) = 0;
-          access::rw(values[count])      = val;
-          ++access::rw(col_ptrs[sv_col_adjusted + 1]);
-          
-          count++;
-          }
+        count++;
+        
+        ++m_it;
         }
-      
-      // typename SpMat<eT>::const_row_iterator m_it     = X.m.begin_row(sv_row_start);
-      // typename SpMat<eT>::const_row_iterator m_it_end = X.m.end_row(sv_row_start);
-      // 
-      // uword count = 0;
-      // 
-      // while(m_it != m_it_end)
-      //   {
-      //   const uword m_it_col = m_it.col();
-      //   
-      //   const bool m_it_inside_box = ((m_it_col >= sv_col_start) && (m_it_col <= sv_col_end));
-      //   
-      //   if(m_it_inside_box)
-      //     {
-      //     const uword m_it_row_adjusted = 0;
-      //     const uword m_it_col_adjusted = m_it_col - sv_col_start;
-      //     
-      //     access::rw(row_indices[count]) = m_it_row_adjusted;
-      //     access::rw(values[count])      = (*m_it);
-      //     ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
-      //     
-      //     count++;
-      //     }
-      //   
-      //   ++m_it;
-      //   }
       }
     else
+    if(X.n_rows == X.m.n_rows)
       {
+      const uword sv_col_start = X.aux_col1;
+      const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
+      
       typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col(sv_col_start);
       typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col(sv_col_end);
       
@@ -1487,27 +1458,32 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
       
       while(m_it != m_it_end)
         {
-        const uword m_it_row = m_it.row();
-        const uword m_it_col = m_it.col();
-        
-        const bool m_it_inside_box = ((m_it_row >= sv_row_start) && (m_it_row <= sv_row_end));
-        
-        if(m_it_inside_box)
-          {
-          const uword m_it_row_adjusted = m_it_row - sv_row_start;
-          const uword m_it_col_adjusted = m_it_col - sv_col_start;
+        const uword m_it_col_adjusted = m_it.col() - sv_col_start;
           
-          access::rw(row_indices[count]) = m_it_row_adjusted;
-          access::rw(values[count])      = (*m_it);
-          ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
-          
-          count++;
-          }
+        access::rw(row_indices[count]) = m_it.row();
+        access::rw(values[count]) = (*m_it);
+        ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
+        
+        count++;
         
         ++m_it;
         }
       }
+    else
+      {
+      typename SpSubview<eT>::const_iterator it     = X.begin();
+      typename SpSubview<eT>::const_iterator it_end = X.end();
       
+      while(it != it_end)
+        {
+        access::rw(row_indices[it.pos()]) = it.row();
+        access::rw(values[it.pos()]) = (*it);
+        ++access::rw(col_ptrs[it.col() + 1]);
+        ++it;
+        }
+      }
+    
+    // Now sum column pointers.
     for(uword c = 1; c <= n_cols; ++c)
       {
       access::rw(col_ptrs[c]) += col_ptrs[c - 1];
