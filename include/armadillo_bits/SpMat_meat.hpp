@@ -1412,37 +1412,88 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
   
   if(X.n_nonzero == 0)  { zeros(X.n_rows, X.n_cols); return *this; }
   
-  X.m.sync_csc();
-  
   const bool alias = (this == &(X.m));
-
-  if(alias == false)
+  
+  if(alias)
     {
+    SpMat<eT> tmp(X);
+    
+    steal_mem(tmp);
+    }
+  else
+    {
+    X.m.sync_csc();
+    
     init(X.n_rows, X.n_cols, X.n_nonzero);
-
-    typename SpSubview<eT>::const_iterator it     = X.begin();
-    typename SpSubview<eT>::const_iterator it_end = X.end();
-
-    while(it != it_end)
+    
+    const uword sv_row_start = X.aux_row1;
+    const uword sv_col_start = X.aux_col1;
+    
+    const uword sv_row_end   = X.aux_row1 + X.n_rows - 1;
+    const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
+    
+    if(X.n_rows == 1)
       {
-      access::rw(row_indices[it.pos()]) = it.row();
-      access::rw(values[it.pos()]) = (*it);
-      ++access::rw(col_ptrs[it.col() + 1]);
-      ++it;
+      typename SpMat<eT>::const_row_iterator m_it     = X.m.begin_row(sv_row_start);
+      typename SpMat<eT>::const_row_iterator m_it_end = X.m.end_row(sv_row_start);
+      
+      uword count = 0;
+      
+      while(m_it != m_it_end)
+        {
+        const uword m_it_col = m_it.col();
+        
+        const bool m_it_inside_box = ((m_it_col >= sv_col_start) && (m_it_col <= sv_col_end));
+        
+        if(m_it_inside_box)
+          {
+          const uword m_it_row_adjusted = 0;
+          const uword m_it_col_adjusted = m_it_col - sv_col_start;
+          
+          access::rw(row_indices[count]) = m_it_row_adjusted;
+          access::rw(values[count])      = (*m_it);
+          ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
+          
+          count++;
+          }
+        
+        ++m_it;
+        }
       }
-
-    // Now sum column pointers.
+    else
+      {
+      typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col(sv_col_start);
+      typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col(sv_col_end);
+      
+      uword count = 0;
+      
+      while(m_it != m_it_end)
+        {
+        const uword m_it_row = m_it.row();
+        const uword m_it_col = m_it.col();
+        
+        const bool m_it_inside_box = ((m_it_row >= sv_row_start) && (m_it_row <= sv_row_end));
+        
+        if(m_it_inside_box)
+          {
+          const uword m_it_row_adjusted = m_it_row - sv_row_start;
+          const uword m_it_col_adjusted = m_it_col - sv_col_start;
+          
+          access::rw(row_indices[count]) = m_it_row_adjusted;
+          access::rw(values[count])      = (*m_it);
+          ++access::rw(col_ptrs[m_it_col_adjusted + 1]);
+          
+          count++;
+          }
+        
+        ++m_it;
+        }
+      }
+      
     for(uword c = 1; c <= n_cols; ++c)
       {
       access::rw(col_ptrs[c]) += col_ptrs[c - 1];
       }
-    }
-  else
-    {
-    // Create it in a temporary.
-    SpMat<eT> tmp(X);
-
-    steal_mem(tmp);
     }
   
   return *this;
