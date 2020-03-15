@@ -1456,8 +1456,10 @@ SpMat<eT>::operator=(const SpSubview<eT>& X)
       
       while(it != it_end)
         {
-        access::rw(row_indices[it.pos()]) = it.row();
-        access::rw(values[it.pos()]) = (*it);
+        const uword it_pos = it.pos();
+        
+        access::rw(row_indices[it_pos]) = it.row();
+        access::rw(values[it_pos]) = (*it);
         ++access::rw(col_ptrs[it.col() + 1]);
         ++it;
         }
