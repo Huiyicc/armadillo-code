@@ -288,6 +288,8 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     return true;
     }
   
+  // TODO: if(S.is_diagmat()) { ... }
+  
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = sympd_helper::guess_sympd_anysize(S);
   #else
