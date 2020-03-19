@@ -112,6 +112,29 @@ op_sqrtmat::apply_direct(Mat< std::complex<typename T1::elem_type> >& out, const
     return true;
     }
   
+  if(A.is_diagmat())
+    {
+    const uword N = A.n_rows;
+    
+    out.zeros(N,N);  // aliasing can't happen as op_sqrtmat is defined as cx_mat = op(mat)
+    
+    for(uword i=0; i<N; ++i)
+      {
+      const in_T val = A.at(i,i);
+      
+      if(val >= in_T(0))
+        {
+        out.at(i,i) = std::sqrt(val);
+        }
+      else
+        {
+        out.at(i,i) = std::sqrt( out_T(val) );
+        }
+      }
+    
+    return true;
+    }
+  
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
   #else
@@ -295,6 +318,17 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     {
     out.set_size(1,1);
     out[0] = std::sqrt(S[0]);
+    return true;
+    }
+  
+  if(S.is_diagmat())
+    {
+    const uword N = S.n_rows;
+    
+    out.zeros(N,N);  // aliasing can't happen as S is generated
+    
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = std::sqrt( S.at(i,i) ); }
+    
     return true;
     }
   
