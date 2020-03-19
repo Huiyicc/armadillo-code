@@ -288,7 +288,16 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     return true;
     }
   
-  // TODO: if(S.is_diagmat()) { ... }
+  if(S.is_diagmat())
+    {
+    const uword N = S.n_rows;
+    
+    out.zeros(N,N);  // aliasing can't happen as S is generated
+    
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = std::log( S.at(i,i) ); }
+    
+    return true;
+    }
   
   #if defined(ARMA_OPTIMISE_SYMPD)
     const bool try_sympd = sympd_helper::guess_sympd_anysize(S);
