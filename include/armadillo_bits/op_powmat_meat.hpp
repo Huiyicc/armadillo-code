@@ -33,18 +33,32 @@ op_powmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_powmat>& expr
   
   if(y_neg)
     {
-    Mat<eT> X_inv;
-    
-    const bool inv_status = inv(X_inv, expr.m);
-    
-    if(inv_status == false)
+    if(y == uword(1))
       {
-      out.soft_reset();
-      arma_stop_runtime_error("powmat(): matrix inverse failed");
-      return;
+      const bool inv_status = inv(out, expr.m);
+      
+      if(inv_status == false)
+        {
+        out.soft_reset();
+        arma_stop_runtime_error("powmat(): matrix inverse failed");
+        return;
+        }
       }
-    
-    op_powmat::apply(out, X_inv, y);
+    else
+      {
+      Mat<eT> X_inv;
+      
+      const bool inv_status = inv(X_inv, expr.m);
+      
+      if(inv_status == false)
+        {
+        out.soft_reset();
+        arma_stop_runtime_error("powmat(): matrix inverse failed");
+        return;
+        }
+      
+      op_powmat::apply(out, X_inv, y);
+      }
     }
   else
     {
