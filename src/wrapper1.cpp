@@ -51,10 +51,8 @@
 
 #if defined(ARMA_USE_HDF5_ALT)
   
-  #if !defined(H5_USE_110_API)
-    #undef  H5_USE_18_API
-    #define H5_USE_18_API
-  #endif
+  #undef  H5_USE_110_API
+  #define H5_USE_110_API
   
   #include <hdf5.h>
   
