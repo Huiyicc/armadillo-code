@@ -50,6 +50,12 @@
 #endif
 
 #if defined(ARMA_USE_HDF5_ALT)
+  
+  #if !defined(H5_USE_110_API)
+    #undef  H5_USE_18_API
+    #define H5_USE_18_API
+  #endif
+  
   #include <hdf5.h>
   
   #if defined(H5_USE_16_API_DEFAULT) || defined(H5_USE_16_API)

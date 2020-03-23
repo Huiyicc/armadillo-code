@@ -15,6 +15,12 @@
 
 
 #if defined(ARMA_USE_HDF5)
+  
+  #if !defined(H5_USE_110_API)
+    #undef  H5_USE_18_API
+    #define H5_USE_18_API
+  #endif
+  
   #if !defined(ARMA_HDF5_INCLUDE_DIR)
     #include <hdf5.h>
   #else
