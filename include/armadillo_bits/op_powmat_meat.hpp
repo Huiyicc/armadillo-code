@@ -88,7 +88,7 @@ op_powmat::apply(Mat<eT>& out, const Mat<eT>& X, const uword y)
     {
     podarray<eT> tmp(N);  // use temporary array in case we have aliasing
     
-    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow(X.at(i,i), y); }  // TODO: y may need to converted to int or sword
+    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow(X.at(i,i), int(y)); }
     
     out.zeros(N,N);
     
