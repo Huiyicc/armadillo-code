@@ -121,83 +121,105 @@ op_powmat::apply(Mat<eT>& out, const Mat<eT>& X, const uword y)
   }
 
 
-// template<typename T1>
-// inline
-// void
-// op_powmat_cx::apply(Mat< std::complex<typename T1::pod_type> >& out, const mtOp<std::complex<typename T1::pod_type>,op_powmat_cx>& expr)
-//   {
-//   arma_extra_debug_sigprint();
-//   
-//   typedef typename T1::elem_type in_eT;
-//   typedef typename T1::pod_type  in_T;
-//   typedef std::complex<in_T>     out_eT;
-//   
-//   const in_T y = std::real(expr.aux_out_eT);
-//   
-//   const quasi_unwrap<T1> U(expr.m);
-//   const Mat<in_eT>& A  = U.M;
-//   
-//   arma_debug_check( (A.is_square() == false), "powmat(): given matrix must be square sized" );
-//   
-//   const uword N = A.n_rows;
-//   
-//   if(y == T(0))  { out.eye(N,N);                          return; }
-//   if(y == T(1))  { out = conv_to< Mat<out_eT> >::from(A); return; }
-//   
-//   #if defined(ARMA_OPTIMISE_SYMPD)
-//     const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
-//   #else
-//     const bool try_sympd = false;
-//   #endif
-//   
-//   if(try_sympd)
-//     {
-//     Col<in_T>  eigval;
-//     Mat<in_eT> eigvec;
-//     
-//     const bool eig_status = eig_sym(eigval, eigvec, A);
-//     
-//     if(eig_status)
-//       {
-//       eigval = pow(eigval, y);
-//       
-//       const Mat<out_eT> tmp = diagmat(eigval) * eigvec.t();
-//       
-//       out = conv_to< Mat<out_eT> >::from(eigvec * tmp);
-//       
-//       return;
-//       }
-//     
-//     // fallthrough
-//     }
-//   
-//   bool powmat_status = false;
-//   
-//   Col<out_eT> eigval;
-//   Mat<out_eT> eigvec;
-//   
-//   const bool eig_status = eig_gen(eigval, eigvec, A);
-//   
-//   if(eig_status)
-//     {
-//     eigval = pow(eigval, y);
-//     
-//     // out = eigvec * diagmat(eigval) * inv(eigvec);
-//     
-//     const Mat<out_eT> eigvec_t = trans(eigvec);
-//     
-//     const Mat<out_eT> tmp = diagmat(conj(eigval)) * eigvec_t;
-//     
-//     const bool solve_status = auxlib::solve_square_fast(out, eigvec_t, tmp);
-//     
-//     if(solve_status)  { out = trans(out); powmat_status = true; }
-//     }
-//   
-//   if(powmat_status == false)
-//     {
-//     // TODO: throw
-//     }
-//   }
+
+template<typename T1>
+inline
+void
+op_powmat_cx::apply(Mat< std::complex<typename T1::pod_type> >& out, const mtOp<std::complex<typename T1::pod_type>,T1,op_powmat_cx>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type in_eT;
+  typedef typename T1::pod_type  in_T;
+  typedef std::complex<in_T>     out_eT;
+  
+  const in_T y = std::real(expr.aux_out_eT);
+  
+  if( y == in_T(int(y)) )
+    {
+    arma_extra_debug_print("op_powmat_cx::apply(): integer exponent detected; redirecting to op_powmat");
+    
+    out = conv_to< Mat<out_eT> >::from( powmat(expr.m,int(y)) );
+    
+    return;
+    }
+  
+  const quasi_unwrap<T1> U(expr.m);
+  const Mat<in_eT>& A  = U.M;
+  
+  arma_debug_check( (A.is_square() == false), "powmat(): given matrix must be square sized" );
+  
+  const uword N = A.n_rows;
+  
+  if(y == in_T(0))  { out.eye(N,N);                          return; }
+  if(y == in_T(1))  { out = conv_to< Mat<out_eT> >::from(A); return; }
+  
+  if(A.is_diagmat())
+    {
+    podarray<out_eT> tmp(N);  // use temporary array in case we have aliasing
+    
+    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow( std::complex<in_T>(A.at(i,i)), y) ; }
+    
+    out.zeros(N,N);
+    
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = tmp[i]; }
+    
+    return;
+    }
+  
+  #if defined(ARMA_OPTIMISE_SYMPD)
+    const bool try_sympd = sympd_helper::guess_sympd_anysize(A);
+  #else
+    const bool try_sympd = false;
+  #endif
+  
+  if(try_sympd)
+    {
+    Col<in_T>  eigval;
+    Mat<in_eT> eigvec;
+    
+    const bool eig_status = eig_sym(eigval, eigvec, A);
+    
+    if(eig_status)
+      {
+      eigval = pow(eigval, y);
+      
+      const Mat<in_eT> tmp = diagmat(eigval) * eigvec.t();
+      
+      out = conv_to< Mat<out_eT> >::from(eigvec * tmp);
+      
+      return;
+      }
+    
+    // fallthrough
+    }
+  
+  bool powmat_status = false;
+  
+  Col<out_eT> eigval;
+  Mat<out_eT> eigvec;
+  
+  const bool eig_status = eig_gen(eigval, eigvec, A);
+  
+  if(eig_status)
+    {
+    eigval = pow(eigval, y);
+    
+    Mat<out_eT> eigvec_t = trans(eigvec);
+    Mat<out_eT> tmp      = diagmat(conj(eigval)) * eigvec_t;
+    
+    const bool solve_status = auxlib::solve_square_fast(out, eigvec_t, tmp);
+    
+    if(solve_status)  { out = trans(out); powmat_status = true; }
+    }
+  
+  if(powmat_status == false)
+    {
+    out.soft_reset();
+    
+    arma_stop_runtime_error("powmat(): transformation failed");
+    }
+  }
 
 
 
