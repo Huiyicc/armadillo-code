@@ -151,9 +151,6 @@ op_powmat_cx::apply(Mat< std::complex<typename T1::pod_type> >& out, const mtOp<
   
   const uword N = A.n_rows;
   
-  if(y == in_T(0))  { out.eye(N,N);                          return; }
-  if(y == in_T(1))  { out = conv_to< Mat<out_eT> >::from(A); return; }
-  
   if(A.is_diagmat())
     {
     podarray<out_eT> tmp(N);  // use temporary array in case we have aliasing
