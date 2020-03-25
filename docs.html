@@ -10171,12 +10171,16 @@ See also:
 <b>B = powmat( A, n )</b>
 <br><b>powmat( B, A, n )</b>
 <ul>
-<li>Matrix power operation: raise square matrix <i>A</i> to the power of <i>n</i>, where <i>n</i> is an integer</li>
+<li>Matrix power operation: raise square matrix <i>A</i> to the power of <i>n</i>, where <i>n</i> has the type <i>int</i> or <i>double</i></li>
+<br>
+<li>If <i>n</i> has the type <i>double</i>, the resultant <i>B</i> matrix always has complex elements</li>
 <br>
 <li>For <i>n&nbsp;=&nbsp;0</i>, an identity matrix is generated</li>
 <br>
+<!--
 <li>For <i>n&nbsp;&leq;&nbsp;-1</i>, inverse of <i>A</i> is raised to the power of <i>abs(n)</i></li>
 <br>
+-->
 <li>If <i>A</i> is not square sized, a <i>std::logic_error</i> exception is thrown</li>
 <br>
 <li>If the matrix power cannot be found:
@@ -10186,17 +10190,23 @@ See also:
 </ul>
 </li>
 <br>
-<li><b>Caveat</b>: to solve a system of linear equations, using <a href="#solve">solve()</a> can be faster and/or more accurate</li>
-<br>
-<li><b>Caveat</b>: the matrix power operation is generally <b>not</b> the same as applying the <a href="#misc_fns">pow()</a> function to each element</li>
+<li><b>Caveats</b>:
+<ul>
+<li>to find the inverse of a matrix, use <a href="#inv">inv()</a> instead</li>
+<li>to solve a system of linear equations, use <a href="#solve">solve()</a> instead</li>
+<li>to find the matrix square root, use <a href="#sqrtmat">sqrtmat()</a> instead</li>
+<li>the matrix power operation is generally <b>not</b> the same as applying the <a href="#misc_fns">pow()</a> function to each element</li>
+</ul>
 <br>
 <li>
 Examples:
 <ul>
 <pre>
-mat A = randu&lt;mat&gt;(5,5);
+   mat A = randu&lt;mat&gt;(5,5);
 
-mat B = powmat(A,3);  // equivalent to A*A*A
+   mat B = powmat(A, 4);     //     integer exponent
+
+cx_mat C = powmat(A, 4.56);  // non-integer exponent
 </pre>
 </ul>
 </li>
