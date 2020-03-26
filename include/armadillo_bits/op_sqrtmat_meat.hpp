@@ -349,7 +349,7 @@ op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typenam
     
     if(eig_status)
       {
-      // ensure each eigenvalue is >= 0
+      // ensure each eigenvalue is > 0
       
       const uword N          = eigval.n_elem;
       const T*    eigval_mem = eigval.memptr();
