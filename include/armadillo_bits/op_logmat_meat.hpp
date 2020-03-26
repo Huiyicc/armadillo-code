@@ -316,7 +316,7 @@ op_logmat_cx::apply_direct(Mat<typename T1::elem_type>& out, const Base<typename
     
     if(eig_status)
       {
-      // ensure each eigenvalue is >= 0
+      // ensure each eigenvalue is > 0
       
       const uword N          = eigval.n_elem;
       const T*    eigval_mem = eigval.memptr();
