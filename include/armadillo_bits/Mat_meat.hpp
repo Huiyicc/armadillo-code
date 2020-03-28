@@ -2689,6 +2689,23 @@ Mat<eT>::operator/=(const SpBase<eT, T1>& m)
 
 template<typename eT>
 inline
+Mat<eT>::Mat(const SpSubview<eT>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).operator=(X);
+  }
+
+
+
+template<typename eT>
+inline
 Mat<eT>&
 Mat<eT>::operator=(const SpSubview<eT>& X)
   {
