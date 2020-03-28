@@ -2525,46 +2525,28 @@ Mat<eT>::operator=(const SpBase<eT, T1>& m)
   {
   arma_extra_debug_sigprint();
   
-  if( (is_SpMat<T1>::value) || (is_SpMat<typename SpProxy<T1>::stored_type>::value) )
+  const unwrap_spmat<T1> U(m.get_ref());
+  const SpMat<eT>&   x = U.M;
+  
+  const uword x_n_cols = x.n_cols;
+  
+  (*this).zeros(x.n_rows, x_n_cols);
+  
+  const    eT* x_values      = x.values;
+  const uword* x_row_indices = x.row_indices;
+  const uword* x_col_ptrs    = x.col_ptrs;
+  
+  for(uword x_col = 0; x_col < x_n_cols; ++x_col)
     {
-    const unwrap_spmat<T1> U(m.get_ref());
-    const SpMat<eT>&   x = U.M;
+    const uword start = x_col_ptrs[x_col    ];
+    const uword end   = x_col_ptrs[x_col + 1];
     
-    const uword x_n_cols = x.n_cols;
-    
-    (*this).zeros(x.n_rows, x_n_cols);
-    
-    const    eT* x_values      = x.values;
-    const uword* x_row_indices = x.row_indices;
-    const uword* x_col_ptrs    = x.col_ptrs;
-    
-    for(uword x_col = 0; x_col < x_n_cols; ++x_col)
+    for(uword i = start; i < end; ++i)
       {
-      const uword start = x_col_ptrs[x_col    ];
-      const uword end   = x_col_ptrs[x_col + 1];
+      const uword x_row = x_row_indices[i];
+      const eT    x_val = x_values[i];
       
-      for(uword i = start; i < end; ++i)
-        {
-        const uword x_row = x_row_indices[i];
-        const eT    x_val = x_values[i];
-        
-        at(x_row, x_col) = x_val;
-        }
-      }
-    }
-  else
-    {
-    const SpProxy<T1> p(m.get_ref());
-    
-    (*this).zeros(p.get_n_rows(), p.get_n_cols());
-    
-    typename SpProxy<T1>::const_iterator_type it     = p.begin();
-    typename SpProxy<T1>::const_iterator_type it_end = p.end();
-    
-    while(it != it_end)
-      {
-      at(it.row(), it.col()) = (*it);
-      ++it;
+      at(x_row, x_col) = x_val;
       }
     }
   
