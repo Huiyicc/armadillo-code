@@ -2701,16 +2701,24 @@ Mat<eT>::operator=(const SpSubview<eT>& X)
     const uword sv_col_start = X.aux_col1;
     const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
     
-    typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col(sv_col_start);
-    typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col(sv_col_end);
+    const    eT* m_values      = X.m.values;
+    const uword* m_row_indices = X.m.row_indices;
+    const uword* m_col_ptrs    = X.m.col_ptrs;
     
-    while(m_it != m_it_end)
+    for(uword m_col = sv_col_start; m_col <= sv_col_end; ++m_col)
       {
-      const uword m_it_col_adjusted = m_it.col() - sv_col_start;
+      const uword m_col_adjusted = m_col - sv_col_start;
       
-      at(m_it.row(), m_it_col_adjusted) = (*m_it);
+      const uword start = m_col_ptrs[m_col    ];
+      const uword end   = m_col_ptrs[m_col + 1];
       
-      ++m_it;
+      for(uword ii = start; ii < end; ++ii)
+        {
+        const uword m_row = m_row_indices[ii];
+        const eT    m_val = m_values[ii];
+        
+        at(m_row, m_col_adjusted) = m_val;
+        }
       }
     }
   else
