@@ -169,6 +169,8 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1> inline Mat& operator%=(const SpBase<eT, T1>& m);
   template<typename T1> inline Mat& operator/=(const SpBase<eT, T1>& m);
   
+  inline Mat&  operator=(const SpSubview<eT>& X);
+  
   inline explicit    Mat(const spdiagview<eT>& X);
   inline Mat&  operator=(const spdiagview<eT>& X);
   inline Mat& operator+=(const spdiagview<eT>& X);

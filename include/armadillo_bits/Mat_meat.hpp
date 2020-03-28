@@ -2707,6 +2707,49 @@ Mat<eT>::operator/=(const SpBase<eT, T1>& m)
 
 template<typename eT>
 inline
+Mat<eT>&
+Mat<eT>::operator=(const SpSubview<eT>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  (*this).zeros(X.n_rows, X.n_cols);
+  
+  if(X.n_rows == X.m.n_rows)
+    {
+    const uword sv_col_start = X.aux_col1;
+    const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
+    
+    typename SpMat<eT>::const_col_iterator m_it     = X.m.begin_col(sv_col_start);
+    typename SpMat<eT>::const_col_iterator m_it_end = X.m.end_col(sv_col_end);
+    
+    while(m_it != m_it_end)
+      {
+      const uword m_it_col_adjusted = m_it.col() - sv_col_start;
+      
+      at(m_it.row(), m_it_col_adjusted) = (*m_it);
+      
+      ++m_it;
+      }
+    }
+  else
+    {
+    typename SpSubview<eT>::const_iterator it     = X.begin();
+    typename SpSubview<eT>::const_iterator it_end = X.end();
+    
+    while(it != it_end)
+      {
+      at(it.row(), it.col()) = (*it);
+      ++it;
+      }
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
 Mat<eT>::Mat(const spdiagview<eT>& X)
   : n_rows(X.n_rows)
   , n_cols(X.n_cols)
