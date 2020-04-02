@@ -28,10 +28,7 @@ class op_diagvec
   inline static void apply(Mat<typename T1::elem_type>& out, const Op<T1,op_diagvec>& X);
   
   template<typename T1>
-  arma_hot inline static void apply_unwrap(Mat<typename T1::elem_type>& out, const T1& X,       const uword row_offset, const uword col_offset, const uword len);
-  
-  template<typename T1>
-  arma_hot inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset, const uword len);
+  inline static void apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset, const uword len);
   };
 
 

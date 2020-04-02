@@ -42,7 +42,9 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
     
     const uword len = (std::min)(tmp.n_rows, tmp.n_cols);
     
-    op_diagvec::apply_unwrap(out, tmp, 0, 0, len);
+    const Proxy< Mat<eT> > P(tmp);
+    
+    op_diagvec::apply_proxy(out, P, 0, 0, len);
     
     return;
     }
@@ -60,66 +62,23 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
   
   const uword len = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value) && (Proxy<T1>::fake_mat == false) )
+  if(P.is_alias(out) == false)
     {
-    op_diagvec::apply_unwrap(out, P.Q, row_offset, col_offset, len);
+    op_diagvec::apply_proxy(out, P, row_offset, col_offset, len);
     }
   else
     {
-    if(P.is_alias(out) == false)
-      {
-      op_diagvec::apply_proxy(out, P, row_offset, col_offset, len);
-      }
-    else
-      {
-      Mat<eT> tmp;
-      
-      op_diagvec::apply_proxy(tmp, P, row_offset, col_offset, len);
-      
-      out.steal_mem(tmp);
-      }
-    }
-  }
-
-
-
-template<typename T1>
-arma_hot
-inline
-void
-op_diagvec::apply_unwrap(Mat<typename T1::elem_type>& out, const T1& X, const uword row_offset, const uword col_offset, const uword len)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const unwrap_check<T1> tmp_A(X, out);
-  const Mat<eT>& A =     tmp_A.M;
-  
-  out.set_size(len, 1);
-  
-  eT* out_mem = out.memptr();
-  
-  uword i,j;
-  for(i=0, j=1; j < len; i+=2, j+=2)
-    {
-    const eT tmp_i = A.at( i + row_offset, i + col_offset );
-    const eT tmp_j = A.at( j + row_offset, j + col_offset );
+    Mat<eT> tmp;
     
-    out_mem[i] = tmp_i;
-    out_mem[j] = tmp_j;
-    }
-  
-  if(i < len)
-    {
-    out_mem[i] = A.at( i + row_offset, i + col_offset );
+    op_diagvec::apply_proxy(tmp, P, row_offset, col_offset, len);
+    
+    out.steal_mem(tmp);
     }
   }
 
 
 
 template<typename T1>
-arma_hot
 inline
 void
 op_diagvec::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset, const uword len)
