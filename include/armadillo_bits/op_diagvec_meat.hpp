@@ -34,6 +34,15 @@ op_diagvec::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagvec>& X)
   const uword row_offset = (b >  0) ? a : 0;
   const uword col_offset = (b == 0) ? a : 0;
   
+  // if( (is_glue_times<T1>::value) && (row_offset == 0) && (col_offset == 0) )
+  //   {
+  //   const Mat<eT> tmp( diagmat(X.m) );   // use dedicated multiplication provided by diagmat()
+  //   
+  //   out = tmp.diag();
+  //   
+  //   return;
+  //   }
+  
   const Proxy<T1> P(X.m);
   
   const uword n_rows = P.get_n_rows();
