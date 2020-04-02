@@ -397,6 +397,19 @@ struct is_mtGlue< const mtGlue<eT, T1, T2, glue_type> >
 
 
 template<typename T>
+struct is_glue_times
+  { static const bool value = false; };
+
+template<typename T1, typename T2>
+struct is_glue_times< Glue<T1,T2,glue_times> >
+  { static const bool value = true; };
+
+template<typename T1, typename T2>
+struct is_glue_times< const Glue<T1,T2,glue_times> >
+  { static const bool value = true; };
+
+
+template<typename T>
 struct is_glue_times_diag
   { static const bool value = false; };
 
