@@ -317,8 +317,11 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
 
   private:
+  
   friend class SpMat<eT>;
   friend class SpSubview_col<eT>;
+  friend class SpSubview_row<eT>;
+  
   SpSubview();
   
   inline arma_warn_unused eT&  insert_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
