@@ -2234,7 +2234,7 @@ SpMat<eT>::row(const uword row_num) const
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_row<eT>
 SpMat<eT>::operator()(const uword row_num, const span& col_span)
   {
   arma_extra_debug_sigprint();
@@ -2256,14 +2256,14 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span)
     "SpMat::operator(): indices out of bounds or incorrectly used"
     );
   
-  return SpSubview<eT>(*this, row_num, in_col1, 1, submat_n_cols);
+  return SpSubview_row<eT>(*this, row_num, in_col1, submat_n_cols);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_row<eT>
 SpMat<eT>::operator()(const uword row_num, const span& col_span) const
   {
   arma_extra_debug_sigprint();
@@ -2285,7 +2285,7 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span) const
     "SpMat::operator(): indices out of bounds or incorrectly used"
     );
   
-  return SpSubview<eT>(*this, row_num, in_col1, 1, submat_n_cols);
+  return SpSubview_row<eT>(*this, row_num, in_col1, submat_n_cols);
   }
 
 
@@ -2320,7 +2320,7 @@ SpMat<eT>::col(const uword col_num) const
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_col<eT>
 SpMat<eT>::operator()(const span& row_span, const uword col_num)
   {
   arma_extra_debug_sigprint();
@@ -2342,14 +2342,14 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num)
     "SpMat::operator(): indices out of bounds or incorrectly used"
     );
   
-  return SpSubview<eT>(*this, in_row1, col_num, submat_n_rows, 1);
+  return SpSubview_col<eT>(*this, col_num, in_row1, submat_n_rows);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_col<eT>
 SpMat<eT>::operator()(const span& row_span, const uword col_num) const
   {
   arma_extra_debug_sigprint();
@@ -2371,7 +2371,7 @@ SpMat<eT>::operator()(const span& row_span, const uword col_num) const
     "SpMat::operator(): indices out of bounds or incorrectly used"
     );
   
-  return SpSubview<eT>(*this, in_row1, col_num, submat_n_rows, 1);
+  return SpSubview_col<eT>(*this, col_num, in_row1, submat_n_rows);
   }
 
 

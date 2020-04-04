@@ -356,6 +356,9 @@ class SpSubview_col : public SpSubview<eT>
   inline SpSubview_col(const SpMat<eT>& in_m, const uword in_col);
   inline SpSubview_col(      SpMat<eT>& in_m, const uword in_col);
   
+  inline SpSubview_col(const SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
+  inline SpSubview_col(      SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
+  
   
   private:
   
@@ -390,6 +393,9 @@ class SpSubview_row : public SpSubview<eT>
   
   inline SpSubview_row(const SpMat<eT>& in_m, const uword in_row);
   inline SpSubview_row(      SpMat<eT>& in_m, const uword in_row);
+  
+  inline SpSubview_row(const SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
+  inline SpSubview_row(      SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
   
   
   private:

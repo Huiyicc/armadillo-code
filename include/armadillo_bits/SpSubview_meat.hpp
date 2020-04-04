@@ -1650,6 +1650,26 @@ SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col)
 
 template<typename eT>
 inline
+SpSubview_col<eT>::SpSubview_col(const SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
+  : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+SpSubview_col<eT>::SpSubview_col(SpMat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows)
+  : SpSubview<eT>(in_m, in_row1, in_col, in_n_rows, 1)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
 void
 SpSubview_col<eT>::operator=(const SpSubview<eT>& x)
   {
@@ -1718,6 +1738,26 @@ template<typename eT>
 inline
 SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row)
   : SpSubview<eT>(in_m, in_row, 0, 1, in_m.n_cols)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+SpSubview_row<eT>::SpSubview_row(const SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+  : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
+  {
+  arma_extra_debug_sigprint();
+  }
+
+
+
+template<typename eT>
+inline
+SpSubview_row<eT>::SpSubview_row(SpMat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols)
+  : SpSubview<eT>(in_m, in_row, in_col1, 1, in_n_cols)
   {
   arma_extra_debug_sigprint();
   }
