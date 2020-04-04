@@ -2206,28 +2206,28 @@ SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
 
 template<typename eT>
 arma_inline
-SpSubview<eT>
+SpSubview_row<eT>
 SpMat<eT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
   
-  return SpSubview<eT>(*this, row_num, 0, 1, n_cols);
+  return SpSubview_row<eT>(*this, row_num);
   }
 
 
 
 template<typename eT>
 arma_inline
-const SpSubview<eT>
+const SpSubview_row<eT>
 SpMat<eT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check(row_num >= n_rows, "SpMat::row(): out of bounds");
   
-  return SpSubview<eT>(*this, row_num, 0, 1, n_cols);
+  return SpSubview_row<eT>(*this, row_num);
   }
 
 
@@ -2292,28 +2292,28 @@ SpMat<eT>::operator()(const uword row_num, const span& col_span) const
 
 template<typename eT>
 arma_inline
-SpSubview<eT>
+SpSubview_col<eT>
 SpMat<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
   
-  return SpSubview<eT>(*this, 0, col_num, n_rows, 1);
+  return SpSubview_col<eT>(*this, col_num);
   }
 
 
 
 template<typename eT>
 arma_inline
-const SpSubview<eT>
+const SpSubview_col<eT>
 SpMat<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
   
   arma_debug_check(col_num >= n_cols, "SpMat::col(): out of bounds");
   
-  return SpSubview<eT>(*this, 0, col_num, n_rows, 1);
+  return SpSubview_col<eT>(*this, col_num);
   }
 
 

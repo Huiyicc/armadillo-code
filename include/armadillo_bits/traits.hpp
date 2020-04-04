@@ -633,6 +633,24 @@ struct is_SpSubview< SpSubview<eT> >
 
 
 template<typename T>
+struct is_SpSubview_col
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpSubview_col< SpSubview_col<eT> >
+  { static const bool value = true; };
+
+
+template<typename T>
+struct is_SpSubview_row
+  { static const bool value = false; };
+
+template<typename eT>
+struct is_SpSubview_row< SpSubview_row<eT> >
+  { static const bool value = true; };
+
+
+template<typename T>
 struct is_spdiagview
   { static const bool value = false; };
 
@@ -684,6 +702,8 @@ struct is_arma_sparse_type
   static const bool value
   =  is_SpMat<T1>::value
   || is_SpSubview<T1>::value
+  || is_SpSubview_col<T1>::value
+  || is_SpSubview_row<T1>::value
   || is_spdiagview<T1>::value
   || is_SpOp<T1>::value
   || is_SpGlue<T1>::value

@@ -318,6 +318,7 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
   private:
   friend class SpMat<eT>;
+  friend class SpSubview_col<eT>;
   SpSubview();
   
   inline arma_warn_unused eT&  insert_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
@@ -326,84 +327,76 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
   inline void invalidate_cache() const;
   };
 
-/*
+
+
 template<typename eT>
 class SpSubview_col : public SpSubview<eT>
   {
   public:
-
+  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
+  
   inline void operator= (const SpSubview<eT>& x);
   inline void operator= (const SpSubview_col& x);
-
-  template<typename T1>
-  inline void operator= (const Base<eT,T1>& x);
-
-  inline       SpSubview_col<eT> rows(const uword in_row1, const uword in_row2);
-  inline const SpSubview_col<eT> rows(const uword in_row1, const uword in_row2) const;
-
-  inline       SpSubview_col<eT> subvec(const uword in_row1, const uword in_row2);
-  inline const SpSubview_col<eT> subvec(const uword in_row1, const uword in_row2) const;
-
-
+  
+  template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  
+  
   protected:
-
-  inline SpSubview_col(const Mat<eT>& in_m, const uword in_col);
-  inline SpSubview_col(      Mat<eT>& in_m, const uword in_col);
-
-  inline SpSubview_col(const Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
-  inline SpSubview_col(      Mat<eT>& in_m, const uword in_col, const uword in_row1, const uword in_n_rows);
-
-
+  
+  inline SpSubview_col(const SpMat<eT>& in_m, const uword in_col);
+  inline SpSubview_col(      SpMat<eT>& in_m, const uword in_col);
+  
+  
   private:
-
-  friend class Mat<eT>;
-  friend class Col<eT>;
+  
+  friend class SpMat<eT>;
   friend class SpSubview<eT>;
-
+  
   SpSubview_col();
   };
+
+
 
 template<typename eT>
 class SpSubview_row : public SpSubview<eT>
   {
   public:
-
+  
   typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
-
+  
+  static const bool is_row  = true;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
+  
   inline void operator= (const SpSubview<eT>& x);
   inline void operator= (const SpSubview_row& x);
-
-  template<typename T1>
-  inline void operator= (const Base<eT,T1>& x);
-
-  inline       SpSubview_row<eT> cols(const uword in_col1, const uword in_col2);
-  inline const SpSubview_row<eT> cols(const uword in_col1, const uword in_col2) const;
-
-  inline       SpSubview_row<eT> subvec(const uword in_col1, const uword in_col2);
-  inline const SpSubview_row<eT> subvec(const uword in_col1, const uword in_col2) const;
-
-
+  
+  template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
+  template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  
+  
   protected:
-
-  inline SpSubview_row(const Mat<eT>& in_m, const uword in_row);
-  inline SpSubview_row(      Mat<eT>& in_m, const uword in_row);
-
-  inline SpSubview_row(const Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
-  inline SpSubview_row(      Mat<eT>& in_m, const uword in_row, const uword in_col1, const uword in_n_cols);
-
-
+  
+  inline SpSubview_row(const SpMat<eT>& in_m, const uword in_row);
+  inline SpSubview_row(      SpMat<eT>& in_m, const uword in_row);
+  
+  
   private:
-
-  friend class Mat<eT>;
-  friend class Row<eT>;
+  
+  friend class SpMat<eT>;
   friend class SpSubview<eT>;
-
+  
   SpSubview_row();
   };
-*/
+
+
 
 //! @}
