@@ -40,7 +40,7 @@ op_reshape::apply_unwrap(Mat<eT>& out, const Mat<eT>& A, const uword in_n_rows, 
         out.set_size(in_n_rows, in_n_cols);
         arrayops::copy( out.memptr(), A.memptr(), out.n_elem );
         }
-      else  // &out == &A, i.e. inplace resize
+      else  // &out == &A, i.e. inplace reshape
         {
         out.set_size(in_n_rows, in_n_cols);
         // set_size() doesn't destroy data as long as the number of elements in the matrix remains the same
@@ -228,6 +228,7 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   const uword in_n_rows = in.aux_uword_a;
   const uword in_n_cols = in.aux_uword_b;
   
+  // allow detection of in-place reshape
   if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
     {
     const unwrap<T1> U(in.m);
