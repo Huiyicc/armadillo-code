@@ -132,15 +132,6 @@ op_reshape::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
   
   typedef typename T1::elem_type eT;
   
-  if(is_Mat<typename Proxy<T1>::stored_type>::value)
-    {
-    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
-    
-    op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols, uword(0));
-    
-    return;
-    }
-  
   out.set_size(in_n_rows, in_n_cols);
   
   eT* out_mem = out.memptr();
@@ -237,7 +228,7 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   const uword in_n_rows = in.aux_uword_a;
   const uword in_n_cols = in.aux_uword_b;
   
-  if(is_Mat<T1>::value)
+  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
     {
     const unwrap<T1> U(in.m);
     
