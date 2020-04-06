@@ -155,6 +155,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline SpMat& operator%=(const SpSubview<eT>& X);
   inline SpMat& operator/=(const SpSubview<eT>& X);
   
+  inline             SpMat(const SpSubview_col<eT>& X);
+  inline             SpMat(const SpSubview_row<eT>& X);
+  
   inline             SpMat(const spdiagview<eT>& X);
   inline SpMat&  operator=(const spdiagview<eT>& X);
   inline SpMat& operator+=(const spdiagview<eT>& X);

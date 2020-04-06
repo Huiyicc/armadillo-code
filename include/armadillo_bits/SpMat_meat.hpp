@@ -1571,6 +1571,44 @@ SpMat<eT>::operator/=(const SpSubview<eT>& x)
 
 template<typename eT>
 inline
+SpMat<eT>::SpMat(const SpSubview_col<eT>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).operator=(X);  // interpret SpSubview_col as SpSubview
+  }
+
+
+
+template<typename eT>
+inline
+SpMat<eT>::SpMat(const SpSubview_row<eT>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(NULL)
+  , row_indices(NULL)
+  , col_ptrs(NULL)
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  (*this).operator=(X);  // interpret SpSubview_row as SpSubview
+  }
+
+
+
+template<typename eT>
+inline
 SpMat<eT>::SpMat(const spdiagview<eT>& X)
   : n_rows(0)
   , n_cols(0)
