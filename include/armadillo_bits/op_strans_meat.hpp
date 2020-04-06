@@ -313,12 +313,11 @@ op_strans::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X)
   
   const Proxy<T1> P(X);
   
-  // allow detection of in-place transpose
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
+  if(is_Mat<typename Proxy<T1>::stored_type>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
     
-    op_strans::apply_mat(out, tmp.M);
+    op_strans::apply_mat(out, U.M);
     }
   else
     {
@@ -456,7 +455,18 @@ op_strans::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_strans>& in)
   {
   arma_extra_debug_sigprint();
   
-  op_strans::apply_proxy(out, in.m);
+  if(is_Mat<T1>::value)
+    {
+    // allow detection of in-place transpose
+    
+    const unwrap<T1> U(in.m);
+    
+    op_strans::apply_mat(out, U.M);
+    }
+  else
+    {
+    op_strans::apply_proxy(out, in.m);
+    }
   }
 
 
@@ -685,14 +695,24 @@ op_strans2::apply_proxy(Mat<typename T1::elem_type>& out, const T1& X, const typ
   
   typedef typename T1::elem_type eT;
   
+  if(is_Mat<T1>::value)
+    {
+    // allow detection of in-place transpose
+    
+    const unwrap<T1> U(X);
+    
+    op_strans2::apply(out, U.M, val);
+    
+    return;
+    }
+  
   const Proxy<T1> P(X);
   
-  // allow detection of in-place transpose
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
+  if(is_Mat<typename Proxy<T1>::stored_type>::value)
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
     
-    op_strans2::apply(out, tmp.M, val);
+    op_strans2::apply(out, U.M, val);
     }
   else
     {
