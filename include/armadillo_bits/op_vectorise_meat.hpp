@@ -41,7 +41,7 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
   
   typedef typename T1::elem_type eT;
   
-  if(is_Mat<T1>::value)
+  if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
     {
     const unwrap<T1> U(expr);
     
@@ -133,59 +133,50 @@ op_vectorise_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>&
   const uword N = P.get_n_elem();
   
   out.set_size(N, 1);
-    
-  if(is_Mat<typename Proxy<T1>::stored_type>::value)
+  
+  eT* outmem = out.memptr();
+  
+  if(Proxy<T1>::use_at == false)
     {
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
+    // TODO: add handling of aligned access ?
     
-    arrayops::copy(out.memptr(), tmp.M.memptr(), N);
+    typename Proxy<T1>::ea_type A = P.get_ea();
+    
+    uword i,j;
+    
+    for(i=0, j=1; j < N; i+=2, j+=2)
+      {
+      const eT tmp_i = A[i];
+      const eT tmp_j = A[j];
+      
+      outmem[i] = tmp_i;
+      outmem[j] = tmp_j;
+      }
+    
+    if(i < N)
+      {
+      outmem[i] = A[i];
+      }
     }
   else
     {
-    eT* outmem = out.memptr();
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
-    if(Proxy<T1>::use_at == false)
+    if(n_rows == 1)
       {
-      // TODO: add handling of aligned access ?
-      
-      typename Proxy<T1>::ea_type A = P.get_ea();
-      
-      uword i,j;
-      
-      for(i=0, j=1; j < N; i+=2, j+=2)
+      for(uword i=0; i < n_cols; ++i)
         {
-        const eT tmp_i = A[i];
-        const eT tmp_j = A[j];
-        
-        outmem[i] = tmp_i;
-        outmem[j] = tmp_j;
-        }
-      
-      if(i < N)
-        {
-        outmem[i] = A[i];
+        outmem[i] = P.at(0,i);
         }
       }
     else
       {
-      const uword n_rows = P.get_n_rows();
-      const uword n_cols = P.get_n_cols();
-      
-      if(n_rows == 1)
+      for(uword col=0; col < n_cols; ++col)
+      for(uword row=0; row < n_rows; ++row)
         {
-        for(uword i=0; i < n_cols; ++i)
-          {
-          outmem[i] = P.at(0,i);
-          }
-        }
-      else
-        {
-        for(uword col=0; col < n_cols; ++col)
-        for(uword row=0; row < n_rows; ++row)
-          {
-          *outmem = P.at(row,col);
-          outmem++;
-          }
+        *outmem = P.at(row,col);
+        outmem++;
         }
       }
     }
