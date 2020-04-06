@@ -446,8 +446,6 @@ op_strans::apply_direct(Mat<typename T1::elem_type>& out, const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  typedef typename T1::elem_type eT;
-  
   // allow detection of in-place transpose
   if(is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value)
     {
