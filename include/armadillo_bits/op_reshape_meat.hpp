@@ -132,6 +132,15 @@ op_reshape::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, co
   
   typedef typename T1::elem_type eT;
   
+  if(is_Mat<typename Proxy<T1>::stored_type>::value)
+    {
+    const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
+    
+    op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols, uword(0));
+    
+    return;
+    }
+  
   out.set_size(in_n_rows, in_n_cols);
   
   eT* out_mem = out.memptr();
@@ -225,21 +234,19 @@ op_reshape::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reshape>& in)
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1> P(in.m);
-  
   const uword in_n_rows = in.aux_uword_a;
   const uword in_n_cols = in.aux_uword_b;
   
-  if( (is_Mat<typename Proxy<T1>::stored_type>::value == true) && (Proxy<T1>::fake_mat == false) )
+  if(is_Mat<T1>::value)
     {
-    // not checking for aliasing here, as this might be an inplace reshape
+    const unwrap<T1> U(in.m);
     
-    const unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
-    
-    op_reshape::apply_unwrap(out, tmp.M, in_n_rows, in_n_cols, uword(0));
+    op_reshape::apply_unwrap(out, U.M, in_n_rows, in_n_cols, uword(0));
     }
   else
     {
+    const Proxy<T1> P(in.m);
+    
     if(P.is_alias(out))
       {
       Mat<eT> tmp;
