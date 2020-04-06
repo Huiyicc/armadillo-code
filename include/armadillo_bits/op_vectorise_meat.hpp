@@ -63,11 +63,18 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
     {
     const subview<eT>& sv = reinterpret_cast< const subview<eT>& >(expr);
     
-    Mat<eT> tmp = sv;
-    
-    tmp.set_size(tmp.n_elem, 1);  // set_size() doesn't destroy data as long as the number of elements in the matrix remains the same
+    if(&out == &(sv.m))
+      {
+      Mat<eT> tmp;
       
-    out.steal_mem(tmp);
+      op_vectorise_col::apply_subview(tmp, sv);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_vectorise_col::apply_subview(out, sv);
+      }
     }
   else
     {
@@ -85,6 +92,30 @@ op_vectorise_col::apply_direct(Mat<typename T1::elem_type>& out, const T1& expr)
       {
       op_vectorise_col::apply_proxy(out, P);
       }
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+op_vectorise_col::apply_subview(Mat<eT>& out, const subview<eT>& sv)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword sv_n_rows = sv.n_rows;
+  const uword sv_n_cols = sv.n_cols;
+  
+  out.set_size(sv.n_elem, 1);
+  
+  eT* out_mem = out.memptr();
+  
+  for(uword col=0; col < sv_n_cols; ++col)
+    {
+    arrayops::copy(out_mem, sv.colptr(col), sv_n_rows);
+    
+    out_mem += sv_n_rows;
     }
   }
 
@@ -389,7 +420,6 @@ op_vectorise_cube_col::apply_proxy(Mat<typename T1::elem_type>& out, const Proxy
       }
     }
   }
-
 
 
 
