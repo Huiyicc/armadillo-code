@@ -118,6 +118,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = false;");
+    
     const uword N = (std::min)(A_n_rows, B_n_cols);
     
     out.set_size(N,1);
@@ -161,6 +163,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = false;");
+    
     const uword N = (std::min)(A_n_cols, B_n_cols);
     
     out.set_size(N,1);
@@ -182,6 +186,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = true;");
+    
     const uword N = (std::min)(A_n_rows, B_n_rows);
     
     out.set_size(N,1);
@@ -205,6 +211,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = true;");
+    
     const uword N = (std::min)(A_n_cols, B_n_rows);
     
     out.set_size(N,1);
@@ -270,6 +278,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = false;");
+    
     const uword N = (std::min)(A_n_rows, B_n_cols);
     
     out.set_size(N,1);
@@ -310,6 +320,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = false;");
+    
     const uword N = (std::min)(A_n_cols, B_n_cols);
     
     out.set_size(N,1);
@@ -353,6 +365,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = true;");
+    
     const uword N = (std::min)(A_n_rows, B_n_rows);
     
     out.set_size(N,1);
@@ -391,6 +405,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == true) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = true;");
+    
     const uword N = (std::min)(A_n_cols, B_n_rows);
     
     out.set_size(N,1);

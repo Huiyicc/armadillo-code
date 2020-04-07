@@ -79,6 +79,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_rows == 1) || (B_n_cols == 1))
       {
+      arma_extra_debug_print("trans_A = false; trans_B = false; vector result");
+      
       const Mat<eT> C     = A*B;
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -95,6 +97,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_cols == 1) || (B_n_cols == 1))
       {
+      arma_extra_debug_print("trans_A = true; trans_B = false; vector result");
+      
       const Mat<eT> C     = trans(A)*B;
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -111,6 +115,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_rows == 1) || (B_n_rows == 1))
       {
+      arma_extra_debug_print("trans_A = false; trans_B = true; vector result");
+      
       const Mat<eT> C     = A*trans(B);
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -127,6 +133,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_cols == 1) || (B_n_rows == 1))
       {
+      arma_extra_debug_print("trans_A = true; trans_B = true; vector result");
+      
       const Mat<eT> C     = trans(A)*trans(B);
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -148,6 +156,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = false; matrix result");
+    
     out.zeros(A_n_rows, B_n_cols);
     
     const uword N = (std::min)(A_n_rows, B_n_cols);
@@ -189,6 +199,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = false; matrix result");
+    
     out.zeros(A_n_cols, B_n_cols);
     
     const uword N = (std::min)(A_n_cols, B_n_cols);
@@ -208,6 +220,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = true; matrix result");
+    
     out.zeros(A_n_rows, B_n_rows);
     
     const uword N = (std::min)(A_n_rows, B_n_rows);
@@ -229,6 +243,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = true; matrix result");
+    
     out.zeros(A_n_cols, B_n_rows);
     
     const uword N = (std::min)(A_n_cols, B_n_rows);
@@ -289,6 +305,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_rows == 1) || (B_n_cols == 1))
       {
+      arma_extra_debug_print("trans_A = false; trans_B = false; vector result");
+      
       const Mat<eT> C     = A*B;
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -305,6 +323,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_cols == 1) || (B_n_cols == 1))
       {
+      arma_extra_debug_print("trans_A = true; trans_B = false; vector result");
+      
       const Mat<eT> C     = trans(A)*B;
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -321,6 +341,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_rows == 1) || (B_n_rows == 1))
       {
+      arma_extra_debug_print("trans_A = false; trans_B = true; vector result");
+      
       const Mat<eT> C     = A*trans(B);
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -337,6 +359,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
     {
     if((A_n_cols == 1) || (B_n_rows == 1))
       {
+      arma_extra_debug_print("trans_A = true; trans_B = true; vector result");
+      
       const Mat<eT> C     = trans(A)*trans(B);
       const eT*     C_mem = C.memptr();
       const uword   N     = C.n_elem;
@@ -358,6 +382,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = false; matrix result");
+    
     out.zeros(A_n_rows, B_n_cols);
     
     const uword N = (std::min)(A_n_rows, B_n_cols);
@@ -396,6 +422,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == false) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = false; matrix result");
+    
     out.zeros(A_n_cols, B_n_cols);
     
     const uword N = (std::min)(A_n_cols, B_n_cols);
@@ -437,6 +465,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true) )
     {
+    arma_extra_debug_print("trans_A = false; trans_B = true; matrix result");
+    
     out.zeros(A_n_rows, B_n_rows);
     
     const uword N = (std::min)(A_n_rows, B_n_rows);
@@ -473,6 +503,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   else
   if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == true) )
     {
+    arma_extra_debug_print("trans_A = true; trans_B = true; matrix result");
+    
     out.zeros(A_n_cols, B_n_rows);
     
     const uword N = (std::min)(A_n_cols, B_n_rows);
