@@ -49,64 +49,117 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
 template<typename T1, typename T2>
 inline
 void
-op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  // TODO: this is a rudimentary implementation; adapt code from trace()
-  
   typedef typename T1::elem_type eT;
   
-  const quasi_unwrap<T1> tmp1(X.m.A);
-  const quasi_unwrap<T2> tmp2(X.m.B);
+  const partial_unwrap<T1> UA(X.m.A);
+  const partial_unwrap<T2> UB(X.m.B);
   
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
+  const typename partial_unwrap<T1>::stored_type& A = UA.M;
+  const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
-  arma_debug_assert_trans_mul_size< false, false >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_debug_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
-  
-  //const uword B_n_rows = B.n_rows;  // TODO: use for adapted code
+
+  const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  if( (A_n_rows == 0) || (B_n_cols == 0) )  { out.set_size(A_n_rows, B_n_cols); return; }
+  // check if the multiplication results in a vector
   
-  const bool C_is_vec = (A_n_rows == 1) || (B_n_cols == 1);
-  
-  if(C_is_vec)
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
-    const Mat<eT> C     = A*B;
-    const eT*     C_mem = C.memptr();
-    
-    const uword N = (A_n_rows == 1) ? B_n_cols : A_n_rows;
-    
-    out.zeros(N, N);
-    
-    for(uword i=0; i<N; ++i)
+    if((A_n_rows == 1) || (B_n_cols == 1))
       {
-      out.at(i,i) = C_mem[i];
+      const Mat<eT> C     = A*B;
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
       }
     }
   else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
     {
+    if((A_n_cols == 1) || (B_n_cols == 1))
+      {
+      const Mat<eT> C     = trans(A)*B;
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    if((A_n_rows == 1) || (B_n_rows == 1))
+      {
+      const Mat<eT> C     = A*trans(B);
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    if((A_n_cols == 1) || (B_n_rows == 1))
+      {
+      const Mat<eT> C     = trans(A)*trans(B);
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  
+  // if we got to this point, the multiplication results in a matrix
+
+  const bool is_alias = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
+  
+  Mat<eT>  tmp;
+  Mat<eT>& out = (is_alias) ? tmp : actual_out;
+  
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
+    {
+    out.zeros(A_n_rows, B_n_cols);
+    
     const uword N = (std::min)(A_n_rows, B_n_cols);
-    
-    podarray<eT> C(N);
-    C.zeros();
-    
-    eT* C_mem = C.memptr();
     
     for(uword k=0; k < N; ++k)
       {
+      eT acc1 = eT(0);
+      eT acc2 = eT(0);
+      
       const eT* B_colptr = B.colptr(k);
       
       // condition: A_n_cols = B_n_rows
-      
-      eT acc1 = eT(0);
-      eT acc2 = eT(0);
       
       uword j;
       
@@ -128,16 +181,76 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_ti
         acc1 += A.at(k, i) * B_colptr[i];
         }
       
-      C_mem[k] = (acc1 + acc2);
-      }
-    
-    out.zeros(A_n_rows, B_n_cols);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      out.at(i,i) = C_mem[i];
+      const eT acc = acc1 + acc2;
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
       }
     }
+  else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
+    {
+    out.zeros(A_n_cols, B_n_cols);
+    
+    const uword N = (std::min)(A_n_cols, B_n_cols);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      const eT* A_colptr = A.colptr(k);
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_rows = B_n_rows
+      
+      const eT acc = op_dot::direct_dot(A_n_rows, A_colptr, B_colptr);
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    out.zeros(A_n_rows, B_n_rows);
+    
+    const uword N = (std::min)(A_n_rows, B_n_rows);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      eT acc = eT(0);
+      
+      // condition: A_n_cols = B_n_cols
+      
+      for(uword i=0; i < A_n_cols; ++i)
+        {
+        acc += A.at(k,i) * B.at(k,i);
+        }
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    out.zeros(A_n_cols, B_n_rows);
+    
+    const uword N = (std::min)(A_n_cols, B_n_rows);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      eT acc = eT(0);
+      
+      const eT* A_colptr = A.colptr(k);
+      
+      // condition: A_n_rows = B_n_cols
+      
+      for(uword i=0; i < A_n_rows; ++i)
+        {
+        acc += A_colptr[i] * B.at(k,i);
+        }
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  
+  if(is_alias)  { actual_out.steal_mem(tmp); }
   }
 
 
@@ -145,65 +258,118 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_ti
 template<typename T1, typename T2>
 inline
 void
-op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  // TODO: this is a rudimentary implementation; adapt code from trace()
-  
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  const quasi_unwrap<T1> tmp1(X.m.A);
-  const quasi_unwrap<T2> tmp2(X.m.B);
+  const partial_unwrap<T1> UA(X.m.A);
+  const partial_unwrap<T2> UB(X.m.B);
   
-  const Mat<eT>& A = tmp1.M;
-  const Mat<eT>& B = tmp2.M;
+  const typename partial_unwrap<T1>::stored_type& A = UA.M;
+  const typename partial_unwrap<T2>::stored_type& B = UB.M;
   
-  arma_debug_assert_trans_mul_size< false, false >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  arma_debug_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
+  
+  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
   
-  //const uword B_n_rows = B.n_rows;  // TODO: use for adapted code
+  const uword B_n_rows = B.n_rows;
   const uword B_n_cols = B.n_cols;
   
-  if( (A_n_rows == 0) || (B_n_cols == 0) )  { out.set_size(A_n_rows, B_n_cols); return; }
+  // check if the multiplication results in a vector
   
-  const bool C_is_vec = (A_n_rows == 1) || (B_n_cols == 1);
-  
-  if(C_is_vec)
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
     {
-    const Mat<eT> C     = A*B;
-    const eT*     C_mem = C.memptr();
-    
-    const uword N = (A_n_rows == 1) ? B_n_cols : A_n_rows;
-    
-    out.zeros(N, N);
-    
-    for(uword i=0; i<N; ++i)
+    if((A_n_rows == 1) || (B_n_cols == 1))
       {
-      out.at(i,i) = C_mem[i];
+      const Mat<eT> C     = A*B;
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
       }
     }
   else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == false) )
     {
+    if((A_n_cols == 1) || (B_n_cols == 1))
+      {
+      const Mat<eT> C     = trans(A)*B;
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    if((A_n_rows == 1) || (B_n_rows == 1))
+      {
+      const Mat<eT> C     = A*trans(B);
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true ) && (partial_unwrap<T2>::do_trans == true ) )
+    {
+    if((A_n_cols == 1) || (B_n_rows == 1))
+      {
+      const Mat<eT> C     = trans(A)*trans(B);
+      const eT*     C_mem = C.memptr();
+      const uword   N     = C.n_elem;
+      
+      actual_out.zeros(N,N);
+      
+      for(uword i=0; i<N; ++i)  { actual_out.at(i,i) = (use_alpha) ? eT(alpha * C_mem[i]) : eT(C_mem[i]); }
+      
+      return;
+      }
+    }
+  
+  // if we got to this point, the multiplication results in a matrix
+
+  const bool is_alias = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
+  
+  Mat<eT>  tmp;
+  Mat<eT>& out = (is_alias) ? tmp : actual_out;
+  
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == false) )
+    {
+    out.zeros(A_n_rows, B_n_cols);
+    
     const uword N = (std::min)(A_n_rows, B_n_cols);
-    
-    podarray<eT> C(N);
-    C.zeros();
-    
-    eT* C_mem = C.memptr();
     
     for(uword k=0; k < N; ++k)
       {
+      T acc_real = T(0);
+      T acc_imag = T(0);
+      
       const eT* B_colptr = B.colptr(k);
       
       // condition: A_n_cols = B_n_rows
-      
-      T acc_real = T(0);
-      T acc_imag = T(0);
       
       for(uword i=0; i < A_n_cols; ++i)
         {
@@ -222,16 +388,128 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_ti
         acc_imag += (a*d) + (b*c);
         }
       
-      C_mem[k] = std::complex<T>(acc_real,acc_imag);
-      }
-    
-    out.zeros(A_n_rows, B_n_cols);
-    
-    for(uword i=0; i<N; ++i)
-      {
-      out.at(i,i) = C_mem[i];
+      const eT acc = std::complex<T>(acc_real, acc_imag);
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
       }
     }
+  else
+  if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == false) )
+    {
+    out.zeros(A_n_cols, B_n_cols);
+    
+    const uword N = (std::min)(A_n_cols, B_n_cols);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      T acc_real = T(0);
+      T acc_imag = T(0);
+      
+      const eT* A_colptr = A.colptr(k);
+      const eT* B_colptr = B.colptr(k);
+      
+      // condition: A_n_rows = B_n_rows
+      
+      for(uword i=0; i < A_n_rows; ++i)
+        {
+        // acc += std::conj(A_colptr[i]) * B_colptr[i];
+        
+        const std::complex<T>& xx = A_colptr[i];
+        const std::complex<T>& yy = B_colptr[i];
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c = yy.real();
+        const T d = yy.imag();
+        
+        // take into account the complex conjugate of xx
+        
+        acc_real += (a*c) + (b*d);
+        acc_imag += (a*d) - (b*c);
+        }
+      
+      const eT acc = std::complex<T>(acc_real, acc_imag);
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == false) && (partial_unwrap<T2>::do_trans == true) )
+    {
+    out.zeros(A_n_rows, B_n_rows);
+    
+    const uword N = (std::min)(A_n_rows, B_n_rows);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      T acc_real = T(0);
+      T acc_imag = T(0);
+      
+      // condition: A_n_cols = B_n_cols
+      
+      for(uword i=0; i < A_n_cols; ++i)
+        {
+        // acc += A.at(k,i) * std::conj(B.at(k,i));
+        
+        const std::complex<T>& xx = A.at(k, i);
+        const std::complex<T>& yy = B.at(k, i);
+        
+        const T a = xx.real();
+        const T b = xx.imag();
+        
+        const T c =  yy.real();
+        const T d = -yy.imag();  // take the conjugate
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
+      
+      const eT acc = std::complex<T>(acc_real, acc_imag);
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  else
+  if( (partial_unwrap<T1>::do_trans == true) && (partial_unwrap<T2>::do_trans == true) )
+    {
+    out.zeros(A_n_cols, B_n_rows);
+    
+    const uword N = (std::min)(A_n_cols, B_n_rows);
+    
+    for(uword k=0; k < N; ++k)
+      {
+      T acc_real = T(0);
+      T acc_imag = T(0);
+      
+      const eT* A_colptr = A.colptr(k);
+      
+      // condition: A_n_rows = B_n_cols
+      
+      for(uword i=0; i < A_n_rows; ++i)
+        {
+        // acc += std::conj(A_colptr[i]) * std::conj(B.at(k,i));
+        
+        const std::complex<T>& xx = A_colptr[i];
+        const std::complex<T>& yy = B.at(k, i);
+        
+        const T a =  xx.real();
+        const T b = -xx.imag();  // take the conjugate
+        
+        const T c =  yy.real();
+        const T d = -yy.imag();  // take the conjugate
+        
+        acc_real += (a*c) - (b*d);
+        acc_imag += (a*d) + (b*c);
+        }
+      
+      const eT acc = std::complex<T>(acc_real, acc_imag);
+      
+      out.at(k,k) = (use_alpha) ? eT(alpha * acc) : eT(acc);
+      }
+    }
+  
+  if(is_alias)  { actual_out.steal_mem(tmp); }
   }
 
 
