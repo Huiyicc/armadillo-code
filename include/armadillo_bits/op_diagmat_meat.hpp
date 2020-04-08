@@ -28,19 +28,75 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
   
   typedef typename T1::elem_type eT;
   
-  const Proxy<T1> P(X.m);
-  
-  if(P.is_alias(out))
+  if(is_Mat<T1>::value)
     {
-    Mat<eT> tmp;
+    // allow detection of in-place operation
     
-    op_diagmat2::apply(tmp, P, 0, 0);
+    const unwrap<T1>   U(X.m);
+    const Mat<eT>& A = U.M;
     
-    out.steal_mem(tmp);
+    if(&out != &A)  // no aliasing
+      {
+      const Proxy< Mat<eT> > P(A);
+      
+      op_diagmat2::apply(out, P, 0, 0);
+      }
+    else  // we have aliasing
+      {
+      const uword n_rows = out.n_rows;
+      const uword n_cols = out.n_cols;
+      
+      if((n_rows == 1) || (n_cols == 1))  // create diagonal matrix from vector
+        {
+        const eT*   out_mem = out.memptr();
+        const uword N       = out.n_elem;
+        
+        Mat<eT> tmp(N,N);  tmp.zeros();
+        
+        for(uword i=0; i<N; ++i)  { tmp.at(i,i) = out_mem[i]; }
+        
+        out.steal_mem(tmp);
+        }
+      else  // create diagonal matrix from matrix
+        {
+        const uword N = (std::min)(n_rows, n_cols);
+        
+        for(uword i=0; i < n_cols; ++i)
+          {
+          if(i < N)
+            {
+            eT& out_ii = out.at(i,i);
+            
+            const eT val = out_ii;
+            
+            arrayops::fill_zeros(out.colptr(i), n_rows);
+            
+            out_ii = val;
+            }
+          else
+            {
+            arrayops::fill_zeros(out.colptr(i), n_rows);
+            }
+          }
+        }
+      }
     }
   else
     {
-    op_diagmat2::apply(out, P, 0, 0);
+    const Proxy<T1> P(X.m);
+    
+    if(P.is_alias(out))
+      {
+      Mat<eT> tmp;
+      
+      op_diagmat2::apply(tmp, P, 0, 0);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      op_diagmat2::apply(out, P, 0, 0);
+      }
     }
   }
 
@@ -546,6 +602,12 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
 
 
 
+//
+//
+//
+
+
+
 template<typename T1>
 inline
 void
@@ -571,18 +633,18 @@ op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const u
       {
       typename Proxy<T1>::ea_type Pea = P.get_ea();
       
-      for(uword i=0; i < n_elem; ++i)
-        {
-        out.at(row_offset + i, col_offset + i) = Pea[i];
-        }
+      for(uword i=0; i < n_elem; ++i)  { out.at(row_offset + i, col_offset + i) = Pea[i]; }
       }
     else
       {
-      const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
-      
-      const Proxy<typename unwrap<typename Proxy<T1>::stored_type>::stored_type> PP(U.M);
-      
-      op_diagmat2::apply(out, PP, row_offset, col_offset);
+      if(n_rows == 1)
+        {
+        for(uword i=0; i < n_elem; ++i)  { out.at(row_offset + i, col_offset + i) = P.at(0,i); }
+        }
+      else
+        {
+        for(uword i=0; i < n_elem; ++i)  { out.at(row_offset + i, col_offset + i) = P.at(i,0); }
+        }
       }
     }
   else  // P represents a matrix 
