@@ -39,7 +39,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
       {
       const Proxy< Mat<eT> > P(A);
       
-      op_diagmat2::apply(out, P, 0, 0);
+      op_diagmat::apply(out, P);
       }
     else  // we have aliasing
       {
@@ -89,14 +89,63 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat>& X)
       {
       Mat<eT> tmp;
       
-      op_diagmat2::apply(tmp, P, 0, 0);
+      op_diagmat::apply(tmp, P);
       
       out.steal_mem(tmp);
       }
     else
       {
-      op_diagmat2::apply(out, P, 0, 0);
+      op_diagmat::apply(out, P);
       }
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_diagmat::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword n_rows = P.get_n_rows();
+  const uword n_cols = P.get_n_cols();
+  const uword n_elem = P.get_n_elem();
+  
+  if(n_elem == 0)  { out.reset(); return; }
+  
+  const bool P_is_vec = (T1::is_row) || (T1::is_col) || (n_rows == 1) || (n_cols == 1);
+  
+  if(P_is_vec)
+    {
+    out.zeros(n_elem, n_elem);
+    
+    if(Proxy<T1>::use_at == false)
+      {
+      typename Proxy<T1>::ea_type Pea = P.get_ea();
+      
+      for(uword i=0; i < n_elem; ++i)  { out.at(i,i) = Pea[i]; }
+      }
+    else
+      {
+      if(n_rows == 1)
+        {
+        for(uword i=0; i < n_elem; ++i)  { out.at(i,i) = P.at(0,i); }
+        }
+      else
+        {
+        for(uword i=0; i < n_elem; ++i)  { out.at(i,i) = P.at(i,0); }
+        }
+      }
+    }
+  else  // P represents a matrix 
+    {
+    out.zeros(n_rows, n_cols);
+    
+    const uword N = (std::min)(n_rows, n_cols);
+    
+    for(uword i=0; i<N; ++i)  { out.at(i,i) = P.at(i,i); }
     }
   }
 
