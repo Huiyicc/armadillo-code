@@ -660,6 +660,36 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
 template<typename T1>
 inline
 void
+op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat2>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const uword row_offset = X.aux_uword_a;
+  const uword col_offset = X.aux_uword_b;
+  
+  const Proxy<T1> P(X.m);
+  
+  if(P.is_alias(out))
+    {
+    Mat<eT> tmp;
+    
+    op_diagmat2::apply(tmp, P, row_offset, col_offset);
+    
+    out.steal_mem(tmp);
+    }
+  else
+    {
+    op_diagmat2::apply(out, P, row_offset, col_offset);
+    }
+  }
+
+
+
+template<typename T1>
+inline
+void
 op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const uword row_offset, const uword col_offset)
   {
   arma_extra_debug_sigprint();
@@ -715,36 +745,6 @@ op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P, const u
       
       out.at(row,col) = P.at(row,col);
       }
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-op_diagmat2::apply(Mat<typename T1::elem_type>& out, const Op<T1, op_diagmat2>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  const uword row_offset = X.aux_uword_a;
-  const uword col_offset = X.aux_uword_b;
-  
-  const Proxy<T1> P(X.m);
-  
-  if(P.is_alias(out))
-    {
-    Mat<eT> tmp;
-    
-    op_diagmat2::apply(tmp, P, row_offset, col_offset);
-    
-    out.steal_mem(tmp);
-    }
-  else
-    {
-    op_diagmat2::apply(out, P, row_offset, col_offset);
     }
   }
 
