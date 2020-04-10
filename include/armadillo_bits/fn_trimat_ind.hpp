@@ -14,14 +14,14 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_trimat_indices
+//! \addtogroup fn_trimat_ind
 //! @{
 
 
 arma_warn_unused
 inline
 uvec
-trimatu_indices(const SizeMat& s, const sword k = 0)
+trimatu_ind(const SizeMat& s, const sword k = 0)
   {
   arma_extra_debug_sigprint();
   
@@ -31,7 +31,7 @@ trimatu_indices(const SizeMat& s, const sword k = 0)
   const uword row_offset = (k < 0) ? uword(-k) : uword(0);
   const uword col_offset = (k > 0) ? uword( k) : uword(0);
   
-  arma_debug_check( ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)), "trimatu_indices(): requested diagonal is out of bounds" );
+  arma_debug_check( ((row_offset > 0) && (row_offset >= n_rows)) || ((col_offset > 0) && (col_offset >= n_cols)), "trimatu_ind(): requested diagonal is out of bounds" );
   
   const uword N = (std::min)(n_rows - row_offset, n_cols - col_offset);
   
@@ -83,7 +83,7 @@ trimatu_indices(const SizeMat& s, const sword k = 0)
 arma_warn_unused
 inline
 uvec
-trimatl_indices(const SizeMat& s, const sword k = 0)
+trimatl_ind(const SizeMat& s, const sword k = 0)
   {
   arma_extra_debug_sigprint();
   
