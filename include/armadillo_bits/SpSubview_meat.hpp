@@ -1718,6 +1718,36 @@ SpSubview_col<eT>::operator=(const Base<eT,T1>& x)
 
 
 
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_htrans>
+SpSubview_col<eT>::t() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_htrans>
+SpSubview_col<eT>::ht() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_col<eT>,spop_strans>
+SpSubview_col<eT>::st() const
+  {
+  return SpOp<SpSubview_col<eT>,spop_strans>(*this);
+  }
+
+
+
 //
 //
 //
@@ -1810,6 +1840,36 @@ SpSubview_row<eT>::operator=(const Base<eT,T1>& x)
   arma_extra_debug_sigprint();
   
   SpSubview<eT>::operator=(x);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_htrans>
+SpSubview_row<eT>::t() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_htrans>
+SpSubview_row<eT>::ht() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_htrans>(*this);
+  }
+
+
+
+template<typename eT>
+inline
+const SpOp<SpSubview_row<eT>,spop_strans>
+SpSubview_row<eT>::st() const
+  {
+  return SpOp<SpSubview_row<eT>,spop_strans>(*this);
   }
 
 

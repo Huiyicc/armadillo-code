@@ -350,6 +350,10 @@ class SpSubview_col : public SpSubview<eT>
   template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator= (const   Base<eT,T1>& x);
   
+  inline const SpOp<SpSubview_col<eT>,spop_htrans>  t() const;
+  inline const SpOp<SpSubview_col<eT>,spop_htrans> ht() const;
+  inline const SpOp<SpSubview_col<eT>,spop_strans> st() const;
+  
   
   protected:
   
@@ -387,6 +391,10 @@ class SpSubview_row : public SpSubview<eT>
   
   template<typename T1> inline void operator= (const SpBase<eT,T1>& x);
   template<typename T1> inline void operator= (const   Base<eT,T1>& x);
+  
+  inline const SpOp<SpSubview_row<eT>,spop_htrans>  t() const;
+  inline const SpOp<SpSubview_row<eT>,spop_htrans> ht() const;
+  inline const SpOp<SpSubview_row<eT>,spop_strans> st() const;
   
   
   protected:
