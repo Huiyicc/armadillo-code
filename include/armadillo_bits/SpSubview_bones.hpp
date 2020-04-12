@@ -115,11 +115,11 @@ class SpSubview : public SpBase<eT, SpSubview<eT> >
 
   inline bool is_vec() const;
 
-  inline       SpSubview row(const uword row_num);
-  inline const SpSubview row(const uword row_num) const;
+  inline       SpSubview_row<eT> row(const uword row_num);
+  inline const SpSubview_row<eT> row(const uword row_num) const;
 
-  inline       SpSubview col(const uword col_num);
-  inline const SpSubview col(const uword col_num) const;
+  inline       SpSubview_col<eT> col(const uword col_num);
+  inline const SpSubview_col<eT> col(const uword col_num) const;
 
   inline       SpSubview rows(const uword in_row1, const uword in_row2);
   inline const SpSubview rows(const uword in_row1, const uword in_row2) const;

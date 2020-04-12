@@ -1065,56 +1065,56 @@ SpSubview<eT>::is_vec() const
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_row<eT>
 SpSubview<eT>::row(const uword row_num)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(row_num >= n_rows, "SpSubview::row(): out of bounds");
-
-  return submat(row_num, 0, row_num, n_cols - 1);
+  
+  return SpSubview_row<eT>(const_cast< SpMat<eT>& >(m), row_num + aux_row1, aux_col1, n_cols);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_row<eT>
 SpSubview<eT>::row(const uword row_num) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(row_num >= n_rows, "SpSubview::row(): out of bounds");
-
-  return submat(row_num, 0, row_num, n_cols - 1);
+  
+  return SpSubview_row<eT>(m, row_num + aux_row1, aux_col1, n_cols);
   }
 
 
 
 template<typename eT>
 inline
-SpSubview<eT>
+SpSubview_col<eT>
 SpSubview<eT>::col(const uword col_num)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(col_num >= n_cols, "SpSubview::col(): out of bounds");
-
-  return submat(0, col_num, n_rows - 1, col_num);
+  
+  return SpSubview_col<eT>(const_cast< SpMat<eT>& >(m), col_num + aux_col1, aux_row1, n_rows);
   }
 
 
 
 template<typename eT>
 inline
-const SpSubview<eT>
+const SpSubview_col<eT>
 SpSubview<eT>::col(const uword col_num) const
   {
   arma_extra_debug_sigprint();
-
+  
   arma_debug_check(col_num >= n_cols, "SpSubview::col(): out of bounds");
-
-  return submat(0, col_num, n_rows - 1, col_num);
+  
+  return SpSubview_col<eT>(m, col_num + aux_col1, aux_row1, n_rows);
   }
 
 
