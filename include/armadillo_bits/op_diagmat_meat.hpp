@@ -154,15 +154,27 @@ op_diagmat::apply(Mat<typename T1::elem_type>& out, const Proxy<T1>& P)
 template<typename T1, typename T2>
 inline
 void
-op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_not_cx<typename T1::elem_type>::result* junk)
+op_diagmat::apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  op_diagmat::apply_times(out, X.m.A, X.m.B);
+  }
+
+
+
+template<typename T1, typename T2>
+inline
+void
+op_diagmat::apply_times(Mat<typename T1::elem_type>& actual_out, const T1& X, const T2& Y, const typename arma_not_cx<typename T1::elem_type>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
   
-  const partial_unwrap<T1> UA(X.m.A);
-  const partial_unwrap<T2> UB(X.m.B);
+  const partial_unwrap<T1> UA(X);
+  const partial_unwrap<T2> UB(Y);
   
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
@@ -379,7 +391,7 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
 template<typename T1, typename T2>
 inline
 void
-op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X, const typename arma_cx_only<typename T1::elem_type>::result* junk)
+op_diagmat::apply_times(Mat<typename T1::elem_type>& actual_out, const T1& X, const T2& Y, const typename arma_cx_only<typename T1::elem_type>::result* junk)
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
@@ -387,8 +399,8 @@ op_diagmat::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   typedef typename T1::pod_type   T;
   typedef typename T1::elem_type eT;
   
-  const partial_unwrap<T1> UA(X.m.A);
-  const partial_unwrap<T2> UB(X.m.B);
+  const partial_unwrap<T1> UA(X);
+  const partial_unwrap<T2> UB(Y);
   
   const typename partial_unwrap<T1>::stored_type& A = UA.M;
   const typename partial_unwrap<T2>::stored_type& B = UB.M;
