@@ -1255,51 +1255,38 @@ SpMat<eT>::operator=(const Op<T1, op_diagmat>& expr)
   {
   arma_extra_debug_sigprint();
   
-  const Proxy<T1> P(expr.m);
+  const diagmat_proxy<T1> P(expr.m);
   
-  const uword P_n_rows = P.get_n_rows();
-  const uword P_n_cols = P.get_n_cols();
+  const uword max_n_nonzero = (std::min)(P.n_rows, P.n_cols);
   
-  const bool P_is_vec = (P_n_rows == 1) || (P_n_cols == 1);
+  // resize memory to upper bound
+  init(P.n_rows, P.n_cols, max_n_nonzero);
   
-  if(P_is_vec)    // generate diagonal sparse matrix from dense vector
+  uword count = 0;
+  
+  for(uword i=0; i < max_n_nonzero; ++i)
     {
-    const uword N = (P_n_rows == 1) ? P_n_cols : P_n_rows;
+    const eT val = P[i];
     
-    (*this).eye(N,N);
-    
-    eT* this_values = access::rwp(values);
-    
-    if(Proxy<T1>::use_at == false)
+    if(val != eT(0))
       {
-      typename Proxy<T1>::ea_type P_ea = P.get_ea();
-      
-      for(uword i=0; i < N; ++i) { this_values[i] = P_ea[i]; }
-      }
-    else
-      {
-      if(P_n_rows == 1)
-        {
-        for(uword i=0; i < N; ++i) { this_values[i] = P.at(0,i); }
-        }
-      else
-        {
-        for(uword i=0; i < N; ++i) { this_values[i] = P.at(i,0); }
-        }
+      access::rw(values[count])      = val;
+      access::rw(row_indices[count]) = i;
+      access::rw(col_ptrs[i + 1])++;
+      ++count;
       }
     }
-  else   // generate diagonal sparse matrix from dense matrix
+  
+  // fix column pointers to be cumulative
+  for(uword i = 1; i < n_cols + 1; ++i)
     {
-    (*this).eye(P_n_rows, P_n_cols);
-    
-    eT* this_values = access::rwp(values);
-    
-    const uword N = (std::min)(P_n_rows, P_n_cols);
-    
-    for(uword i=0; i < N; ++i) { this_values[i] = P.at(i,i); }
+    access::rw(col_ptrs[i]) += col_ptrs[i - 1];
     }
   
-  remove_zeros();
+  // quick resize without reallocating memory and copying data
+  access::rw(         n_nonzero) = count;
+  access::rw(     values[count]) = eT(0);
+  access::rw(row_indices[count]) = uword(0);
   
   return *this;
   }
