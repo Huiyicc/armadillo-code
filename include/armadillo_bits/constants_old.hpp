@@ -74,25 +74,25 @@ class Phy
   public:
   
   //! atomic mass constant (in kg)
-  arma_deprecated static eT m_u()       {  return eT(1.660539040e-27); }
+  arma_deprecated static eT m_u()       {  return eT(1.66053906660e-27); }
   
   //! Avogadro constant
-  arma_deprecated static eT N_A()       {  return eT(6.022140857e23); }
+  arma_deprecated static eT N_A()       {  return eT(6.02214076e23); }
   
   //! Boltzmann constant (in joules per kelvin)
-  arma_deprecated static eT k()         {  return eT(1.38064852e-23); }
+  arma_deprecated static eT k()         {  return eT(1.380649e-23); }
   
   //! Boltzmann constant (in eV/K)
-  arma_deprecated static eT k_evk()     {  return eT(8.6173303e-5); }
+  arma_deprecated static eT k_evk()     {  return eT(8.617333262e-5); }
   
   //! Bohr radius (in meters)
-  arma_deprecated static eT a_0()       { return eT(0.52917721067e-10); }
+  arma_deprecated static eT a_0()       { return eT(5.29177210903e-11); }
   
   //! Bohr magneton
-  arma_deprecated static eT mu_B()      { return eT(927.4009994e-26); }
+  arma_deprecated static eT mu_B()      { return eT(9.2740100783e-24); }
   
   //! characteristic impedance of vacuum (in ohms)
-  arma_deprecated static eT Z_0()       { return eT(376.730313461771); }
+  arma_deprecated static eT Z_0()       { return eT(376.730313668); }
   
   //! conductance quantum (in siemens)
   arma_deprecated static eT G_0()       { return eT(7.7480917310e-5); }
