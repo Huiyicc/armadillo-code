@@ -79,6 +79,35 @@ qr_econ
   return status;
   }
 
+//! QR decomposition with pivoting
+template<typename T1>
+inline
+bool
+qr_pivot
+  (
+         Mat<typename T1::elem_type>&    Q,
+         Mat<typename T1::elem_type>&    R,
+         Col<uword>&    P,
+  const Base<typename T1::elem_type,T1>& X,
+  const typename arma_blas_type_only<typename T1::elem_type>::result* junk = 0
+  )
+  {
+  arma_extra_debug_sigprint();
+  arma_ignore(junk);
 
+  arma_debug_check( (&Q == &R), "qr(): Q and R are the same object");
+
+  const bool status = auxlib::qr_pivot(Q, R, P, X);
+
+  if(status == false)
+    {
+    Q.soft_reset();
+    R.soft_reset();
+    P.soft_reset();
+    arma_debug_warn("qr_pivot(): decomposition failed");
+    }
+
+  return status;
+  }
 
 //! @}
