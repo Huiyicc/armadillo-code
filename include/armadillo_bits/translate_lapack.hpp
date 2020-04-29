@@ -424,7 +424,7 @@ namespace lapack
   template<typename eT>
   inline
   void
-  cx_geqp3(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* jpvt, eT* tau, eT* work, blas_int* lwork, typename eT::value_type* rwork, blas_int* info)
+  cx_geqp3(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* jpvt, eT* tau, eT* work, blas_int* lwork, typename get_pod_type<eT>::result* rwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
     
