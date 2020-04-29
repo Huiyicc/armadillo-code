@@ -2234,7 +2234,7 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     if(R.is_empty())
       {
       Q.eye(R_n_rows, R_n_rows);
-          
+      
       P.set_size(R_n_cols);
       
       for(uword col=0; col < R_n_cols; ++col)  { P.at(col) = col; }
@@ -2247,7 +2247,7 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     blas_int m         = static_cast<blas_int>(R_n_rows);
     blas_int n         = static_cast<blas_int>(R_n_cols);
     blas_int lwork     = 0;
-    blas_int lwork_min = (std::max)(blas_int(3 * n + 1), (std::max)(m,n));  // TODO: take into account requirements of geqp3() _and_ orgqr()/ungqr()
+    blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() _and_ orgqr()/ungqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
     
