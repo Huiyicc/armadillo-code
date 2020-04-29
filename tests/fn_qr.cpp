@@ -37,7 +37,7 @@ void qr_check(const MatType& Q, const MatType& R, const MatType &A, double atol,
     // R should be upper-triangular
     for (uword col_idx = 0; col_idx < R.n_cols; ++col_idx) {
         for (uword row_idx = col_idx + 1; row_idx < R.n_rows; ++row_idx) {
-            REQUIRE(R.at(row_idx, col_idx) == Approx(0));
+            REQUIRE(std::abs(R.at(row_idx, col_idx)) < atol);
         }
     }
 
@@ -79,6 +79,23 @@ TEST_CASE("fn_qr_pivot_real_1")
   double rtol = 1e-8;
 
   mat Q, R;
+  uvec P;
+  qr(Q, R, P, A);
+  qr_check(Q, R, A, atol, rtol, &P);
+  }
+
+TEST_CASE("fn_qr_pivot_complex_1")
+  {
+  cx_mat A =
+    "\
+      1+1j   -1  0;\
+     -1    3-1j  0;\
+      0       1  0;\
+    ";
+  double atol = 1e-10;
+  double rtol = 1e-8;
+
+  cx_mat Q, R;
   uvec P;
   qr(Q, R, P, A);
   qr_check(Q, R, A, atol, rtol, &P);
