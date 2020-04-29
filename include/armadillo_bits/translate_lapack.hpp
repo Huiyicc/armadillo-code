@@ -406,18 +406,22 @@ namespace lapack
     else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgeqrf)(m, n, (T*)a, lda, (T*)tau, (T*)work, lwork, info); }
     }
   
+  
+  
   template<typename eT>
   inline
   void
   geqp3(blas_int* m, blas_int* n, eT* a, blas_int* lda, blas_int* jpvt, eT* tau, eT* work, blas_int* lwork, blas_int* info)
     {
     arma_type_check(( is_supported_blas_type<eT>::value == false ));
-
+    
          if(    is_float<eT>::value)  { typedef float    T; arma_fortran(arma_sgeqp3)(m, n, (T*)a, lda, jpvt, (T*)tau, (T*)work, lwork, info); }
     else if(   is_double<eT>::value)  { typedef double   T; arma_fortran(arma_dgeqp3)(m, n, (T*)a, lda, jpvt, (T*)tau, (T*)work, lwork, info); }
     else if( is_cx_float<eT>::value)  { typedef blas_cxf T; arma_fortran(arma_cgeqp3)(m, n, (T*)a, lda, jpvt, (T*)tau, (T*)work, lwork, info); }
     else if(is_cx_double<eT>::value)  { typedef blas_cxd T; arma_fortran(arma_zgeqp3)(m, n, (T*)a, lda, jpvt, (T*)tau, (T*)work, lwork, info); }
     }
+  
+  
   
   template<typename eT>
   inline
@@ -429,8 +433,8 @@ namespace lapack
          if( is_float<eT>::value)  { typedef float  T; arma_fortran(arma_sorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info); }
     else if(is_double<eT>::value)  { typedef double T; arma_fortran(arma_dorgqr)(m, n, k, (T*)a, lda, (T*)tau, (T*)work, lwork, info); }
     }
-
-
+  
+  
   
   template<typename eT>
   inline

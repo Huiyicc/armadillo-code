@@ -95,12 +95,12 @@
   #define arma_dgeqrf dgeqrf
   #define arma_cgeqrf cgeqrf
   #define arma_zgeqrf zgeqrf
-
+  
   #define arma_sgeqp3 sgeqp3
   #define arma_dgeqp3 dgeqp3
   #define arma_cgeqp3 cgeqp3
   #define arma_zgeqp3 zgeqp3
-
+  
   #define arma_sorgqr sorgqr
   #define arma_dorgqr dorgqr
   
@@ -329,12 +329,12 @@
   #define arma_dgeqrf DGEQRF
   #define arma_cgeqrf CGEQRF
   #define arma_zgeqrf ZGEQRF
-
+  
   #define arma_sgeqp3 SGEQP3
   #define arma_dgeqp3 DGEQP3
   #define arma_cgeqp3 CGEQP3
   #define arma_zgeqp3 ZGEQP3
-
+  
   #define arma_sorgqr SORGQR
   #define arma_dorgqr DORGQR
   

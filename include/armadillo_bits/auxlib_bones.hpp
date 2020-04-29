@@ -156,14 +156,14 @@ class auxlib
   template<typename eT>
   inline static bool chol_band_common(Mat<eT>& X, const uword KD, const uword layout);
   
-
+  
   //
   // hessenberg decomposition
-
+  
   template<typename eT, typename T1>
   inline static bool hess(Mat<eT>& H, const Base<eT,T1>& X, Col<eT>& tao);
-
-
+  
+  
   //
   // qr
   
@@ -175,7 +175,8 @@ class auxlib
   
   template<typename eT, typename T1>
   inline static bool qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X);
-
+  
+  
   //
   // svd
   
