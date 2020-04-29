@@ -2247,7 +2247,7 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     blas_int m         = static_cast<blas_int>(R_n_rows);
     blas_int n         = static_cast<blas_int>(R_n_cols);
     blas_int lwork     = 0;
-    blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and orgqr()
+    blas_int lwork_min = (std::max)(blas_int(3 * n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and orgqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
     
@@ -2258,8 +2258,15 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     
     eT        work_query[2];
     blas_int lwork_query = -1;
-    
+    typename get_pod_type<eT>::result rwork_query[2];
+
     arma_extra_debug_print("lapack::geqp3()");
+    if (is_cx_float<eT>::value || is_cx_double<eT>::value) {
+        lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), &work_query[0], &lwork_query, &rwork_query[0], &info);
+    } else {
+        lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), &work_query[0], &lwork_query, &info);
+    }
+
     lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), &work_query[0], &lwork_query, &info);
     
     if(info != 0)  { return false; }
@@ -2271,8 +2278,12 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     podarray<eT> work( static_cast<uword>(lwork) );
     
     arma_extra_debug_print("lapack::geqp3()");
-    lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, &info);
-    
+    if (is_cx_float<eT>::value || is_cx_double<eT>::value) {
+        podarray<typename get_pod_type<eT>::result> rwork( static_cast<uword>(2 * n) );
+        lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    } else {
+        lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, &info);
+    }
     if(info != 0)  { return false; }
     
     Q.set_size(R_n_rows, R_n_rows);
