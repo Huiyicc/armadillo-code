@@ -2302,7 +2302,7 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X)
     arma_ignore(R);
     arma_ignore(P);
     arma_ignore(X);
-    arma_stop_logic_error("qr_pivot(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qr(): use of LAPACK must be enabled");
     return false;
     }
   #endif
@@ -2398,7 +2398,7 @@ auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Col<uword
     arma_ignore(R);
     arma_ignore(P);
     arma_ignore(X);
-    arma_stop_logic_error("qr_pivot(): use of LAPACK must be enabled");
+    arma_stop_logic_error("qr(): use of LAPACK must be enabled");
     return false;
     }
   #endif
