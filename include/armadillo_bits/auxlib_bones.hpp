@@ -173,7 +173,9 @@ class auxlib
   template<typename eT, typename T1>
   inline static bool qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
   
-  
+  template<typename eT, typename T1>
+  inline static bool qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X);
+
   //
   // svd
   
