@@ -171,10 +171,13 @@ class auxlib
   inline static bool qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
   
   template<typename eT, typename T1>
-  inline static bool qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
-  
-  template<typename eT, typename T1>
   inline static bool qr_pivot(Mat<eT>& Q, Mat<eT>& R, Col<uword>& P, const Base<eT,T1>& X);
+  
+  template<typename  T, typename T1>
+  inline static bool qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Col<uword>& P, const Base<std::complex<T>,T1>& X);
+
+  template<typename eT, typename T1>
+  inline static bool qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X);
   
   
   //

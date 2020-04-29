@@ -527,14 +527,15 @@ extern "C"
       arma_fortran_sans_prefix(arma_dgeqp3)(m, n, a, lda, jpvt, tau, work, lwork, info);
       }
     
-    void arma_fortran_with_prefix(arma_cgeqp3)(const blas_int* m, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* jpvt, blas_cxf* tau, blas_cxf* work, const blas_int* lwork, blas_int* info)
+    
+    void arma_fortran_with_prefix(arma_cgeqp3)(const blas_int* m, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* jpvt, blas_cxf* tau, blas_cxf* work, const blas_int* lwork,  float* rwork, blas_int* info)
       {
-      arma_fortran_sans_prefix(arma_cgeqp3)(m, n, a, lda, jpvt, tau, work, lwork, info);
+      arma_fortran_sans_prefix(arma_cgeqp3)(m, n, a, lda, jpvt, tau, work, lwork, rwork, info);
       }
     
-    void arma_fortran_with_prefix(arma_zgeqp3)(const blas_int* m, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* jpvt, blas_cxd* tau, blas_cxd* work, const blas_int* lwork, blas_int* info)
+    void arma_fortran_with_prefix(arma_zgeqp3)(const blas_int* m, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* jpvt, blas_cxd* tau, blas_cxd* work, const blas_int* lwork, double* rwork, blas_int* info)
       {
-      arma_fortran_sans_prefix(arma_zgeqp3)(m, n, a, lda, jpvt, tau, work, lwork, info);
+      arma_fortran_sans_prefix(arma_zgeqp3)(m, n, a, lda, jpvt, tau, work, lwork, rwork, info);
       }
     
     
