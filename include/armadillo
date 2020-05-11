@@ -60,11 +60,11 @@
   #include <random>
   #include <functional>
   #include <chrono>
-  #include <atomic>
 #endif
 
 
 #if defined(ARMA_USE_CXX11_MUTEX)
+  #include <atomic>
   #include <mutex>
 #endif
 
