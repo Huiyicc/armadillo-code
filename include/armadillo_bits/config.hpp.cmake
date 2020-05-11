@@ -101,8 +101,9 @@
 
 #if !defined(ARMA_USE_CXX11)
 // #define ARMA_USE_CXX11
-//// Uncomment the above line to forcefully enable use of C++11 features (eg. initialiser lists).
-//// Note that ARMA_USE_CXX11 is automatically enabled when a C++11 compiler is detected.
+// #define ARMA_USE_CXX11_MUTEX
+//// Uncomment the above two lines to forcefully enable use of C++11 features.
+//// Note that ARMA_USE_CXX11 and ARMA_USE_CXX11_MUTEX are automatically enabled when a C++11 compiler is detected.
 #endif
 
 #if !defined(ARMA_USE_OPENMP)
@@ -249,6 +250,7 @@
 
 #if defined(ARMA_DONT_USE_CXX11)
   #undef ARMA_USE_CXX11
+  #undef ARMA_USE_CXX11_MUTEX
   #undef ARMA_USE_EXTERN_CXX11_RNG
 #endif
 
@@ -262,6 +264,10 @@
       #cmakedefine ARMA_USE_EXTERN_CXX11_RNG
     #endif
   #endif
+#endif
+
+#if defined(ARMA_DONT_USE_CXX11_MUTEX)
+  #undef ARMA_USE_CXX11_MUTEX
 #endif
 
 #if defined(ARMA_DONT_USE_EXTERN_CXX11_RNG)
