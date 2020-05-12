@@ -18193,7 +18193,7 @@ Disable use of all C++11 features; overrides <i>ARMA_USE_CXX11</i>
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Disable use of only std::mutex in C++11; applicable if your compiler and/or environment doesn't support std::mutex
+Disable use of only <i>std::mutex</i> in C++11; applicable if your compiler and/or environment doesn't support <i>std::mutex</i>
     </td>
   </tr>
   <tr>
@@ -18889,6 +18889,7 @@ List of additions and changes for each version:
 <ul>
 <li>expanded <a href="#qr">qr()</a> to optionally use pivoted decomposition</li>
 <li>updated <a href="#constants">physical constants</a> to NIST 2018 CODATA values</li>
+<li>added <code>ARMA_DONT_USE_CXX11_MUTEX</code> <a href="#config_hpp">confguration option</a> to disable use of <i>std::mutex</i></li>
 </ul>
 </li>
 <br>
