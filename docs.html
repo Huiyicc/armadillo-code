@@ -12567,14 +12567,30 @@ See also:
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="qr"></a>
-<b>qr( Q, R, X )</b>
+<table>
+<tr><td><b>qr( Q, R, X )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 1)</td></tr>
+<tr><td><b>qr( Q, R, P, X )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 2)</td></tr>
+<tr><td><b>qr( Q, R, P, X, "matrix" )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 3)</td></tr>
+<tr><td><b>qr( Q, R, P, X, "vector" )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 4)</td></tr>
+</table>
 <ul>
 <li>
-Decomposition of <i>X</i> into an orthogonal matrix <i>Q</i> and a right triangular matrix <i>R</i>, such that <i>Q*R = X</i>
+Decomposition of <i>X</i> into an orthogonal matrix <i>Q</i> and a right triangular matrix <i>R</i>,
+with an optional permutation matrix/vector <i>P</i>
+<ul>
+<li>form 1: decomposition so that <i>Q*R = X</i></li>
+<li>form 2 and 3: <i>P</i> is permutation matrix with type <a href="#Mat">umat</a>; decomposition so that <i>Q*R = X*P</i></li>
+<li>form 4: <i>P</i> is permutation vector with type <a href="#Col">uvec</a>; decomposition so that <i>Q*R = X.cols(P)</i></li>
+</ul>
 </li>
 <br>
 <li>
-If the decomposition fails, <i>Q</i> and <i>R</i> are reset and the function returns a bool set to <i>false</i> (exception is not thrown)
+If <i>P</i> is specified, a column pivoting decomposition is used;
+the diagonal entries of <i>R</i> are ordered from largest to smallest magnitude
+</li>
+<br>
+<li>
+If the decomposition fails, <i>Q</i>, <i>R</i> and <i>P</i> are reset and the function returns a bool set to <i>false</i> (exception is not thrown)
 </li>
 <br>
 <li>
@@ -12582,9 +12598,17 @@ Examples:
 <ul>
 <pre>
 mat X = randu&lt;mat&gt;(5,5);
-mat Q, R;
 
-qr(Q,R,X);
+mat Q;
+mat R;
+
+umat P_mat;
+uvec P_vec;
+
+qr(Q, R, X);
+qr(Q, R, P_mat, X);
+qr(Q, R, P_mat, X, "matrix");
+qr(Q, R, P_vec, X, "vector");
 </pre>
 </ul>
 </li>
