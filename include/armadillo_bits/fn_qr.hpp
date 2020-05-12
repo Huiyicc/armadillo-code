@@ -123,10 +123,7 @@ qr
       
       P.zeros(N,N);
       
-      for(uword row=0; row < N; ++row)
-        {
-        P.at(row, P_vec[row]) = uword(1);
-        }
+      for(uword row=0; row < N; ++row)  { P.at(P_vec[row], row) = uword(1); }
       }
     }
   
