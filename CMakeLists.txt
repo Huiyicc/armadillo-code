@@ -143,6 +143,10 @@ option(ALLOW_BLAS_LAPACK_MACOS "Allow detection of BLAS and LAPACK on macOS" OFF
 ## cmake -D ALLOW_BLAS_LAPACK_MACOS=true .
 
 option(BUILD_SMOKE_TEST "Build a smoke test" OFF)
+## Example use on the command line:
+## cmake -D BUILD_SMOKE_TEST=true .
+## make
+## ctest
 
 
 if(WIN32)
