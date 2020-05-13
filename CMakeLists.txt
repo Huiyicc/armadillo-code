@@ -175,6 +175,8 @@ message(STATUS "ALLOW_OPENBLAS_MACOS       = ${ALLOW_OPENBLAS_MACOS}"      )
 message(STATUS "ALLOW_BLAS_LAPACK_MACOS    = ${ALLOW_BLAS_LAPACK_MACOS}"   )
 message(STATUS "BUILD_SMOKE_TEST           = ${BUILD_SMOKE_TEST}"          )
 
+message(STATUS "")
+message(STATUS "*** Looking for external libraries")
 
 ##
 ## Find LAPACK and BLAS libraries, or their optimised versions
@@ -614,6 +616,7 @@ install(FILES "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" DESTINATION ${CMAKE_
 # smoke test
 
 if(BUILD_SMOKE_TEST)
+  message(STATUS "*** Building smoke_test")
   enable_testing()
   add_subdirectory(smoke_test)
 endif()
