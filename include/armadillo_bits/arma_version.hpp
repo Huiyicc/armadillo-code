@@ -20,9 +20,9 @@
 
 
 #define ARMA_VERSION_MAJOR 9
-#define ARMA_VERSION_MINOR 879
-#define ARMA_VERSION_PATCH 0
-#define ARMA_VERSION_NAME  "unstable"
+#define ARMA_VERSION_MINOR 880
+#define ARMA_VERSION_PATCH 1
+#define ARMA_VERSION_NAME  "Roasted Mocha Detox"
 
 
 
