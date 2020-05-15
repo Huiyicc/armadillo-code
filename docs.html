@@ -12568,10 +12568,9 @@ See also:
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="qr"></a>
 <table>
-<tr><td><b>qr( Q, R, X )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 1)</td></tr>
-<tr><td><b>qr( Q, R, P, X )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 2)</td></tr>
+<tr><td><b>qr( Q, R,    X           )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 1)</td></tr>
+<tr><td><b>qr( Q, R, P, X, "vector" )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 2)</td></tr>
 <tr><td><b>qr( Q, R, P, X, "matrix" )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 3)</td></tr>
-<tr><td><b>qr( Q, R, P, X, "vector" )</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 4)</td></tr>
 </table>
 <ul>
 <li>
@@ -12579,8 +12578,8 @@ Decomposition of <i>X</i> into an orthogonal matrix <i>Q</i> and a right triangu
 with an optional permutation matrix/vector <i>P</i>
 <ul>
 <li>form 1: decomposition has the form <i>Q*R = X</i></li>
-<li>form 2&nbsp;&amp;&nbsp;3: <i>P</i> is permutation matrix with type <a href="#Mat">umat</a>; decomposition has the form <i>Q*R = X*P</i></li>
-<li>form 4: <i>P</i> is permutation vector with type <a href="#Col">uvec</a>; decomposition has the form <i>Q*R = X.cols(P)</i></li>
+<li>form 2: <i>P</i> is permutation vector with type <a href="#Col">uvec</a>; decomposition has the form <i>Q*R = X.cols(P)</i></li>
+<li>form 3: <i>P</i> is permutation matrix with type <a href="#Mat">umat</a>; decomposition has the form <i>Q*R = X*P</i></li>
 </ul>
 </li>
 <br>
@@ -12602,13 +12601,13 @@ mat X = randu&lt;mat&gt;(5,5);
 mat Q;
 mat R;
 
-umat P_mat;
-uvec P_vec;
-
 qr(Q, R, X);
-qr(Q, R, P_mat, X);
-qr(Q, R, P_mat, X, "matrix");
+
+uvec P_vec;
+umat P_mat;
+
 qr(Q, R, P_vec, X, "vector");
+qr(Q, R, P_mat, X, "matrix");
 </pre>
 </ul>
 </li>
