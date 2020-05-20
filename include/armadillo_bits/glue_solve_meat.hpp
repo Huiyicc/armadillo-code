@@ -272,7 +272,7 @@ glue_solve_gen::apply(Mat<eT>& out, const Base<eT,T1>& A_expr, const Base<eT,T2>
     
     if(fast)
       {
-      status = auxlib::solve_approx_fast(out, A, B_expr.get_ref());  // A is overwritten
+      status = auxlib::solve_rect_fast(out, A, B_expr.get_ref());  // A is overwritten
       
       if(status == false)
         {
