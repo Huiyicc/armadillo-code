@@ -2284,7 +2284,7 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     if(info != 0)  { return false; }
     
-    R.set_size(Q_n_cols, Q_n_cols);
+    R.zeros(Q_n_cols, Q_n_cols);
     
     //
     // construct R
@@ -2294,11 +2294,6 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
       for(uword row=0; row <= col; ++row)
         {
         R.at(row,col) = Q.at(row,col);
-        }
-      
-      for(uword row=(col+1); row < Q_n_cols; ++row)
-        {
-        R.at(row,col) = eT(0);
         }
       }
     
