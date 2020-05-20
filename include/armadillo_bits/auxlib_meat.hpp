@@ -4337,7 +4337,7 @@ auxlib::solve_sympd_refine(Mat< std::complex<typename T1::pod_type> >& out, type
 template<typename T1>
 inline
 bool
-auxlib::solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
+auxlib::solve_rect_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_extra_debug_sigprint();
   
@@ -4403,6 +4403,135 @@ auxlib::solve_approx_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::ele
     arma_ignore(out);
     arma_ignore(A);
     arma_ignore(B_expr);
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! solve a non-square full-rank system via QR or LQ decomposition with rcond estimate (experimental)
+template<typename T1>
+inline
+bool
+auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr, const bool allow_ugly)
+  {
+  arma_extra_debug_sigprint();
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::elem_type eT;
+    typedef typename T1::pod_type   T;
+    
+    out_rcond = T(0);
+    
+    const unwrap<T1>   U(B_expr.get_ref());
+    const Mat<eT>& B = U.M;
+    
+    arma_debug_check( (A.n_rows != B.n_rows), "solve(): number of rows in the given matrices must be the same" );
+    
+    if(A.is_empty() || B.is_empty())
+      {
+      out.zeros(A.n_cols, B.n_cols);
+      return true;
+      }
+    
+    arma_debug_assert_blas_size(A,B);
+    
+    Mat<eT> tmp( (std::max)(A.n_rows, A.n_cols), B.n_cols );
+    
+    if(arma::size(tmp) == arma::size(B))
+      {
+      tmp = B;
+      }
+    else
+      {
+      tmp.zeros();
+      tmp(0,0, arma::size(B)) = B;
+      }
+    
+    char      trans = 'N';
+    blas_int  m     = blas_int(A.n_rows);
+    blas_int  n     = blas_int(A.n_cols);
+    blas_int  lda   = blas_int(A.n_rows);
+    blas_int  ldb   = blas_int(tmp.n_rows);
+    blas_int  nrhs  = blas_int(B.n_cols);
+    blas_int  mn    = (std::min)(m,n);
+    blas_int  lwork = 3 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
+    blas_int  info  = 0;
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_extra_debug_print("lapack::gels()");
+    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork, &info );
+    
+    if(info != 0)  { return false; }
+    
+    if(A.n_rows >= A.n_cols)
+      {
+      arma_extra_debug_print("estimating rcond via R");
+      
+      // xGELS  docs: A contains details of its QR decomposition as returned by xGEQRF
+      // xGEQRF docs: elements on and above the diagonal contain the min(M,N)-by-N upper trapezoidal matrix R
+      
+      Mat<eT> R(A.n_cols, A.n_cols, fill::zeros);
+      
+      for(uword col=0; col < A.n_cols; ++col)
+        {
+        for(uword row=0; row <= col; ++row)
+          {
+          R.at(row,col) = A.at(row,col);
+          }
+        }
+      
+      // determine quality of solution
+      out_rcond = auxlib::rcond_trimat(R, 0);   // 0: upper triangular; 1: lower triangular
+      
+      if( (allow_ugly == false) && (out_rcond < auxlib::epsilon_lapack(A)) )  { return false; }
+      }
+    else
+    if(A.n_rows < A.n_cols)
+      {
+      arma_extra_debug_print("estimating rcond via L");
+      
+      // xGELS  docs: A contains details of its LQ decomposition as returned by xGELQF
+      // xGELQF docs: elements on and below the diagonal contain the m-by-min(m,n) lower trapezoidal matrix L
+      
+      Mat<eT> L(A.n_rows, A.n_rows, fill::zeros);
+      
+      for(uword col=0; col < A.n_rows; ++col)
+        {
+        for(uword row=col; row < A.n_rows; ++row)
+          {
+          L.at(row,col) = A.at(row,col);
+          }
+        }
+      
+      // determine quality of solution
+      out_rcond = auxlib::rcond_trimat(L, 1);   // 0: upper triangular; 1: lower triangular
+      
+      if( (allow_ugly == false) && (out_rcond < auxlib::epsilon_lapack(A)) )  { return false; }
+      }
+    
+    if(tmp.n_rows == A.n_cols)
+      {
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      out = tmp.head_rows(A.n_cols);
+      }
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(out);
+    arma_ignore(out_rcond)
+    arma_ignore(A);
+    arma_ignore(B_expr);
+    arma_ignore(allow_ugly);
     arma_stop_logic_error("solve(): use of LAPACK must be enabled");
     return false;
     }
