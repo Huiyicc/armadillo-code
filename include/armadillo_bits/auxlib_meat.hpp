@@ -4523,7 +4523,7 @@ auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type
   #else
     {
     arma_ignore(out);
-    arma_ignore(out_rcond)
+    arma_ignore(out_rcond);
     arma_ignore(A);
     arma_ignore(B_expr);
     arma_ignore(allow_ugly);
