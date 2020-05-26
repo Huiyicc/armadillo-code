@@ -2630,7 +2630,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     podarray<eT>   work( static_cast<uword>(lwork   ) );
     podarray< T>  rwork( static_cast<uword>(5*min_mn) );
     
-    blas_int lwork_tmp = -1;  // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
     lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
@@ -2730,7 +2730,7 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    // let gesvd_() calculate the optimum size of the workspace
+    // query to find optimum size of workspace
     eT        work_query[2];
     blas_int lwork_query = -1;
     
@@ -2811,7 +2811,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     podarray<eT>  work( static_cast<uword>(lwork   ) );
     podarray<T>  rwork( static_cast<uword>(5*min_mn) );
     
-    blas_int lwork_tmp = -1;  // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
     lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
@@ -2926,7 +2926,7 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
     
     podarray<eT> work( static_cast<uword>(lwork) );
     
-    blas_int lwork_tmp = -1;  // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::gesvd()");
     lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, &info);
@@ -3044,7 +3044,7 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
     podarray<eT>  work( static_cast<uword>(lwork   ) );
     podarray<T>  rwork( static_cast<uword>(5*min_mn) );
     
-    blas_int lwork_tmp = -1;  // let gesvd_() calculate the optimum size of the workspace
+    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
     lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
@@ -3265,10 +3265,12 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn          );
-    blas_int  lwork2 = 3*min_mn        + (std::max)( max_mn, 4*min_mn*min_mn + 3*min_mn + max_mn );
-    blas_int  lwork  = 2 * ((std::max)(lwork1, lwork2));  // due to differences between lapack 3.1 and 3.4; TODO: LAPACK 3.8 has another size
+    blas_int  lwork1 = 3*min_mn*min_mn + (std::max)(max_mn, 4*min_mn*min_mn + 4*min_mn);  // as per LAPACK 3.2 docs
+    blas_int  lwork2 = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.8 docs; consistent with LAPACK 3.4 docs: 3*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 3*min_mn + max_mn )
+    blas_int  lwork  = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
     blas_int  info   = 0;
+    
+    lwork *= 2;  // increase size of lwork for better performance; note that lwork has (min_mn*min_mn) term, so care is needed to avoid using too much memory
     
     S.set_size( static_cast<uword>(min_mn) );
     
@@ -3333,16 +3335,16 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int lda     = blas_int(A.n_rows);
     blas_int ldu     = blas_int(U.n_rows);
     blas_int ldvt    = blas_int(V.n_rows);
-    blas_int lwork   = 2 * (min_mn*min_mn + 2*min_mn + max_mn);
-    blas_int lrwork1 = 5*min_mn*min_mn + 7*min_mn;
-    blas_int lrwork2 = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));
-    blas_int lrwork  = (std::max)(lrwork1, lrwork2);  // due to differences between lapack 3.1 and 3.4
+    blas_int lwork   = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.4 and 3.8 docs; TODO: check with LAPACK 3.2 docs
+    blas_int lrwork  = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info    = 0;
+    
+    lwork *= 2;  // increase size of lwork for better performance; note that lwork has (min_mn*min_mn) term, so care is needed to avoid using too much memory
     
     S.set_size( static_cast<uword>(min_mn) );
     
     podarray<eT>        work( static_cast<uword>(lwork   ) );
-    podarray<T>        rwork( static_cast<uword>(lrwork  ) );
+    podarray< T>       rwork( static_cast<uword>(lrwork  ) );
     podarray<blas_int> iwork( static_cast<uword>(8*min_mn) );
     
     arma_extra_debug_print("lapack::cx_gesdd()");
@@ -3390,10 +3392,12 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int lda    = blas_int(A.n_rows);
     blas_int ldu    = m;
     blas_int ldvt   = min_mn;
-    blas_int lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn          );
-    blas_int lwork2 = 3*min_mn        + (std::max)( max_mn, 4*min_mn*min_mn + 3*min_mn + max_mn );
-    blas_int lwork  = 2 * ((std::max)(lwork1, lwork2));  // due to differences between lapack 3.1 and 3.4
+    blas_int lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn );  // as per LAPACK 3.2 docs
+    blas_int lwork2 = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.4 docs; LAPACK 3.8 requires 4*min_mn*min_mn + 7*min_mn
+    blas_int lwork  = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
     blas_int info   = 0;
+    
+    lwork *= 2;  // increase size of lwork for better performance; note that lwork has (min_mn*min_mn) term, so care is needed to avoid using too much memory
     
     if(A.is_empty())
       {
