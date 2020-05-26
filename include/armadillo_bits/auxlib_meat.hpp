@@ -3335,12 +3335,9 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int lda     = blas_int(A.n_rows);
     blas_int ldu     = blas_int(U.n_rows);
     blas_int ldvt    = blas_int(V.n_rows);
-    blas_int lwork   = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2, 3.4, 3.8 docs
-    blas_int lrwork  = min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
+    blas_int lwork   = 4 * (min_mn*min_mn + 2*min_mn + max_mn);  // as per LAPACK 3.2, 3.4, 3.8 docs
+    blas_int lrwork  = 4 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info    = 0;
-    
-    lwork  *= 4;
-    lrwork *= 4;
     
     S.set_size( static_cast<uword>(min_mn) );
     
