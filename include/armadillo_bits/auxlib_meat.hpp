@@ -958,7 +958,7 @@ auxlib::eig_gen
     T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int lwork = (vecs_on) ? (8 * ((std::max)(blas_int(1), 4*N)) ) : (8 * ((std::max)(blas_int(1), 3*N)) );
+    blas_int lwork = (vecs_on) ? (4 * ((std::max)(blas_int(1), 4*N)) ) : (4 * ((std::max)(blas_int(1), 3*N)) );
     blas_int info  = 0;
     
     podarray<T> work( static_cast<uword>(lwork) );
@@ -1065,7 +1065,7 @@ auxlib::eig_gen
     eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int lwork = 8 * ((std::max)(blas_int(1), 2*N));
+    blas_int lwork = 4 * ((std::max)(blas_int(1), 2*N));
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
@@ -1148,7 +1148,7 @@ auxlib::eig_gen_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 8 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int lwork = 4 * ((std::max)(blas_int(1), blas_int(2*N)));
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
@@ -1271,7 +1271,7 @@ auxlib::eig_gen_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 8 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int lwork = 4 * ((std::max)(blas_int(1), blas_int(2*N)));
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
@@ -1359,7 +1359,7 @@ auxlib::eig_pair
     T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int lwork = 8 * ((std::max)(blas_int(1), 8*N));
+    blas_int lwork = 4 * ((std::max)(blas_int(1), 8*N));
     blas_int info  = 0;
     
     podarray<T> alphar(A.n_rows);
@@ -1496,7 +1496,7 @@ auxlib::eig_pair
     eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int lwork = 8 * ((std::max)(blas_int(1),2*N));
+    blas_int lwork = 4 * ((std::max)(blas_int(1),2*N));
     blas_int info  = 0;
     
     podarray<eT> alpha(A.n_rows);
@@ -1585,7 +1585,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(A.n_rows);
-    blas_int lwork = 8 * ( (std::max)(blas_int(1), 3*N-1) );
+    blas_int lwork = 4 * ( (std::max)(blas_int(1), 3*N-1) );
     blas_int info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -1648,7 +1648,7 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(A.n_rows);
-    blas_int lwork = 8 * ( (std::max)(blas_int(1), 2*N-1) );
+    blas_int lwork = 4 * ( (std::max)(blas_int(1), 2*N-1) );
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
@@ -1700,7 +1700,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(eigvec.n_rows);
-    blas_int lwork = 8 * ( (std::max)(blas_int(1), 3*N-1) );
+    blas_int lwork = 4 * ( (std::max)(blas_int(1), 3*N-1) );
     blas_int info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -1754,7 +1754,7 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     char uplo  = 'U';
     
     blas_int N     = blas_int(eigvec.n_rows);
-    blas_int lwork = 8 * ( (std::max)(blas_int(1), 2*N-1) );
+    blas_int lwork = 4 * ( (std::max)(blas_int(1), 2*N-1) );
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
@@ -1807,7 +1807,7 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     char uplo = 'U';
     
     blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 4 * (1 + 6*N + 2*(N*N));
+    blas_int lwork  = 2 * (1 + 6*N + 2*(N*N));
     blas_int liwork = 4 * (3 + 5*N);
     blas_int info   = 0;
     
@@ -1863,8 +1863,8 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< st
     char uplo  = 'U';
     
     blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 4 * (2*N + N*N);
-    blas_int lrwork = 4 * (1 + 5*N + 2*(N*N));
+    blas_int lwork  = 2 * (2*N + N*N);
+    blas_int lrwork = 2 * (1 + 5*N + 2*(N*N));
     blas_int liwork = 4 * (3 + 5*N);
     blas_int info   = 0;
     
@@ -2622,7 +2622,7 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     blas_int  lda    = A.n_rows;
     blas_int  ldu    = U.n_rows;
     blas_int  ldvt   = V.n_rows;
-    blas_int  lwork  = (std::max)( blas_int(1), 2*min_mn+(std::max)(m,n) );
+    blas_int  lwork  = 4 * ( (std::max)( blas_int(1), 2*min_mn+(std::max)(m,n) ) );
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -2803,7 +2803,7 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = (std::max)( blas_int(1), 2*min_mn + (std::max)(m,n) );
+    blas_int  lwork  = 4 * ( (std::max)( blas_int(1), 2*min_mn + (std::max)(m,n) ) );
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -2920,7 +2920,7 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
       }
     
     
-    blas_int lwork = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int lwork = 4 * ( (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
     blas_int info  = 0;
     
     
@@ -3037,7 +3037,7 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
       V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n)      );
       }
     
-    blas_int lwork = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int lwork = 4 * ( (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
     blas_int info  = 0;
     
     
@@ -3117,7 +3117,7 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 8 * ( 3*min_mn + (std::max)( max_mn, 7*min_mn ) );
+    blas_int  lwork  = 4 * ( 3*min_mn + (std::max)( max_mn, 7*min_mn ) );
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3180,7 +3180,7 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     blas_int  lda    = blas_int(A.n_rows);
     blas_int  ldu    = blas_int(U.n_rows);
     blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 8 * (2*min_mn + max_mn);  
+    blas_int  lwork  = 4 * (2*min_mn + max_mn);  
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3269,7 +3269,7 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  ldvt   = blas_int(V.n_rows);
     blas_int  lwork1 = 3*min_mn*min_mn + (std::max)(max_mn, 4*min_mn*min_mn + 4*min_mn);  // as per LAPACK 3.2 docs
     blas_int  lwork2 = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.8 docs; consistent with LAPACK 3.4 docs
-    blas_int  lwork  = 4 * (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.8
+    blas_int  lwork  = 2 * ((std::max)(lwork1, lwork2));  // due to differences between LAPACK 3.2 and 3.8
     blas_int  info   = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3335,8 +3335,8 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int lda     = blas_int(A.n_rows);
     blas_int ldu     = blas_int(U.n_rows);
     blas_int ldvt    = blas_int(V.n_rows);
-    blas_int lwork   = 4 * (min_mn*min_mn + 2*min_mn + max_mn);  // as per LAPACK 3.2, 3.4, 3.8 docs
-    blas_int lrwork  = 4 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
+    blas_int lwork   = 2 * (min_mn*min_mn + 2*min_mn + max_mn);  // as per LAPACK 3.2, 3.4, 3.8 docs
+    blas_int lrwork  = 2 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info    = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3392,7 +3392,7 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int ldvt   = min_mn;
     blas_int lwork1 = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn );  // as per LAPACK 3.2 docs
     blas_int lwork2 = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.4 docs; LAPACK 3.8 requires 4*min_mn*min_mn + 7*min_mn
-    blas_int lwork  = 4 * (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
+    blas_int lwork  = 2 * (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
     blas_int info   = 0;
     
     if(A.is_empty())
@@ -3459,8 +3459,8 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     blas_int lda     = blas_int(A.n_rows);
     blas_int ldu     = m;
     blas_int ldvt    = min_mn;
-    blas_int lwork   = 4 * (min_mn*min_mn + 2*min_mn + max_mn);  // as per LAPACK 3.2 docs
-    blas_int lrwork  = 4 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));  // LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
+    blas_int lwork   = 2 * (min_mn*min_mn + 2*min_mn + max_mn);  // as per LAPACK 3.2 docs
+    blas_int lrwork  = 2 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));  // LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info    = 0;
     
     if(A.is_empty())
@@ -4370,7 +4370,7 @@ auxlib::solve_rect_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_
     blas_int  ldb   = blas_int(tmp.n_rows);
     blas_int  nrhs  = blas_int(B.n_cols);
     blas_int  mn    = (std::min)(m,n);
-    blas_int  lwork = 8 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
+    blas_int  lwork = 4 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
     blas_int  info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -4451,7 +4451,7 @@ auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type
     blas_int  ldb   = blas_int(tmp.n_rows);
     blas_int  nrhs  = blas_int(B.n_cols);
     blas_int  mn    = (std::min)(m,n);
-    blas_int  lwork = 8 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
+    blas_int  lwork = 4 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
     blas_int  info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -5449,7 +5449,7 @@ auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
     blas_int  n      = blas_int(S_n_rows);
     blas_int  sdim   = 0;
     blas_int  ldvs   = calc_U ? n : blas_int(1);
-    blas_int  lwork  = 8 * ((std::max)(blas_int(1), 3*n));
+    blas_int  lwork  = 4 * ((std::max)(blas_int(1), 3*n));
     blas_int  info   = 0;
     
     podarray<eT> wr(S_n_rows);
@@ -5523,7 +5523,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool cal
     blas_int  n      = blas_int(S_n_rows);
     blas_int  sdim   = 0;
     blas_int  ldvs   = calc_U ? n : blas_int(1);
-    blas_int  lwork  = 8 * ((std::max)(blas_int(1), 2*n));
+    blas_int  lwork  = 4 * ((std::max)(blas_int(1), 2*n));
     blas_int  info   = 0;
     
     podarray<eT>           w(S_n_rows);
@@ -5657,7 +5657,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     void*    selctg  = 0;
     blas_int N       = blas_int(A.n_rows);
     blas_int sdim    = 0;
-    blas_int lwork   = 8 * ((std::max)(blas_int(1),8*N+16));
+    blas_int lwork   = 4 * ((std::max)(blas_int(1),8*N+16));
     blas_int info    = 0;
     
          if(mode == 'l')  { eigsort = 'S'; selctg = qz_helper::ptr_cast(&(qz_helper::select_lhp<T>)); }
@@ -5748,7 +5748,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     void*    selctg  = 0;
     blas_int N       = blas_int(A.n_rows);
     blas_int sdim    = 0;
-    blas_int lwork   = 8 * ((std::max)(blas_int(1),2*N));
+    blas_int lwork   = 4 * ((std::max)(blas_int(1),2*N));
     blas_int info    = 0;
     
          if(mode == 'l')  { eigsort = 'S'; selctg = qz_helper::ptr_cast(&(qz_helper::cx_select_lhp<T>)); }
