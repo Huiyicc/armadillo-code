@@ -2148,7 +2148,6 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     blas_int m         = static_cast<blas_int>(R_n_rows);
     blas_int n         = static_cast<blas_int>(R_n_cols);
-    blas_int lwork     = 0;
     blas_int lwork_min = (std::max)(blas_int(1), (std::max)(m,n));  // take into account requirements of geqrf() _and_ orgqr()/ungqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
@@ -2164,13 +2163,12 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::geqrf()");
-    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    lapack::geqrf(&m, &n, R.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
     
     if(info != 0)  { return false; }
     
@@ -2193,13 +2191,13 @@ auxlib::qr(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     if( (is_float<eT>::value) || (is_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::orgqr()");
-      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+      lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
       }
     else
     if( (is_cx_float<eT>::value) || (is_cx_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::ungqr()");
-      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+      lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
       }
     
     return (info == 0);
@@ -2258,7 +2256,6 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     
     blas_int m         = static_cast<blas_int>(Q_n_rows);
     blas_int n         = static_cast<blas_int>(Q_n_cols);
-    blas_int lwork     = 0;
     blas_int lwork_min = (std::max)(blas_int(1), (std::max)(m,n));  // take into account requirements of geqrf() _and_ orgqr()/ungqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
@@ -2274,13 +2271,12 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::geqrf()");
-    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    lapack::geqrf(&m, &n, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
     
     if(info != 0)  { return false; }
     
@@ -2300,13 +2296,13 @@ auxlib::qr_econ(Mat<eT>& Q, Mat<eT>& R, const Base<eT,T1>& X)
     if( (is_float<eT>::value) || (is_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::orgqr()");
-      lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+      lapack::orgqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
       }
     else
     if( (is_cx_float<eT>::value) || (is_cx_double<eT>::value) )
       {
       arma_extra_debug_print("lapack::ungqr()");
-      lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+      lapack::ungqr(&m, &n, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
       }
     
     return (info == 0);
@@ -2353,7 +2349,6 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Mat<uword>& P, const Base<eT,T1>& X)
     
     blas_int m         = static_cast<blas_int>(R_n_rows);
     blas_int n         = static_cast<blas_int>(R_n_cols);
-    blas_int lwork     = 0;
     blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and orgqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
@@ -2372,13 +2367,12 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Mat<uword>& P, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::geqp3()");
-    lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, &info);
+    lapack::geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork_final, &info);
     
     if(info != 0)  { return false; }
     
@@ -2399,7 +2393,7 @@ auxlib::qr_pivot(Mat<eT>& Q, Mat<eT>& R, Mat<uword>& P, const Base<eT,T1>& X)
       }
     
     arma_extra_debug_print("lapack::orgqr()");
-    lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    lapack::orgqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
     
     return (info == 0);
     }
@@ -2448,7 +2442,6 @@ auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Mat<uword
     
     blas_int m         = static_cast<blas_int>(R_n_rows);
     blas_int n         = static_cast<blas_int>(R_n_cols);
-    blas_int lwork     = 0;
     blas_int lwork_min = (std::max)(blas_int(3*n + 1), (std::max)(m,n));  // take into account requirements of geqp3() and ungqr()
     blas_int k         = (std::min)(m,n);
     blas_int info      = 0;
@@ -2468,13 +2461,12 @@ auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Mat<uword
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::geqp3()");
-    lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_geqp3(&m, &n, R.memptr(), &m, jpvt.memptr(), tau.memptr(), work.memptr(), &lwork_final, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -2495,7 +2487,7 @@ auxlib::qr_pivot(Mat< std::complex<T> >& Q, Mat< std::complex<T> >& R, Mat<uword
       }
     
     arma_extra_debug_print("lapack::ungqr()");
-    lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork, &info);
+    lapack::ungqr(&m, &m, &k, Q.memptr(), &m, tau.memptr(), work.memptr(), &lwork_final, &info);
     
     return (info == 0);
     }
@@ -2547,7 +2539,6 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     blas_int lda        = A.n_rows;
     blas_int ldu        = U.n_rows;
     blas_int ldvt       = V.n_rows;
-    blas_int lwork      = 0;
     blas_int lwork_min  = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
     blas_int info   = 0;
     
@@ -2562,13 +2553,12 @@ auxlib::svd(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_cols)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( work_query[0] );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesvd()");
-    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info);
+    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, &info);
     
     return (info == 0);
     }
@@ -2616,37 +2606,34 @@ auxlib::svd(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, uwor
     char jobu  = 'N';
     char jobvt = 'N';
     
-    blas_int  m      = A.n_rows;
-    blas_int  n      = A.n_cols;
-    blas_int  min_mn = (std::min)(m,n);
-    blas_int  lda    = A.n_rows;
-    blas_int  ldu    = U.n_rows;
-    blas_int  ldvt   = V.n_rows;
-    blas_int  lwork  = 4 * ( (std::max)( blas_int(1), 2*min_mn+(std::max)(m,n) ) );
-    blas_int  info   = 0;
+    blas_int  m         = A.n_rows;
+    blas_int  n         = A.n_cols;
+    blas_int  min_mn    = (std::min)(m,n);
+    blas_int  lda       = A.n_rows;
+    blas_int  ldu       = U.n_rows;
+    blas_int  ldvt      = V.n_rows;
+    blas_int  lwork_min = (std::max)( blas_int(1), 2*min_mn+(std::max)(m,n) );
+    blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    podarray<eT>   work( static_cast<uword>(lwork   ) );
-    podarray< T>  rwork( static_cast<uword>(5*min_mn) );
+    podarray<T> rwork( static_cast<uword>(5*min_mn) );
     
-    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
+    eT        work_query[2];
+    blas_int lwork_query = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
-    blas_int proposed_lwork = static_cast<blas_int>( access::tmp_real(work[0]) );
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    if(proposed_lwork > lwork)
-      {
-      lwork = proposed_lwork;
-      work.set_size( static_cast<uword>(lwork) );
-      }
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), &info);
     
     return (info == 0);
     }
@@ -2725,7 +2712,6 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  ldu        = blas_int(U.n_rows);
     blas_int  ldvt       = blas_int(V.n_rows);
     blas_int  lwork_min  = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
-    blas_int  lwork      = 0;
     blas_int  info       = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -2740,13 +2726,12 @@ auxlib::svd(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( work_query[0] );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesvd()");
-    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info);
+    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, &info);
     
     if(info != 0)  { return false; }
     
@@ -2797,37 +2782,34 @@ auxlib::svd(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, con
     char jobu  = 'A';
     char jobvt = 'A';
     
-    blas_int  m      = blas_int(A.n_rows);
-    blas_int  n      = blas_int(A.n_cols);
-    blas_int  min_mn = (std::min)(m,n);
-    blas_int  lda    = blas_int(A.n_rows);
-    blas_int  ldu    = blas_int(U.n_rows);
-    blas_int  ldvt   = blas_int(V.n_rows);
-    blas_int  lwork  = 4 * ( (std::max)( blas_int(1), 2*min_mn + (std::max)(m,n) ) );
-    blas_int  info   = 0;
+    blas_int  m         = blas_int(A.n_rows);
+    blas_int  n         = blas_int(A.n_cols);
+    blas_int  min_mn    = (std::min)(m,n);
+    blas_int  lda       = blas_int(A.n_rows);
+    blas_int  ldu       = blas_int(U.n_rows);
+    blas_int  ldvt      = blas_int(V.n_rows);
+    blas_int  lwork_min = (std::max)( blas_int(1), 2*min_mn + (std::max)(m,n) );
+    blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
     
-    podarray<eT>  work( static_cast<uword>(lwork   ) );
-    podarray<T>  rwork( static_cast<uword>(5*min_mn) );
+    podarray<T> rwork( static_cast<uword>(5*min_mn) );
     
-    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
+    eT        work_query[2];
+    blas_int lwork_query = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
 
-    blas_int proposed_lwork = static_cast<blas_int>( access::tmp_real(work[0]) );
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    if(proposed_lwork > lwork)
-      {
-      lwork = proposed_lwork;
-      work.set_size( static_cast<uword>(lwork) );
-      }
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -2920,29 +2902,24 @@ auxlib::svd_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X, const
       }
     
     
-    blas_int lwork = 4 * ( (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
-    blas_int info  = 0;
+    blas_int lwork_min = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int info      = 0;
     
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
-    
-    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
+    eT        work_query[2];
+    blas_int lwork_query = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::gesvd()");
-    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, &info);
+    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, &info);
     
     if(info != 0)  { return false; }
     
-    blas_int proposed_lwork = static_cast<blas_int>(work[0]);
+    blas_int lwork_proposed = static_cast<blas_int>(work_query[0]);
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    if(proposed_lwork > lwork)
-      {
-      lwork = proposed_lwork;
-      work.set_size( static_cast<uword>(lwork) );
-      }
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesvd()");
-    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, &info);
+    lapack::gesvd<eT>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, &info);
     
     if(info != 0)  { return false; }
     
@@ -3037,30 +3014,26 @@ auxlib::svd_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V
       V.set_size( static_cast<uword>(ldvt), static_cast<uword>(n)      );
       }
     
-    blas_int lwork = 4 * ( (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) ) );
-    blas_int info  = 0;
+    blas_int lwork_min = (std::max)( blas_int(1), (std::max)( (3*min_mn + (std::max)(m,n)), 5*min_mn ) );
+    blas_int info      = 0;
     
+    podarray<T> rwork( static_cast<uword>(5*min_mn) );
     
-    podarray<eT>  work( static_cast<uword>(lwork   ) );
-    podarray<T>  rwork( static_cast<uword>(5*min_mn) );
-    
-    blas_int lwork_tmp = -1;  // query to find optimum size of workspace
+    eT        work_query[2];
+    blas_int lwork_query = -1;  // query to find optimum size of workspace
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_tmp, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, &work_query[0], &lwork_query, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
-    blas_int proposed_lwork = static_cast<blas_int>( access::tmp_real(work[0]) );
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    if(proposed_lwork > lwork)
-      {
-      lwork = proposed_lwork;
-      work.set_size( static_cast<uword>(lwork) );
-      }
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gesvd()");
-    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), &info);
+    lapack::cx_gesvd<T>(&jobu, &jobvt, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -3118,7 +3091,6 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
     blas_int  ldu       = blas_int(U.n_rows);
     blas_int  ldvt      = blas_int(V.n_rows);
     blas_int  lwork_min = 3*min_mn + (std::max)( max_mn, 7*min_mn );
-    blas_int  lwork     = 0;
     blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3134,13 +3106,12 @@ auxlib::svd_dc(Col<eT>& S, const Base<eT,T1>& X, uword& X_n_rows, uword& X_n_col
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( work_query[0] );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesdd()");
-    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, iwork.memptr(), &info);
+    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, iwork.memptr(), &info);
     
     return (info == 0);
     }
@@ -3195,7 +3166,6 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     blas_int  ldu       = blas_int(U.n_rows);
     blas_int  ldvt      = blas_int(V.n_rows);
     blas_int  lwork_min = 2*min_mn + max_mn;
-    blas_int  lwork     = 0;
     blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3212,13 +3182,12 @@ auxlib::svd_dc(Col<T>& S, const Base<std::complex<T>, T1>& X, uword& X_n_rows, u
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gesdd()");
-    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info);
+    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), iwork.memptr(), &info);
     
     return (info == 0);
     }
@@ -3298,7 +3267,6 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int  lwork1    = 3*min_mn*min_mn + (std::max)(max_mn, 4*min_mn*min_mn + 4*min_mn);  // as per LAPACK 3.2 docs
     blas_int  lwork2    = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.8 docs; consistent with LAPACK 3.4 docs
     blas_int  lwork_min = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.8
-    blas_int  lwork     = 0;
     blas_int  info      = 0;
     
     S.set_size( static_cast<uword>(min_mn) );
@@ -3314,13 +3282,12 @@ auxlib::svd_dc(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>(work_query[0]);
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesdd()");
-    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, iwork.memptr(), &info);
+    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -3378,7 +3345,6 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     blas_int ldu       = blas_int(U.n_rows);
     blas_int ldvt      = blas_int(V.n_rows);
     blas_int lwork_min = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2, 3.4, 3.8 docs
-    blas_int lwork     = 0;
     blas_int lrwork    = 2 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));   // as per LAPACK 3.4 docs; LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info      = 0;
     
@@ -3396,13 +3362,12 @@ auxlib::svd_dc(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >& V, 
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
-    podarray<eT> work( static_cast<uword>(lwork) );
-
     arma_extra_debug_print("lapack::cx_gesdd()");
-    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info);
+    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -3449,7 +3414,6 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     blas_int lwork1    = 3*min_mn*min_mn + (std::max)( max_mn, 4*min_mn*min_mn + 4*min_mn );  // as per LAPACK 3.2 docs
     blas_int lwork2    = 4*min_mn*min_mn + 6*min_mn + max_mn;  // as per LAPACK 3.4 docs; LAPACK 3.8 requires 4*min_mn*min_mn + 7*min_mn
     blas_int lwork_min = (std::max)(lwork1, lwork2);  // due to differences between LAPACK 3.2 and 3.4
-    blas_int lwork     = 0;
     blas_int info      = 0;
     
     if(A.is_empty())
@@ -3477,13 +3441,12 @@ auxlib::svd_dc_econ(Mat<eT>& U, Col<eT>& S, Mat<eT>& V, const Base<eT,T1>& X)
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>(work_query[0]);
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gesdd()");
-    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, iwork.memptr(), &info);
+    lapack::gesdd<eT>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -3530,7 +3493,6 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     blas_int ldu       = m;
     blas_int ldvt      = min_mn;
     blas_int lwork_min = min_mn*min_mn + 2*min_mn + max_mn;  // as per LAPACK 3.2 docs
-    blas_int lwork     = 0;
     blas_int lrwork    = 2 * (min_mn * ((std::max)(5*min_mn+7, 2*max_mn + 2*min_mn+1)));  // LAPACK 3.8 uses 5*min_mn+5 instead of 5*min_mn+7
     blas_int info      = 0;
     
@@ -3560,13 +3522,12 @@ auxlib::svd_dc_econ(Mat< std::complex<T> >& U, Col<T>& S, Mat< std::complex<T> >
     if(info != 0)  { return false; }
     
     blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    lwork = (std::max)(lwork_proposed, lwork_min);
-    
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gesdd()");
-    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info);
+    lapack::cx_gesdd<T>(&jobz, &m, &n, A.memptr(), &lda, S.memptr(), U.memptr(), &ldu, V.memptr(), &ldvt, work.memptr(), &lwork_final, rwork.memptr(), iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
