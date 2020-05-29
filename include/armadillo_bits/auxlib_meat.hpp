@@ -958,7 +958,7 @@ auxlib::eig_gen
     T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int lwork = (vecs_on) ? (4 * ((std::max)(blas_int(1), 4*N)) ) : (4 * ((std::max)(blas_int(1), 3*N)) );
+    blas_int lwork = 64*N;  // lwork_min = (vecs_on) ? (std::max)(blas_int(1), 4*N) : (std::max)(blas_int(1), 3*N)
     blas_int info  = 0;
     
     podarray<T> work( static_cast<uword>(lwork) );
@@ -1065,7 +1065,7 @@ auxlib::eig_gen
     eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int lwork = 4 * ((std::max)(blas_int(1), 2*N));
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 2*N)
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
@@ -1148,7 +1148,7 @@ auxlib::eig_gen_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 4 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
@@ -1271,7 +1271,7 @@ auxlib::eig_gen_balance
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
-    blas_int lwork = 4 * ((std::max)(blas_int(1), blas_int(2*N)));
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), blas_int(2*N))
     blas_int info  = blas_int(0);
     
     podarray<T>  scale(X.n_rows);
@@ -1359,7 +1359,7 @@ auxlib::eig_pair
     T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
-    blas_int lwork = 4 * ((std::max)(blas_int(1), 8*N));
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 8*N)
     blas_int info  = 0;
     
     podarray<T> alphar(A.n_rows);
@@ -1496,7 +1496,7 @@ auxlib::eig_pair
     eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
     blas_int ldvl  = blas_int(1);
     blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
-    blas_int lwork = 4 * ((std::max)(blas_int(1),2*N));
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1),2*N)
     blas_int info  = 0;
     
     podarray<eT> alpha(A.n_rows);
@@ -5558,7 +5558,7 @@ auxlib::schur(Mat<eT>& U, Mat<eT>& S, const Base<eT,T1>& X, const bool calc_U)
     blas_int  n      = blas_int(S_n_rows);
     blas_int  sdim   = 0;
     blas_int  ldvs   = calc_U ? n : blas_int(1);
-    blas_int  lwork  = 4 * ((std::max)(blas_int(1), 3*n));
+    blas_int  lwork  = 64*n;  // lwork_min = (std::max)(blas_int(1), 3*n)
     blas_int  info   = 0;
     
     podarray<eT> wr(S_n_rows);
@@ -5632,7 +5632,7 @@ auxlib::schur(Mat<std::complex<T> >& U, Mat<std::complex<T> >& S, const bool cal
     blas_int  n      = blas_int(S_n_rows);
     blas_int  sdim   = 0;
     blas_int  ldvs   = calc_U ? n : blas_int(1);
-    blas_int  lwork  = 4 * ((std::max)(blas_int(1), 2*n));
+    blas_int  lwork  = 64*n;  // lwork_min = (std::max)(blas_int(1), 2*n)
     blas_int  info   = 0;
     
     podarray<eT>           w(S_n_rows);
@@ -5766,7 +5766,7 @@ auxlib::qz(Mat<T>& A, Mat<T>& B, Mat<T>& vsl, Mat<T>& vsr, const Base<T,T1>& X_e
     void*    selctg  = 0;
     blas_int N       = blas_int(A.n_rows);
     blas_int sdim    = 0;
-    blas_int lwork   = 4 * ((std::max)(blas_int(1),8*N+16));
+    blas_int lwork   = 64*N+16;  // lwork_min = (std::max)(blas_int(1),8*N+16)
     blas_int info    = 0;
     
          if(mode == 'l')  { eigsort = 'S'; selctg = qz_helper::ptr_cast(&(qz_helper::select_lhp<T>)); }
@@ -5857,7 +5857,7 @@ auxlib::qz(Mat< std::complex<T> >& A, Mat< std::complex<T> >& B, Mat< std::compl
     void*    selctg  = 0;
     blas_int N       = blas_int(A.n_rows);
     blas_int sdim    = 0;
-    blas_int lwork   = 4 * ((std::max)(blas_int(1),2*N));
+    blas_int lwork   = 64*N;  // lwork_min = (std::max)(blas_int(1),2*N)
     blas_int info    = 0;
     
          if(mode == 'l')  { eigsort = 'S'; selctg = qz_helper::ptr_cast(&(qz_helper::cx_select_lhp<T>)); }
