@@ -4676,18 +4676,17 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
       tmp(0,0, arma::size(B)) = B;
       }
     
-    blas_int m     = blas_int(A.n_rows);
-    blas_int n     = blas_int(A.n_cols);
-    blas_int nrhs  = blas_int(B.n_cols);
-    blas_int lda   = blas_int(A.n_rows);
-    blas_int ldb   = blas_int(tmp.n_rows);
-    eT       rcond = eT(-1);  // -1 means "use machine precision"
-    blas_int rank  = blas_int(0);
-    blas_int info  = blas_int(0);
+    blas_int m      = blas_int(A.n_rows);
+    blas_int n      = blas_int(A.n_cols);
+    blas_int min_mn = (std::min)(m, n);
+    blas_int nrhs   = blas_int(B.n_cols);
+    blas_int lda    = blas_int(A.n_rows);
+    blas_int ldb    = blas_int(tmp.n_rows);
+    eT       rcond  = eT(-1);  // -1 means "use machine precision"
+    blas_int rank   = blas_int(0);
+    blas_int info   = blas_int(0);
     
-    const uword min_mn = (std::min)(A.n_rows, A.n_cols);
-    
-    podarray<eT> S(min_mn);
+    podarray<eT> S( static_cast<uword>(min_mn) );
     
     // NOTE: with LAPACK 3.8, can use the workspace query to also obtain liwork,
     // NOTE: which makes the call to lapack::laenv() redundant
@@ -4711,9 +4710,11 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     blas_int smlsiz_p1 = blas_int(1) + smlsiz;
     
     blas_int nlvl   = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log(double(min_mn) / double(smlsiz_p1))/double(0.69314718055994530942) ) );
-    blas_int liwork = (std::max)( blas_int(1), (blas_int(3)*blas_int(min_mn)*nlvl + blas_int(11)*blas_int(min_mn)) );
+    blas_int liwork = (std::max)( blas_int(1), (blas_int(3)*min_mn*nlvl + blas_int(11)*min_mn) );
     
     podarray<blas_int> iwork( static_cast<uword>(liwork) );
+    
+    blas_int lwork_min = blas_int(12)*min_mn + blas_int(2)*min_mn*smlsiz + blas_int(8)*min_mn*nlvl + min_mn*nrhs + smlsiz_p1*smlsiz_p1;
     
     eT        work_query[2];
     blas_int lwork_query = blas_int(-1);
@@ -4725,12 +4726,13 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     // NOTE: in LAPACK 3.8, iwork[0] returns the minimum liwork
     
-    blas_int lwork = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::gelsd()");
-    lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork, iwork.memptr(), &info);
+    lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork_final, iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
@@ -4795,18 +4797,17 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
       tmp(0,0, arma::size(B)) = B;
       }
     
-    blas_int m     = blas_int(A.n_rows);
-    blas_int n     = blas_int(A.n_cols);
-    blas_int nrhs  = blas_int(B.n_cols);
-    blas_int lda   = blas_int(A.n_rows);
-    blas_int ldb   = blas_int(tmp.n_rows);
-    T        rcond = T(-1);  // -1 means "use machine precision"
-    blas_int rank  = blas_int(0);
-    blas_int info  = blas_int(0);
+    blas_int m      = blas_int(A.n_rows);
+    blas_int n      = blas_int(A.n_cols);
+    blas_int min_mn = (std::min)(m, n);
+    blas_int nrhs   = blas_int(B.n_cols);
+    blas_int lda    = blas_int(A.n_rows);
+    blas_int ldb    = blas_int(tmp.n_rows);
+    T        rcond  = T(-1);  // -1 means "use machine precision"
+    blas_int rank   = blas_int(0);
+    blas_int info   = blas_int(0);
     
-    const uword min_mn = (std::min)(A.n_rows, A.n_cols);
-    
-    podarray<T> S(min_mn);
+    podarray<T> S( static_cast<uword>(min_mn) );
     
     blas_int ispec = blas_int(9);
     
@@ -4823,7 +4824,7 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     blas_int laenv_result = (arma_config::hidden_args) ? blas_int(lapack::laenv(&ispec, name, opts, &n1, &n2, &n3, &n4, 6, 1)) : blas_int(0);
     
-    blas_int smlsiz = (std::max)( blas_int(25), laenv_result );
+    blas_int smlsiz    = (std::max)( blas_int(25), laenv_result );
     blas_int smlsiz_p1 = blas_int(1) + smlsiz;
     
     blas_int nlvl = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log(double(min_mn) / double(smlsiz_p1))/double(0.69314718055994530942) ) );
@@ -4837,6 +4838,8 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     podarray<T>        rwork( static_cast<uword>(lrwork) );
     podarray<blas_int> iwork( static_cast<uword>(liwork) );
     
+    blas_int lwork_min = 2*min_mn + min_mn*nrhs;
+    
     eT        work_query[2];
     blas_int lwork_query = blas_int(-1);
     
@@ -4845,12 +4848,13 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     if(info != 0)  { return false; }
     
-    blas_int lwork  = static_cast<blas_int>( access::tmp_real( work_query[0]) );
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real( work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
     
-    podarray<eT> work( static_cast<uword>(lwork) );
+    podarray<eT> work( static_cast<uword>(lwork_final) );
     
     arma_extra_debug_print("lapack::cx_gelsd()");
-    lapack::cx_gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork, rwork.memptr(), iwork.memptr(), &info);
+    lapack::cx_gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork_final, rwork.memptr(), iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
     
