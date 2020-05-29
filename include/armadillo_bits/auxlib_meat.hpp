@@ -1585,7 +1585,7 @@ auxlib::eig_sym(Col<eT>& eigval, const Base<eT,T1>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(A.n_rows);
-    blas_int lwork = 4 * ( (std::max)(blas_int(1), 3*N-1) );
+    blas_int lwork = (64+2)*N;  // lwork_min = (std::max)(blas_int(1), 3*N-1)
     blas_int info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -1648,11 +1648,11 @@ auxlib::eig_sym(Col<T>& eigval, const Base<std::complex<T>,T1>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(A.n_rows);
-    blas_int lwork = 4 * ( (std::max)(blas_int(1), 2*N-1) );
+    blas_int lwork = (64+1)*N;  // lwork_min = (std::max)(blas_int(1), 2*N-1)
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
-    podarray<T>  rwork( static_cast<uword>( (std::max)(blas_int(1), 3*N-2) ) );
+    podarray<T>  rwork( static_cast<uword>( (std::max)(blas_int(1), 3*N) ) );
     
     arma_extra_debug_print("lapack::heev()");
     lapack::heev(&jobz, &uplo, &N, A.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
@@ -1700,7 +1700,7 @@ auxlib::eig_sym(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     char uplo  = 'U';
     
     blas_int N     = blas_int(eigvec.n_rows);
-    blas_int lwork = 4 * ( (std::max)(blas_int(1), 3*N-1) );
+    blas_int lwork = (64+2)*N;  // lwork_min = (std::max)(blas_int(1), 3*N-1)
     blas_int info  = 0;
     
     podarray<eT> work( static_cast<uword>(lwork) );
@@ -1754,11 +1754,11 @@ auxlib::eig_sym(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< std::
     char uplo  = 'U';
     
     blas_int N     = blas_int(eigvec.n_rows);
-    blas_int lwork = 4 * ( (std::max)(blas_int(1), 2*N-1) );
+    blas_int lwork = (64+1)*N;  // lwork_min = (std::max)(blas_int(1), 2*N-1)
     blas_int info  = 0;
     
     podarray<eT>  work( static_cast<uword>(lwork) );
-    podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*N-2)) );
+    podarray<T>  rwork( static_cast<uword>((std::max)(blas_int(1), 3*N)) );
     
     arma_extra_debug_print("lapack::heev()");
     lapack::heev(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &info);
