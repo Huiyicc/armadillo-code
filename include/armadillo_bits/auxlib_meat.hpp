@@ -1806,16 +1806,33 @@ auxlib::eig_sym_dc(Col<eT>& eigval, Mat<eT>& eigvec, const Mat<eT>& X)
     char jobz = 'V';
     char uplo = 'U';
     
-    blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 2 * (1 + 6*N + 2*(N*N));
-    blas_int liwork = 4 * (3 + 5*N);
-    blas_int info   = 0;
+    blas_int N          = blas_int(eigvec.n_rows);
+    blas_int lwork_min  = 1 + 6*N + 2*(N*N);
+    blas_int liwork_min = 3 + 5*N;
+    blas_int info       = 0;
     
-    podarray<eT>        work( static_cast<uword>( lwork) );
-    podarray<blas_int> iwork( static_cast<uword>(liwork) ); 
+    eT        work_query[2];
+    blas_int iwork_query[2];
+    
+    blas_int  lwork_query = -1;
+    blas_int liwork_query = -1;
     
     arma_extra_debug_print("lapack::syevd()");
-    lapack::syevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, iwork.memptr(), &liwork, &info);
+    lapack::syevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), &work_query[0], &lwork_query, &iwork_query[0], &liwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int  lwork_proposed = static_cast<blas_int>( work_query[0] );
+    blas_int liwork_proposed = iwork_query[0];
+    
+    blas_int  lwork_final = (std::max)( lwork_proposed,  lwork_min);
+    blas_int liwork_final = (std::max)(liwork_proposed, liwork_min);
+    
+    podarray<eT>        work( static_cast<uword>( lwork_final) );
+    podarray<blas_int> iwork( static_cast<uword>(liwork_final) ); 
+    
+    arma_extra_debug_print("lapack::syevd()");
+    lapack::syevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork_final, iwork.memptr(), &liwork_final, &info);
     
     return (info == 0);
     }
@@ -1862,18 +1879,39 @@ auxlib::eig_sym_dc(Col<T>& eigval, Mat< std::complex<T> >& eigvec, const Mat< st
     char jobz  = 'V';
     char uplo  = 'U';
     
-    blas_int N      = blas_int(eigvec.n_rows);
-    blas_int lwork  = 2 * (2*N + N*N);
-    blas_int lrwork = 2 * (1 + 5*N + 2*(N*N));
-    blas_int liwork = 4 * (3 + 5*N);
-    blas_int info   = 0;
+    blas_int N          = blas_int(eigvec.n_rows);
+    blas_int lwork_min  = 2*N + N*N;
+    blas_int lrwork_min = 1 + 5*N + 2*(N*N);
+    blas_int liwork_min = 3 + 5*N;
+    blas_int info       = 0;
     
-    podarray<eT>        work( static_cast<uword>(lwork)  );
-    podarray<T>        rwork( static_cast<uword>(lrwork) );
-    podarray<blas_int> iwork( static_cast<uword>(liwork) ); 
+    eT        work_query[2];
+    T        rwork_query[2];
+    blas_int iwork_query[2];
+    
+    blas_int  lwork_query = -1;
+    blas_int lrwork_query = -1;
+    blas_int liwork_query = -1;
     
     arma_extra_debug_print("lapack::heevd()");
-    lapack::heevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork, rwork.memptr(), &lrwork, iwork.memptr(), &liwork, &info);
+    lapack::heevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), &work_query[0], &lwork_query, &rwork_query[0], &lrwork_query, &iwork_query[0], &liwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int  lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lrwork_proposed = static_cast<blas_int>( rwork_query[0] );
+    blas_int liwork_proposed = iwork_query[0];
+    
+    blas_int  lwork_final = (std::max)( lwork_proposed,  lwork_min);
+    blas_int lrwork_final = (std::max)(lrwork_proposed, lrwork_min);
+    blas_int liwork_final = (std::max)(liwork_proposed, liwork_min);
+    
+    podarray<eT>        work( static_cast<uword>( lwork_final) );
+    podarray< T>       rwork( static_cast<uword>(lrwork_final) );
+    podarray<blas_int> iwork( static_cast<uword>(liwork_final) ); 
+    
+    arma_extra_debug_print("lapack::heevd()");
+    lapack::heevd(&jobz, &uplo, &N, eigvec.memptr(), &N, eigval.memptr(), work.memptr(), &lwork_final, rwork.memptr(), &lrwork_final, iwork.memptr(), &liwork_final, &info);
     
     return (info == 0);
     }
