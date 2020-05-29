@@ -4446,20 +4446,31 @@ auxlib::solve_rect_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_
       tmp(0,0, arma::size(B)) = B;
       }
     
-    char      trans = 'N';
-    blas_int  m     = blas_int(A.n_rows);
-    blas_int  n     = blas_int(A.n_cols);
-    blas_int  lda   = blas_int(A.n_rows);
-    blas_int  ldb   = blas_int(tmp.n_rows);
-    blas_int  nrhs  = blas_int(B.n_cols);
-    blas_int  mn    = (std::min)(m,n);
-    blas_int  lwork = 4 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
-    blas_int  info  = 0;
+    char      trans     = 'N';
+    blas_int  m         = blas_int(A.n_rows);
+    blas_int  n         = blas_int(A.n_cols);
+    blas_int  lda       = blas_int(A.n_rows);
+    blas_int  ldb       = blas_int(tmp.n_rows);
+    blas_int  nrhs      = blas_int(B.n_cols);
+    blas_int  min_mn    = (std::min)(m,n);
+    blas_int  lwork_min = (std::max)(blas_int(1), min_mn + (std::max)(min_mn, nrhs));
+    blas_int  info      = 0;
     
-    podarray<eT> work( static_cast<uword>(lwork) );
+    eT        work_query[2];
+    blas_int lwork_query = -1;
     
     arma_extra_debug_print("lapack::gels()");
-    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork, &info );
+    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, &work_query[0], &lwork_query, &info );
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
+    
+    podarray<eT> work( static_cast<uword>(lwork_final) );
+    
+    arma_extra_debug_print("lapack::gels()");
+    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork_final, &info );
     
     if(info != 0)  { return false; }
     
@@ -4527,20 +4538,31 @@ auxlib::solve_rect_rcond(Mat<typename T1::elem_type>& out, typename T1::pod_type
       tmp(0,0, arma::size(B)) = B;
       }
     
-    char      trans = 'N';
-    blas_int  m     = blas_int(A.n_rows);
-    blas_int  n     = blas_int(A.n_cols);
-    blas_int  lda   = blas_int(A.n_rows);
-    blas_int  ldb   = blas_int(tmp.n_rows);
-    blas_int  nrhs  = blas_int(B.n_cols);
-    blas_int  mn    = (std::min)(m,n);
-    blas_int  lwork = 4 * ( (std::max)(blas_int(1), mn + (std::max)(mn, nrhs)) );
-    blas_int  info  = 0;
+    char      trans     = 'N';
+    blas_int  m         = blas_int(A.n_rows);
+    blas_int  n         = blas_int(A.n_cols);
+    blas_int  lda       = blas_int(A.n_rows);
+    blas_int  ldb       = blas_int(tmp.n_rows);
+    blas_int  nrhs      = blas_int(B.n_cols);
+    blas_int  min_mn    = (std::min)(m,n);
+    blas_int  lwork_min = (std::max)(blas_int(1), min_mn + (std::max)(min_mn, nrhs));
+    blas_int  info      = 0;
     
-    podarray<eT> work( static_cast<uword>(lwork) );
+    eT        work_query[2];
+    blas_int lwork_query = -1;
     
     arma_extra_debug_print("lapack::gels()");
-    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork, &info );
+    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, &work_query[0], &lwork_query, &info );
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
+    
+    podarray<eT> work( static_cast<uword>(lwork_final) );
+    
+    arma_extra_debug_print("lapack::gels()");
+    lapack::gels<eT>( &trans, &m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, work.memptr(), &lwork_final, &info );
     
     if(info != 0)  { return false; }
     
