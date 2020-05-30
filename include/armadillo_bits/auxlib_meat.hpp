@@ -912,9 +912,11 @@ inline
 bool
 auxlib::eig_gen
   (
-         Mat< std::complex<typename T1::pod_type> >& vals,
-         Mat< std::complex<typename T1::pod_type> >& vecs,
-  const bool                                         vecs_on,
+         Mat< std::complex<typename T1::pod_type> >&  vals,
+         Mat< std::complex<typename T1::pod_type> >& lvecs,
+         Mat< std::complex<typename T1::pod_type> >& rvecs,
+  const bool                                         lvecs_on,
+  const bool                                         rvecs_on,
   const Base<typename T1::pod_type,T1>&              expr
   )
   {
@@ -932,8 +934,9 @@ auxlib::eig_gen
     
     if(X.is_empty())
       {
-      vals.reset();
-      vecs.reset();
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
       return true;
       }
     
@@ -941,23 +944,29 @@ auxlib::eig_gen
     
     vals.set_size(X.n_rows, 1);
     
-    Mat<T> tmp(1,1);
+    Mat<T> ltmp(1,1);
+    Mat<T> rtmp(1,1);
     
-    if(vecs_on)
+    if(lvecs_on)
       {
-      vecs.set_size(X.n_rows, X.n_rows);
-       tmp.set_size(X.n_rows, X.n_rows);
+      lvecs.set_size(X.n_rows, X.n_rows);
+       ltmp.set_size(X.n_rows, X.n_rows);
+      }
+    if(rvecs_on)
+      {
+      rvecs.set_size(X.n_rows, X.n_rows);
+       rtmp.set_size(X.n_rows, X.n_rows);
       }
     
     podarray<T> junk(1);
     
-    char     jobvl = 'N';
-    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     jobvl = (lvecs_on) ? 'V' : 'N';
+    char     jobvr = (rvecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = junk.memptr();
-    T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
-    blas_int ldvl  = blas_int(1);
-    blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
+    T*       vl    = (lvecs_on) ? ltmp.memptr() : junk.memptr();
+    T*       vr    = (rvecs_on) ? rtmp.memptr() : junk.memptr();
+    blas_int ldvl  = (lvecs_on) ? blas_int(ltmp.n_rows) : blas_int(1);
+    blas_int ldvr  = (rvecs_on) ? blas_int(rtmp.n_rows) : blas_int(1);
     blas_int lwork = 64*N;  // lwork_min = (vecs_on) ? (std::max)(blas_int(1), 4*N) : (std::max)(blas_int(1), 3*N)
     blas_int info  = 0;
     
@@ -978,7 +987,7 @@ auxlib::eig_gen
     
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
     
-    if(vecs_on)
+    if(lvecs_on)
       {
       for(uword j=0; j < X.n_rows; ++j)
         {
@@ -986,8 +995,8 @@ auxlib::eig_gen
           {
           for(uword i=0; i < X.n_rows; ++i)
             {
-            vecs.at(i,j)   = std::complex<T>( tmp.at(i,j),  tmp.at(i,j+1) );
-            vecs.at(i,j+1) = std::complex<T>( tmp.at(i,j), -tmp.at(i,j+1) );
+            lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
+            lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
             }
           
           ++j;
@@ -996,7 +1005,30 @@ auxlib::eig_gen
           {
           for(uword i=0; i<X.n_rows; ++i)
             {
-            vecs.at(i,j) = std::complex<T>(tmp.at(i,j), T(0));
+            lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
+            }
+          }
+        }
+      }
+    if(rvecs_on)
+      {
+      for(uword j=0; j < X.n_rows; ++j)
+        {
+        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+          {
+          for(uword i=0; i < X.n_rows; ++i)
+            {
+            rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
+            rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
+            }
+
+          ++j;
+          }
+        else
+          {
+          for(uword i=0; i<X.n_rows; ++i)
+            {
+            rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
             }
           }
         }
@@ -1007,8 +1039,10 @@ auxlib::eig_gen
   #else
     {
     arma_ignore(vals);
-    arma_ignore(vecs);
-    arma_ignore(vecs_on);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(lvecs_on);
+    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1024,9 +1058,11 @@ inline
 bool
 auxlib::eig_gen
   (
-         Mat< std::complex<typename T1::pod_type> >&     vals,
-         Mat< std::complex<typename T1::pod_type> >&     vecs, 
-  const bool                                             vecs_on,
+         Mat< std::complex<typename T1::pod_type> >&      vals,
+         Mat< std::complex<typename T1::pod_type> >&     lvecs,
+         Mat< std::complex<typename T1::pod_type> >&     rvecs,
+  const bool                                             lvecs_on,
+  const bool                                             rvecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& expr
   )
   {
@@ -1045,8 +1081,9 @@ auxlib::eig_gen
     
     if(X.is_empty())
       {
-      vals.reset();
-      vecs.reset();
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
       return true;
       }
     
@@ -1054,17 +1091,18 @@ auxlib::eig_gen
     
     vals.set_size(X.n_rows, 1);
     
-    if(vecs_on)  { vecs.set_size(X.n_rows, X.n_rows); }
+    if(lvecs_on)  { lvecs.set_size(X.n_rows, X.n_rows); }
+    if(rvecs_on)  { rvecs.set_size(X.n_rows, X.n_rows); }
     
     podarray<eT> junk(1);
     
-    char     jobvl = 'N';
-    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     jobvl = (lvecs_on) ? 'V' : 'N';
+    char     jobvr = (rvecs_on) ? 'V' : 'N';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = junk.memptr();
-    eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
-    blas_int ldvl  = blas_int(1);
-    blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
+    eT*      vl    = (lvecs_on) ? lvecs.memptr() : junk.memptr();
+    eT*      vr    = (rvecs_on) ? rvecs.memptr() : junk.memptr();
+    blas_int ldvl  = (lvecs_on) ? blas_int(lvecs.n_rows) : blas_int(1);
+    blas_int ldvr  = (rvecs_on) ? blas_int(rvecs.n_rows) : blas_int(1);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 2*N)
     blas_int info  = 0;
     
@@ -1080,8 +1118,10 @@ auxlib::eig_gen
   #else
     {
     arma_ignore(vals);
-    arma_ignore(vecs);
-    arma_ignore(vecs_on);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(lvecs_on);
+    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1097,9 +1137,11 @@ inline
 bool
 auxlib::eig_gen_balance
   (
-         Mat< std::complex<typename T1::pod_type> >& vals,
-         Mat< std::complex<typename T1::pod_type> >& vecs,
-  const bool                                         vecs_on,
+         Mat< std::complex<typename T1::pod_type> >&  vals,
+         Mat< std::complex<typename T1::pod_type> >& lvecs,
+         Mat< std::complex<typename T1::pod_type> >& rvecs,
+  const bool                                         lvecs_on,
+  const bool                                         rvecs_on,
   const Base<typename T1::pod_type,T1>&              expr
   )
   {
@@ -1117,8 +1159,9 @@ auxlib::eig_gen_balance
     
     if(X.is_empty())
       {
-      vals.reset();
-      vecs.reset();
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
       return true;
       }
     
@@ -1126,25 +1169,31 @@ auxlib::eig_gen_balance
     
     vals.set_size(X.n_rows, 1);
     
-    Mat<T> tmp(1,1);
+    Mat<T> ltmp(1,1);
+    Mat<T> rtmp(1,1);
     
-    if(vecs_on)
+    if(lvecs_on)
       {
-      vecs.set_size(X.n_rows, X.n_rows);
-       tmp.set_size(X.n_rows, X.n_rows);
+      lvecs.set_size(X.n_rows, X.n_rows);
+       ltmp.set_size(X.n_rows, X.n_rows);
+      }
+    if(rvecs_on)
+      {
+      rvecs.set_size(X.n_rows, X.n_rows);
+       rtmp.set_size(X.n_rows, X.n_rows);
       }
     
     podarray<T> junk(1);
     
     char     bal   = 'B'; 
-    char     jobvl = 'N';
-    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     jobvl = (lvecs_on) ? 'V' : 'N';
+    char     jobvr = (rvecs_on) ? 'V' : 'N';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = junk.memptr();
-    T*       vr    = (vecs_on) ? tmp.memptr() : junk.memptr();
-    blas_int ldvl  = blas_int(1);
-    blas_int ldvr  = (vecs_on) ? blas_int(tmp.n_rows) : blas_int(1);
+    T*       vl    = (lvecs_on) ? ltmp.memptr() : junk.memptr();
+    T*       vr    = (rvecs_on) ? rtmp.memptr() : junk.memptr();
+    blas_int ldvl  = (lvecs_on) ? blas_int(ltmp.n_rows) : blas_int(1);
+    blas_int ldvr  = (rvecs_on) ? blas_int(rtmp.n_rows) : blas_int(1);
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
@@ -1173,7 +1222,7 @@ auxlib::eig_gen_balance
     
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
     
-    if(vecs_on)
+    if(lvecs_on)
       {
       for(uword j=0; j < X.n_rows; ++j)
         {
@@ -1181,8 +1230,8 @@ auxlib::eig_gen_balance
           {
           for(uword i=0; i < X.n_rows; ++i)
             {
-            vecs.at(i,j)   = std::complex<T>( tmp.at(i,j),  tmp.at(i,j+1) );
-            vecs.at(i,j+1) = std::complex<T>( tmp.at(i,j), -tmp.at(i,j+1) );
+            lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
+            lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
             }
           
           ++j;
@@ -1191,7 +1240,30 @@ auxlib::eig_gen_balance
           {
           for(uword i=0; i<X.n_rows; ++i)
             {
-            vecs.at(i,j) = std::complex<T>(tmp.at(i,j), T(0));
+            lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
+            }
+          }
+        }
+      }
+    if(rvecs_on)
+      {
+      for(uword j=0; j < X.n_rows; ++j)
+        {
+        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+          {
+          for(uword i=0; i < X.n_rows; ++i)
+            {
+            rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
+            rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
+            }
+
+          ++j;
+          }
+        else
+          {
+          for(uword i=0; i<X.n_rows; ++i)
+            {
+            rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
             }
           }
         }
@@ -1202,8 +1274,10 @@ auxlib::eig_gen_balance
   #else
     {
     arma_ignore(vals);
-    arma_ignore(vecs);
-    arma_ignore(vecs_on);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(lvecs_on);
+    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1219,9 +1293,11 @@ inline
 bool
 auxlib::eig_gen_balance
   (
-         Mat< std::complex<typename T1::pod_type> >&     vals,
-         Mat< std::complex<typename T1::pod_type> >&     vecs, 
-  const bool                                             vecs_on,
+         Mat< std::complex<typename T1::pod_type> >&      vals,
+         Mat< std::complex<typename T1::pod_type> >&     lvecs,
+         Mat< std::complex<typename T1::pod_type> >&     rvecs,
+  const bool                                             lvecs_on,
+  const bool                                             rvecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& expr
   )
   {
@@ -1231,7 +1307,7 @@ auxlib::eig_gen_balance
     {
     arma_extra_debug_print("auxlib::eig_gen_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
     
-    return auxlib::eig_gen(vals, vecs, vecs_on, expr);
+    return auxlib::eig_gen(vals, lvecs, rvecs, lvecs_on, rvecs_on, expr);
     }
   #elif defined(ARMA_USE_LAPACK)
     {
@@ -1246,8 +1322,9 @@ auxlib::eig_gen_balance
     
     if(X.is_empty())
       {
-      vals.reset();
-      vecs.reset();
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
       return true;
       }
     
@@ -1255,19 +1332,20 @@ auxlib::eig_gen_balance
     
     vals.set_size(X.n_rows, 1);
     
-    if(vecs_on)  { vecs.set_size(X.n_rows, X.n_rows); }
+    if(lvecs_on)  { lvecs.set_size(X.n_rows, X.n_rows); }
+    if(rvecs_on)  { rvecs.set_size(X.n_rows, X.n_rows); }
     
     podarray<eT> junk(1);
     
     char     bal   = 'B';
-    char     jobvl = 'N';
-    char     jobvr = (vecs_on) ? 'V' : 'N';
+    char     jobvl = (lvecs_on) ? 'V' : 'N';
+    char     jobvr = (rvecs_on) ? 'V' : 'N';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = junk.memptr();
-    eT*      vr    = (vecs_on) ? vecs.memptr() : junk.memptr();
-    blas_int ldvl  = blas_int(1);
-    blas_int ldvr  = (vecs_on) ? blas_int(vecs.n_rows) : blas_int(1);
+    eT*      vl    = (lvecs_on) ? lvecs.memptr() : junk.memptr();
+    eT*      vr    = (rvecs_on) ? rvecs.memptr() : junk.memptr();
+    blas_int ldvl  = (lvecs_on) ? blas_int(lvecs.n_rows) : blas_int(1);
+    blas_int ldvr  = (rvecs_on) ? blas_int(rvecs.n_rows) : blas_int(1);
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
@@ -1290,8 +1368,10 @@ auxlib::eig_gen_balance
   #else
     {
     arma_ignore(vals);
-    arma_ignore(vecs);
-    arma_ignore(vecs_on);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(lvecs_on);
+    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
