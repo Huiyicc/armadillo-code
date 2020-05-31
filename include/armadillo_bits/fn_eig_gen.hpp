@@ -39,11 +39,10 @@ eig_gen
   
   if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
-  Col<eT>  eigvals;
-  Mat<eT> leigvecs;
-  Mat<eT> reigvecs;
-
-  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, leigvecs, reigvecs, false, false, expr.get_ref()) : auxlib::eig_gen(eigvals, leigvecs, reigvecs, false, false, expr.get_ref());
+  Col<eT> eigvals;
+  Mat<eT> eigvecs;
+  
+  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, eigvecs, false, expr.get_ref()) : auxlib::eig_gen(eigvals, eigvecs, false, expr.get_ref());
   
   if(status == false)
     {
@@ -77,10 +76,9 @@ eig_gen
   
   if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
-  Mat<eT> leigvecs;
-  Mat<eT> reigvecs;
+  Mat<eT> eigvecs;
   
-  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, leigvecs, reigvecs, false, false, expr.get_ref()) : auxlib::eig_gen(eigvals, leigvecs, reigvecs, false, false, expr.get_ref());
+  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, eigvecs, false, expr.get_ref()) : auxlib::eig_gen(eigvals, eigvecs, false, expr.get_ref());
   
   if(status == false)
     {
@@ -98,18 +96,15 @@ inline
 typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
 eig_gen
   (
-        Col< std::complex<typename T1::pod_type> >&  eigvals,
-        Mat< std::complex<typename T1::pod_type> >& reigvecs,
+        Col< std::complex<typename T1::pod_type> >& eigvals,
+        Mat< std::complex<typename T1::pod_type> >& eigvecs,
   const Base<typename T1::elem_type, T1>&           expr,
   const char* option = "nobalance"
   )
   {
   arma_extra_debug_sigprint();
-
-  typedef typename T1::pod_type     T;
-  typedef typename std::complex<T> eT;
   
-  arma_debug_check( (void_ptr(&eigvals) == void_ptr(&reigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
+  arma_debug_check( (void_ptr(&eigvals) == void_ptr(&eigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'eigvec'" );
   
   const char sig = (option != NULL) ? option[0] : char(0);
   
@@ -117,56 +112,15 @@ eig_gen
   
   if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
   
-  Mat<eT> leigvecs;
-
-  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, leigvecs, reigvecs, false, true, expr.get_ref()) : auxlib::eig_gen(eigvals, leigvecs, reigvecs, false, true, expr.get_ref());
+  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, eigvecs, true, expr.get_ref()) : auxlib::eig_gen(eigvals, eigvecs, true, expr.get_ref());
   
   if(status == false)
     {
-     eigvals.soft_reset();
-    reigvecs.soft_reset();
+    eigvals.soft_reset();
+    eigvecs.soft_reset();
     arma_debug_warn("eig_gen(): decomposition failed");
     }
   
-  return status;
-  }
-
-
-
-template<typename T1>
-inline
-typename enable_if2< is_supported_blas_type<typename T1::pod_type>::value, bool >::result
-eig_gen
-  (
-        Col< std::complex<typename T1::pod_type> >&  eigvals,
-        Mat< std::complex<typename T1::pod_type> >& leigvecs,
-        Mat< std::complex<typename T1::pod_type> >& reigvecs,
-  const Base<typename T1::elem_type, T1>&           expr,
-  const char* option = "nobalance"
-  )
-  {
-  arma_extra_debug_sigprint();
-
-  arma_debug_check( (void_ptr(& eigvals) == void_ptr(&leigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'leigvec'" );
-  arma_debug_check( (void_ptr(& eigvals) == void_ptr(&reigvecs)), "eig_gen(): parameter 'eigval' is an alias of parameter 'reigvec'" );
-  arma_debug_check( (void_ptr(&leigvecs) == void_ptr(&reigvecs)), "eig_gen(): parameter 'leigvec' is an alias of parameter 'reigvec'" );
-
-  const char sig = (option != NULL) ? option[0] : char(0);
-
-  arma_debug_check( ((sig != 'n') && (sig != 'b')), "eig_gen(): unknown option" );
-
-  if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
-
-  const bool status = (sig == 'b') ? auxlib::eig_gen_balance(eigvals, leigvecs, reigvecs, true, true, expr.get_ref()) : auxlib::eig_gen(eigvals, leigvecs, reigvecs, true, true, expr.get_ref());
-
-  if(status == false)
-    {
-     eigvals.soft_reset();
-    leigvecs.soft_reset();
-    reigvecs.soft_reset();
-    arma_debug_warn("eig_gen(): decomposition failed");
-    }
-
   return status;
   }
 
