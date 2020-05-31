@@ -104,7 +104,27 @@ class auxlib
   
   template<typename T1>
   inline static bool eig_gen_balance(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& vecs, const bool vecs_on, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
-  
+
+
+  //
+  // eig_gen_twosided
+
+  template<typename T1>
+  inline static bool eig_gen_twosided(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& lvecs, Mat< std::complex<typename T1::pod_type> >& rvecs, const bool lvecs_on, const bool rvecs_on, const Base<typename T1::pod_type,T1>& expr);
+
+  template<typename T1>
+  inline static bool eig_gen_twosided(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& lvecs, Mat< std::complex<typename T1::pod_type> >& rvecs, const bool lvecs_on, const bool rvecs_on, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
+
+
+  //
+  // eig_gen_twosided_balance
+
+  template<typename T1>
+  inline static bool eig_gen_twosided_balance(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& lvecs, Mat< std::complex<typename T1::pod_type> >& rvecs, const bool lvecs_on, const bool rvecs_on, const Base<typename T1::pod_type,T1>& expr);
+
+  template<typename T1>
+  inline static bool eig_gen_twosided_balance(Mat< std::complex<typename T1::pod_type> >& vals, Mat< std::complex<typename T1::pod_type> >& lvecs, Mat< std::complex<typename T1::pod_type> >& rvecs, const bool lvecs_on, const bool rvecs_on, const Base< std::complex<typename T1::pod_type>, T1 >& expr);
+
   
   //
   // eig_pair
