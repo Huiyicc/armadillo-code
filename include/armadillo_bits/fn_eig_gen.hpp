@@ -150,7 +150,7 @@ eig_gen
 
   if( auxlib::crippled_lapack(expr) && (sig == 'b') )  { arma_debug_warn( "eig_gen(): 'balance' option ignored due to linking with crippled lapack"); }
 
-  const bool status = (sig == 'b') ? auxlib::eig_gen_twosided_balance(eigvals, leigvecs, reigvecs, true, true, expr.get_ref()) : auxlib::eig_gen_twosided(eigvals, leigvecs, reigvecs, true, true, expr.get_ref());
+  const bool status = (sig == 'b') ? auxlib::eig_gen_twosided_balance(eigvals, leigvecs, reigvecs, expr.get_ref()) : auxlib::eig_gen_twosided(eigvals, leigvecs, reigvecs, expr.get_ref());
 
   if(status == false)
     {

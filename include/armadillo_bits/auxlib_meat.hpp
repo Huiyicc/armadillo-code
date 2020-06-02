@@ -915,8 +915,6 @@ auxlib::eig_gen_twosided
          Mat< std::complex<typename T1::pod_type> >&  vals,
          Mat< std::complex<typename T1::pod_type> >& lvecs,
          Mat< std::complex<typename T1::pod_type> >& rvecs,
-  const bool                                         lvecs_on,
-  const bool                                         rvecs_on,
   const Base<typename T1::pod_type,T1>&              expr
   )
   {
@@ -947,26 +945,18 @@ auxlib::eig_gen_twosided
     Mat<T> ltmp(1,1);
     Mat<T> rtmp(1,1);
 
-    if(lvecs_on)
-      {
-      lvecs.set_size(X.n_rows, X.n_rows);
-       ltmp.set_size(X.n_rows, X.n_rows);
-      }
-    if(rvecs_on)
-      {
-      rvecs.set_size(X.n_rows, X.n_rows);
-       rtmp.set_size(X.n_rows, X.n_rows);
-      }
+    lvecs.set_size(X.n_rows, X.n_rows);
+    ltmp .set_size(X.n_rows, X.n_rows);
+    rvecs.set_size(X.n_rows, X.n_rows);
+    rtmp .set_size(X.n_rows, X.n_rows);
 
-    podarray<T> junk(1);
-
-    char     jobvl = (lvecs_on) ? 'V' : 'N';
-    char     jobvr = (rvecs_on) ? 'V' : 'N';
+    char     jobvl = 'V';
+    char     jobvr = 'V';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = (lvecs_on) ? ltmp.memptr() : junk.memptr();
-    T*       vr    = (rvecs_on) ? rtmp.memptr() : junk.memptr();
-    blas_int ldvl  = (lvecs_on) ? blas_int(ltmp.n_rows) : blas_int(1);
-    blas_int ldvr  = (rvecs_on) ? blas_int(rtmp.n_rows) : blas_int(1);
+    T*       vl    = ltmp.memptr();
+    T*       vr    = rtmp.memptr();
+    blas_int ldvl  = blas_int(ltmp.n_rows);
+    blas_int ldvr  = blas_int(rtmp.n_rows);
     blas_int lwork = 64*N;  // lwork_min = (vecs_on) ? (std::max)(blas_int(1), 4*N) : (std::max)(blas_int(1), 3*N)
     blas_int info  = 0;
 
@@ -987,49 +977,25 @@ auxlib::eig_gen_twosided
 
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
 
-    if(lvecs_on)
+    for(uword j=0; j < X.n_rows; ++j)
       {
-      for(uword j=0; j < X.n_rows; ++j)
+      if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
         {
-        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+        for(uword i=0; i < X.n_rows; ++i)
           {
-          for(uword i=0; i < X.n_rows; ++i)
-            {
-            lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
-            lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
-            }
-
-          ++j;
+          lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
+          lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
+          rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
+          rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
           }
-        else
-          {
-          for(uword i=0; i<X.n_rows; ++i)
-            {
-            lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
-            }
-          }
+        ++j;
         }
-      }
-    if(rvecs_on)
-      {
-      for(uword j=0; j < X.n_rows; ++j)
+      else
         {
-        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+        for(uword i=0; i<X.n_rows; ++i)
           {
-          for(uword i=0; i < X.n_rows; ++i)
-            {
-            rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
-            rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
-            }
-
-          ++j;
-          }
-        else
-          {
-          for(uword i=0; i<X.n_rows; ++i)
-            {
-            rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
-            }
+          lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
+          rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
           }
         }
       }
@@ -1041,8 +1007,6 @@ auxlib::eig_gen_twosided
     arma_ignore(vals);
     arma_ignore(lvecs);
     arma_ignore(rvecs);
-    arma_ignore(lvecs_on);
-    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1061,8 +1025,6 @@ auxlib::eig_gen_twosided
          Mat< std::complex<typename T1::pod_type> >&      vals,
          Mat< std::complex<typename T1::pod_type> >&     lvecs,
          Mat< std::complex<typename T1::pod_type> >&     rvecs,
-  const bool                                             lvecs_on,
-  const bool                                             rvecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& expr
   )
   {
@@ -1091,18 +1053,16 @@ auxlib::eig_gen_twosided
 
     vals.set_size(X.n_rows, 1);
 
-    if(lvecs_on)  { lvecs.set_size(X.n_rows, X.n_rows); }
-    if(rvecs_on)  { rvecs.set_size(X.n_rows, X.n_rows); }
+    lvecs.set_size(X.n_rows, X.n_rows);
+    rvecs.set_size(X.n_rows, X.n_rows);
 
-    podarray<eT> junk(1);
-
-    char     jobvl = (lvecs_on) ? 'V' : 'N';
-    char     jobvr = (rvecs_on) ? 'V' : 'N';
+    char     jobvl = 'V';
+    char     jobvr = 'V';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = (lvecs_on) ? lvecs.memptr() : junk.memptr();
-    eT*      vr    = (rvecs_on) ? rvecs.memptr() : junk.memptr();
-    blas_int ldvl  = (lvecs_on) ? blas_int(lvecs.n_rows) : blas_int(1);
-    blas_int ldvr  = (rvecs_on) ? blas_int(rvecs.n_rows) : blas_int(1);
+    eT*      vl    = lvecs.memptr();
+    eT*      vr    = rvecs.memptr();
+    blas_int ldvl  = blas_int(lvecs.n_rows);
+    blas_int ldvr  = blas_int(rvecs.n_rows);
     blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 2*N)
     blas_int info  = 0;
 
@@ -1120,8 +1080,6 @@ auxlib::eig_gen_twosided
     arma_ignore(vals);
     arma_ignore(lvecs);
     arma_ignore(rvecs);
-    arma_ignore(lvecs_on);
-    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1140,8 +1098,6 @@ auxlib::eig_gen_twosided_balance
          Mat< std::complex<typename T1::pod_type> >&  vals,
          Mat< std::complex<typename T1::pod_type> >& lvecs,
          Mat< std::complex<typename T1::pod_type> >& rvecs,
-  const bool                                         lvecs_on,
-  const bool                                         rvecs_on,
   const Base<typename T1::pod_type,T1>&              expr
   )
   {
@@ -1172,28 +1128,20 @@ auxlib::eig_gen_twosided_balance
     Mat<T> ltmp(1,1);
     Mat<T> rtmp(1,1);
 
-    if(lvecs_on)
-      {
-      lvecs.set_size(X.n_rows, X.n_rows);
-       ltmp.set_size(X.n_rows, X.n_rows);
-      }
-    if(rvecs_on)
-      {
-      rvecs.set_size(X.n_rows, X.n_rows);
-       rtmp.set_size(X.n_rows, X.n_rows);
-      }
-
-    podarray<T> junk(1);
+    lvecs.set_size(X.n_rows, X.n_rows);
+    ltmp .set_size(X.n_rows, X.n_rows);
+    rvecs.set_size(X.n_rows, X.n_rows);
+    rtmp .set_size(X.n_rows, X.n_rows);
 
     char     bal   = 'B';
-    char     jobvl = (lvecs_on) ? 'V' : 'N';
-    char     jobvr = (rvecs_on) ? 'V' : 'N';
+    char     jobvl = 'V';
+    char     jobvr = 'V';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    T*       vl    = (lvecs_on) ? ltmp.memptr() : junk.memptr();
-    T*       vr    = (rvecs_on) ? rtmp.memptr() : junk.memptr();
-    blas_int ldvl  = (lvecs_on) ? blas_int(ltmp.n_rows) : blas_int(1);
-    blas_int ldvr  = (rvecs_on) ? blas_int(rtmp.n_rows) : blas_int(1);
+    T*       vl    = ltmp.memptr();
+    T*       vr    = rtmp.memptr();
+    blas_int ldvl  = blas_int(ltmp.n_rows);
+    blas_int ldvr  = blas_int(rtmp.n_rows);
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
@@ -1222,49 +1170,25 @@ auxlib::eig_gen_twosided_balance
 
     for(uword i=0; i < X.n_rows; ++i)  { vals_mem[i] = std::complex<T>(vals_real[i], vals_imag[i]); }
 
-    if(lvecs_on)
+    for(uword j=0; j < X.n_rows; ++j)
       {
-      for(uword j=0; j < X.n_rows; ++j)
+      if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
         {
-        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+        for(uword i=0; i < X.n_rows; ++i)
           {
-          for(uword i=0; i < X.n_rows; ++i)
-            {
-            lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
-            lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
-            }
-
-          ++j;
+          lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
+          lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
+          rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
+          rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
           }
-        else
-          {
-          for(uword i=0; i<X.n_rows; ++i)
-            {
-            lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
-            }
-          }
+        ++j;
         }
-      }
-    if(rvecs_on)
-      {
-      for(uword j=0; j < X.n_rows; ++j)
+      else
         {
-        if( (j < (X.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+        for(uword i=0; i<X.n_rows; ++i)
           {
-          for(uword i=0; i < X.n_rows; ++i)
-            {
-            rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
-            rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
-            }
-
-          ++j;
-          }
-        else
-          {
-          for(uword i=0; i<X.n_rows; ++i)
-            {
-            rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
-            }
+          lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
+          rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
           }
         }
       }
@@ -1276,8 +1200,6 @@ auxlib::eig_gen_twosided_balance
     arma_ignore(vals);
     arma_ignore(lvecs);
     arma_ignore(rvecs);
-    arma_ignore(lvecs_on);
-    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
@@ -1296,8 +1218,6 @@ auxlib::eig_gen_twosided_balance
          Mat< std::complex<typename T1::pod_type> >&      vals,
          Mat< std::complex<typename T1::pod_type> >&     lvecs,
          Mat< std::complex<typename T1::pod_type> >&     rvecs,
-  const bool                                             lvecs_on,
-  const bool                                             rvecs_on,
   const Base< std::complex<typename T1::pod_type>, T1 >& expr
   )
   {
@@ -1307,7 +1227,7 @@ auxlib::eig_gen_twosided_balance
     {
     arma_extra_debug_print("auxlib::eig_gen_balance(): redirecting to auxlib::eig_gen() due to crippled LAPACK");
 
-    return auxlib::eig_gen(vals, lvecs, rvecs, lvecs_on, rvecs_on, expr);
+    return auxlib::eig_gen(vals, lvecs, rvecs, expr);
     }
   #elif defined(ARMA_USE_LAPACK)
     {
@@ -1332,20 +1252,18 @@ auxlib::eig_gen_twosided_balance
 
     vals.set_size(X.n_rows, 1);
 
-    if(lvecs_on)  { lvecs.set_size(X.n_rows, X.n_rows); }
-    if(rvecs_on)  { rvecs.set_size(X.n_rows, X.n_rows); }
-
-    podarray<eT> junk(1);
+    lvecs.set_size(X.n_rows, X.n_rows);
+    rvecs.set_size(X.n_rows, X.n_rows);
 
     char     bal   = 'B';
-    char     jobvl = (lvecs_on) ? 'V' : 'N';
-    char     jobvr = (rvecs_on) ? 'V' : 'N';
+    char     jobvl = 'V';
+    char     jobvr = 'V';
     char     sense = 'N';
     blas_int N     = blas_int(X.n_rows);
-    eT*      vl    = (lvecs_on) ? lvecs.memptr() : junk.memptr();
-    eT*      vr    = (rvecs_on) ? rvecs.memptr() : junk.memptr();
-    blas_int ldvl  = (lvecs_on) ? blas_int(lvecs.n_rows) : blas_int(1);
-    blas_int ldvr  = (rvecs_on) ? blas_int(rvecs.n_rows) : blas_int(1);
+    eT*      vl    = lvecs.memptr();
+    eT*      vr    = rvecs.memptr();
+    blas_int ldvl  = blas_int(lvecs.n_rows);
+    blas_int ldvr  = blas_int(rvecs.n_rows);
     blas_int ilo   = blas_int(0);
     blas_int ihi   = blas_int(0);
     T        abnrm = T(0);
@@ -1370,8 +1288,6 @@ auxlib::eig_gen_twosided_balance
     arma_ignore(vals);
     arma_ignore(lvecs);
     arma_ignore(rvecs);
-    arma_ignore(lvecs_on);
-    arma_ignore(rvecs_on);
     arma_ignore(expr);
     arma_stop_logic_error("eig_gen(): use of LAPACK must be enabled");
     return false;
