@@ -1937,6 +1937,249 @@ auxlib::eig_pair
 
 
 
+//! two-sided eigendecomposition of general square real matrix pair (real)
+template<typename T1, typename T2>
+inline
+bool
+auxlib::eig_pair
+  (
+        Mat< std::complex<typename T1::pod_type> >&  vals,
+        Mat< std::complex<typename T1::pod_type> >& lvecs,
+        Mat< std::complex<typename T1::pod_type> >& rvecs,
+  const Base<typename T1::pod_type,T1>&             A_expr,
+  const Base<typename T1::pod_type,T2>&             B_expr
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type  T;
+    typedef std::complex<T>       eT;
+
+    Mat<T> A(A_expr.get_ref());
+    Mat<T> B(B_expr.get_ref());
+
+    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+
+    arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
+
+    arma_debug_assert_blas_size(A);
+
+    if(A.is_empty())
+      {
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
+      return true;
+      }
+
+    if(A.is_finite() == false)  { return false; }
+    if(B.is_finite() == false)  { return false; }
+
+    vals.set_size(A.n_rows, 1);
+
+    Mat<T> ltmp(1,1);
+    Mat<T> rtmp(1,1);
+
+    lvecs.set_size(A.n_rows, A.n_rows);
+    ltmp. set_size(A.n_rows, A.n_rows);
+    rvecs.set_size(A.n_rows, A.n_rows);
+    rtmp. set_size(A.n_rows, A.n_rows);
+
+    char     jobvl = 'V';
+    char     jobvr = 'V';
+    blas_int N     = blas_int(A.n_rows);
+    T*       vl    = ltmp.memptr();
+    T*       vr    = rtmp.memptr();
+    blas_int ldvl  = blas_int(ltmp.n_rows);
+    blas_int ldvr  = blas_int(rtmp.n_rows);
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1), 8*N)
+    blas_int info  = 0;
+
+    podarray<T> alphar(A.n_rows);
+    podarray<T> alphai(A.n_rows);
+    podarray<T>   beta(A.n_rows);
+
+    podarray<T> work( static_cast<uword>(lwork) );
+
+    arma_extra_debug_print("lapack::ggev()");
+    lapack::ggev(&jobvl, &jobvr, &N, A.memptr(), &N,  B.memptr(), &N, alphar.memptr(), alphai.memptr(), beta.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, &info);
+
+    if(info != 0)  { return false; }
+
+    arma_extra_debug_print("reformatting eigenvalues and eigenvectors");
+
+          eT*   vals_mem =   vals.memptr();
+    const  T* alphar_mem = alphar.memptr();
+    const  T* alphai_mem = alphai.memptr();
+    const  T*   beta_mem =   beta.memptr();
+
+    bool beta_has_zero = false;
+
+    for(uword j=0; j<A.n_rows; ++j)
+      {
+      const T alphai_val = alphai_mem[j];
+      const T   beta_val =   beta_mem[j];
+
+      const T re = alphar_mem[j] / beta_val;
+      const T im = alphai_val    / beta_val;
+
+      beta_has_zero = (beta_has_zero || (beta_val == T(0)));
+
+      vals_mem[j] = std::complex<T>(re, im);
+
+      if( (alphai_val > T(0)) && (j < (A.n_rows-1)) )
+        {
+        ++j;
+        vals_mem[j] = std::complex<T>(re,-im);  // force exact conjugate
+        }
+      }
+
+    if(beta_has_zero)  { arma_debug_warn("eig_pair(): given matrices appear ill-conditioned"); }
+
+    for(uword j=0; j < A.n_rows; ++j)
+      {
+      if( (j < (A.n_rows-1)) && (vals_mem[j] == std::conj(vals_mem[j+1])) )
+        {
+        for(uword i=0; i < A.n_rows; ++i)
+          {
+          lvecs.at(i,j)   = std::complex<T>( ltmp.at(i,j),  ltmp.at(i,j+1) );
+          lvecs.at(i,j+1) = std::complex<T>( ltmp.at(i,j), -ltmp.at(i,j+1) );
+          rvecs.at(i,j)   = std::complex<T>( rtmp.at(i,j),  rtmp.at(i,j+1) );
+          rvecs.at(i,j+1) = std::complex<T>( rtmp.at(i,j), -rtmp.at(i,j+1) );
+          }
+        ++j;
+        }
+      else
+        {
+        for(uword i=0; i<A.n_rows; ++i)
+          {
+          lvecs.at(i,j) = std::complex<T>(ltmp.at(i,j), T(0));
+          rvecs.at(i,j) = std::complex<T>(rtmp.at(i,j), T(0));
+          }
+        }
+      }
+
+    return true;
+    }
+  #else
+    {
+    arma_ignore(vals);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(A_expr);
+    arma_ignore(B_expr);
+    arma_stop_logic_error("eig_pair(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+//! two-sided eigendecomposition of general square real matrix pair (complex)
+template<typename T1, typename T2>
+inline
+bool
+auxlib::eig_pair
+  (
+        Mat< std::complex<typename T1::pod_type> >&       vals,
+        Mat< std::complex<typename T1::pod_type> >&      lvecs,
+        Mat< std::complex<typename T1::pod_type> >&      rvecs,
+  const Base< std::complex<typename T1::pod_type>, T1 >& A_expr,
+  const Base< std::complex<typename T1::pod_type>, T2 >& B_expr
+  )
+  {
+  arma_extra_debug_sigprint();
+
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type     T;
+    typedef typename std::complex<T> eT;
+
+    Mat<eT> A(A_expr.get_ref());
+    Mat<eT> B(B_expr.get_ref());
+
+    arma_debug_check( ((A.is_square() == false) || (B.is_square() == false)), "eig_pair(): given matrices must be square sized" );
+
+    arma_debug_check( (A.n_rows != B.n_rows), "eig_pair(): given matrices must have the same size" );
+
+    arma_debug_assert_blas_size(A);
+
+    if(A.is_empty())
+      {
+       vals.reset();
+      lvecs.reset();
+      rvecs.reset();
+      return true;
+      }
+
+    if(A.is_finite() == false)  { return false; }
+    if(B.is_finite() == false)  { return false; }
+
+    vals.set_size(A.n_rows, 1);
+
+    lvecs.set_size(A.n_rows, A.n_rows);
+    rvecs.set_size(A.n_rows, A.n_rows);
+
+    char     jobvl = 'V';
+    char     jobvr = 'V';
+    blas_int N     = blas_int(A.n_rows);
+    eT*      vl    = lvecs.memptr();
+    eT*      vr    = rvecs.memptr();
+    blas_int ldvl  = blas_int(lvecs.n_rows);
+    blas_int ldvr  = blas_int(rvecs.n_rows);
+    blas_int lwork = 64*N;  // lwork_min = (std::max)(blas_int(1),2*N)
+    blas_int info  = 0;
+
+    podarray<eT> alpha(A.n_rows);
+    podarray<eT>  beta(A.n_rows);
+
+    podarray<eT>  work( static_cast<uword>(lwork) );
+    podarray<T>  rwork( static_cast<uword>(8*N)   );
+
+    arma_extra_debug_print("lapack::cx_ggev()");
+    lapack::cx_ggev(&jobvl, &jobvr, &N, A.memptr(), &N, B.memptr(), &N, alpha.memptr(), beta.memptr(), vl, &ldvl, vr, &ldvr, work.memptr(), &lwork, rwork.memptr(), &info);
+
+    if(info != 0)  { return false; }
+
+          eT*   vals_mem =  vals.memptr();
+    const eT*  alpha_mem = alpha.memptr();
+    const eT*   beta_mem =  beta.memptr();
+
+    const std::complex<T> zero(T(0), T(0));
+
+    bool beta_has_zero = false;
+
+    for(uword i=0; i<A.n_rows; ++i)
+      {
+      const eT& beta_val = beta_mem[i];
+
+      vals_mem[i] = alpha_mem[i] / beta_val;
+
+      beta_has_zero = (beta_has_zero || (beta_val == zero));
+      }
+
+    if(beta_has_zero)  { arma_debug_warn("eig_pair(): given matrices appear ill-conditioned"); }
+
+    return true;
+    }
+  #else
+    {
+    arma_ignore(vals);
+    arma_ignore(lvecs);
+    arma_ignore(rvecs);
+    arma_ignore(A_expr);
+    arma_ignore(B_expr);
+    arma_stop_logic_error("eig_pair(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
 //! eigenvalues of a symmetric real matrix
 template<typename eT, typename T1>
 inline
