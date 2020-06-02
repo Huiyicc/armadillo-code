@@ -1692,7 +1692,7 @@ auxlib::eig_gen_twosided_balance
 
 
 
-//! eigendecomposition of general square real matrix pair (real)
+//! eigendecomposition of general square matrix pair (real)
 template<typename T1, typename T2>
 inline
 bool
@@ -1835,7 +1835,7 @@ auxlib::eig_pair
 
 
 
-//! eigendecomposition of general square real matrix pair (complex)
+//! eigendecomposition of general square matrix pair (complex)
 template<typename T1, typename T2>
 inline
 bool
@@ -1937,7 +1937,7 @@ auxlib::eig_pair
 
 
 
-//! two-sided eigendecomposition of general square real matrix pair (real)
+//! two-sided eigendecomposition of general square matrix pair (real)
 template<typename T1, typename T2>
 inline
 bool
@@ -2078,7 +2078,7 @@ auxlib::eig_pair
 
 
 
-//! two-sided eigendecomposition of general square real matrix pair (complex)
+//! two-sided eigendecomposition of general square matrix pair (complex)
 template<typename T1, typename T2>
 inline
 bool
