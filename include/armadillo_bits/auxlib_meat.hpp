@@ -1941,7 +1941,7 @@ auxlib::eig_pair
 template<typename T1, typename T2>
 inline
 bool
-auxlib::eig_pair
+auxlib::eig_pair_twosided
   (
         Mat< std::complex<typename T1::pod_type> >&  vals,
         Mat< std::complex<typename T1::pod_type> >& lvecs,
@@ -2082,7 +2082,7 @@ auxlib::eig_pair
 template<typename T1, typename T2>
 inline
 bool
-auxlib::eig_pair
+auxlib::eig_pair_twosided
   (
         Mat< std::complex<typename T1::pod_type> >&       vals,
         Mat< std::complex<typename T1::pod_type> >&      lvecs,
