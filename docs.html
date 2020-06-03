@@ -12022,10 +12022,15 @@ See also:
 <br>
 <br><b>eig_gen( eigval, eigvec, X )</b>
 <br><b>eig_gen( eigval, eigvec, X, bal )</b>
+<br>
+<br><b>eig_gen( eigval, leigvec, reigvec, X )</b>
+<br><b>eig_gen( eigval, leigvec, reigvec, X, bal )</b>
 <ul>
 <li>Eigen decomposition of <b>dense</b> general (non-symmetric/non-hermitian) square matrix <i>X</i></li>
 <br>
-<li>The eigenvalues and corresponding eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively</li>
+<li>The eigenvalues and corresponding right eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively</li>
+<br>
+<li>If both left and right eigenvectors are requested they are stored in <i>leigvec</i> and <i>reigvec</i>, respectively</li>
 <br>
 <li>The eigenvectors are stored as column vectors</li>
 <br>
@@ -12048,6 +12053,7 @@ The <i>bal</i> argument is optional; <i>bal</i> is one of:
 <li><i>eigval = eig_gen(X)</i> resets <i>eigval</i> and throws a <i>std::runtime_error</i> exception</li>
 <li><i>eig_gen(eigval,X)</i> resets <i>eigval</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 <li><i>eig_gen(eigval,eigvec,X)</i> resets <i>eigval</i> &amp; <i>eigvec</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
+<li><i>eig_gen(eigval,leigvec,reigvec,X)</i> resets <i>eigval</i>, <i>leigvec</i> &amp; <i>reigvec</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
 </li>
 <br>
@@ -12089,13 +12095,17 @@ See also:
 <br><b>eig_pair( eigval, A, B )</b>
 <br>
 <br><b>eig_pair( eigval, eigvec, A, B )</b>
+<br>
+<br><b>eig_pair( eigval, leigvec, reigvec, A, B )</b>
 <ul>
 <li>
 Eigen decomposition for pair of general <b>dense</b> square matrices <i>A</i> and <i>B</i> of the same size,
 such that <i>A*eigvec&nbsp;=&nbsp;B*eigvec*diagmat(eigval)</i>
 </li>
 <br>
-<li>The eigenvalues and corresponding eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively</li>
+<li>The eigenvalues and corresponding right eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively</li>
+<br>
+<li>If both left and right eigenvectors are requested they are stored in <i>leigvec</i> and <i>reigvec</i>, respectively</li>
 <br>
 <li>The eigenvectors are stored as column vectors</li>
 <br>
@@ -12106,6 +12116,7 @@ such that <i>A*eigvec&nbsp;=&nbsp;B*eigvec*diagmat(eigval)</i>
 <li><i>eigval = eig_pair(A,B)</i> resets <i>eigval</i> and throws a <i>std::runtime_error</i> exception</li>
 <li><i>eig_pair(eigval,A,B)</i> resets <i>eigval</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 <li><i>eig_pair(eigval,eigvec,A,B)</i> resets <i>eigval</i> &amp; <i>eigvec</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
+<li><i>eig_pair(eigval,leigvec,reigvec,A,B)</i> resets <i>eigval</i>, <i>leigvec</i> &amp; <i>reigvec</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
 </li>
 <br>
