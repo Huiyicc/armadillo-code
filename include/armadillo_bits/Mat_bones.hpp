@@ -213,6 +213,7 @@ class Mat : public Base< eT, Mat<eT> >
   inline            subview<eT> rows(const span& row_span);
   inline      const subview<eT> rows(const span& row_span) const;
   
+  
   arma_inline       subview_cols<eT> cols(const uword in_col1, const uword in_col2);
   arma_inline const subview_cols<eT> cols(const uword in_col1, const uword in_col2) const;
   
