@@ -387,6 +387,30 @@ struct quasi_unwrap< subview_col<eT> >
 
 
 
+template<typename eT>
+struct quasi_unwrap< subview_cols<eT> >
+  {
+  inline
+  quasi_unwrap(const subview_cols<eT>& A)
+    : orig( A.m )
+    , M   ( const_cast<eT*>( A.m.colptr(A.aux_col1) ), A.m.n_rows, A.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT>& orig;
+  const Mat<eT>  M;
+  
+  static constexpr bool is_const     = true;
+  static constexpr bool has_subview  = true;
+  static constexpr bool has_orig_mem = true;
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&orig) == void_ptr(&X)); }
+  };
+
+
+
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 struct quasi_unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {

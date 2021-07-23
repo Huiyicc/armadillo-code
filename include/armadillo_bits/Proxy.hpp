@@ -1037,6 +1037,57 @@ class Proxy< subview_col<eT> >
 
 
 template<typename eT>
+class Proxy< subview_cols<eT> >
+  {
+  public:
+  
+  typedef eT                                       elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef subview_cols<eT>                         stored_type;
+  typedef const eT*                                ea_type;
+  typedef const Mat<eT>&                           aligned_ea_type;
+  
+  static constexpr bool use_at      = false;
+  static constexpr bool use_mp      = false;
+  static constexpr bool has_subview = true;
+  
+  static constexpr bool is_row  = false;
+  static constexpr bool is_col  = false;
+  static constexpr bool is_xvec = false;
+  
+  arma_aligned const subview_cols<eT>& Q;
+  arma_aligned const Mat<eT>           R;
+    
+  inline explicit Proxy(const subview_cols<eT>& A)
+    : Q(A)
+    , R( const_cast<eT*>( A.m.colptr(A.aux_col1) ), A.m.n_rows, A.n_cols, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return R.n_rows; }
+  arma_inline uword get_n_cols() const { return R.n_cols; }
+  arma_inline uword get_n_elem() const { return R.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return R[i];          }
+  arma_inline elem_type at         (const uword row, const uword col) const { return R.at(row,col); }
+  arma_inline elem_type at_alt     (const uword i)                    const { return R.at_alt(i);   }
+  
+  arma_inline         ea_type         get_ea() const { return R.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return R;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (is_same_type<eT,eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>& X) const { return Q.check_overlap(X); }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(R.memptr()); }
+  };
+
+
+
+template<typename eT>
 class Proxy< subview_row<eT> >
   {
   public:

@@ -210,14 +210,14 @@ class Mat : public Base< eT, Mat<eT> >
   arma_inline       subview<eT> rows(const uword in_row1, const uword in_row2);
   arma_inline const subview<eT> rows(const uword in_row1, const uword in_row2) const;
   
-  arma_inline       subview<eT> cols(const uword in_col1, const uword in_col2);
-  arma_inline const subview<eT> cols(const uword in_col1, const uword in_col2) const;
-  
   inline            subview<eT> rows(const span& row_span);
   inline      const subview<eT> rows(const span& row_span) const;
   
-  arma_inline       subview<eT> cols(const span& col_span);
-  arma_inline const subview<eT> cols(const span& col_span) const;
+  arma_inline       subview_cols<eT> cols(const uword in_col1, const uword in_col2);
+  arma_inline const subview_cols<eT> cols(const uword in_col1, const uword in_col2) const;
+  
+  arma_inline       subview_cols<eT> cols(const span& col_span);
+  arma_inline const subview_cols<eT> cols(const span& col_span) const;
   
   
   arma_inline       subview<eT> submat(const uword in_row1, const uword in_col1, const uword in_row2, const uword in_col2);
