@@ -288,14 +288,12 @@ subview<eT>::inplace_op(const Base<eT,T1>& in, const char* identifier)
         
         uword count = 0;
         
-        if((s.aux_row1 == 0) && (s_n_rows == s.m.n_rows))
+        for(uword ucol=0; ucol < s_n_cols; ++ucol)
           {
-          eT* s_col_data = s.colptr(0);
-          
-          const uword s_n_elem = s.n_elem;
+          eT* s_col_data = s.colptr(ucol);
           
           uword jj;
-          for(jj=1; jj < s_n_elem; jj+=2)
+          for(jj=1; jj < s_n_rows; jj+=2)
             {
             const eT tmp1 = Pea[count];  count++;
             const eT tmp2 = Pea[count];  count++;
@@ -307,42 +305,13 @@ subview<eT>::inplace_op(const Base<eT,T1>& in, const char* identifier)
             if(is_same_type<op_type, op_internal_div  >::yes)  { (*s_col_data) /= tmp1; s_col_data++;  (*s_col_data) /= tmp2; s_col_data++; }
             }
           
-          if((jj-1) < s_n_elem)
+          if((jj-1) < s_n_rows)
             {
             if(is_same_type<op_type, op_internal_equ  >::yes)  { (*s_col_data) =  Pea[count];  count++; }
             if(is_same_type<op_type, op_internal_plus >::yes)  { (*s_col_data) += Pea[count];  count++; }
             if(is_same_type<op_type, op_internal_minus>::yes)  { (*s_col_data) -= Pea[count];  count++; }
             if(is_same_type<op_type, op_internal_schur>::yes)  { (*s_col_data) *= Pea[count];  count++; }
             if(is_same_type<op_type, op_internal_div  >::yes)  { (*s_col_data) /= Pea[count];  count++; }
-            }
-          }
-        else
-          {
-          for(uword ucol=0; ucol < s_n_cols; ++ucol)
-            {
-            eT* s_col_data = s.colptr(ucol);
-            
-            uword jj;
-            for(jj=1; jj < s_n_rows; jj+=2)
-              {
-              const eT tmp1 = Pea[count];  count++;
-              const eT tmp2 = Pea[count];  count++;
-              
-              if(is_same_type<op_type, op_internal_equ  >::yes)  { (*s_col_data) =  tmp1; s_col_data++;  (*s_col_data) =  tmp2; s_col_data++; }
-              if(is_same_type<op_type, op_internal_plus >::yes)  { (*s_col_data) += tmp1; s_col_data++;  (*s_col_data) += tmp2; s_col_data++; }
-              if(is_same_type<op_type, op_internal_minus>::yes)  { (*s_col_data) -= tmp1; s_col_data++;  (*s_col_data) -= tmp2; s_col_data++; }
-              if(is_same_type<op_type, op_internal_schur>::yes)  { (*s_col_data) *= tmp1; s_col_data++;  (*s_col_data) *= tmp2; s_col_data++; }
-              if(is_same_type<op_type, op_internal_div  >::yes)  { (*s_col_data) /= tmp1; s_col_data++;  (*s_col_data) /= tmp2; s_col_data++; }
-              }
-            
-            if((jj-1) < s_n_rows)
-              {
-              if(is_same_type<op_type, op_internal_equ  >::yes)  { (*s_col_data) =  Pea[count];  count++; }
-              if(is_same_type<op_type, op_internal_plus >::yes)  { (*s_col_data) += Pea[count];  count++; }
-              if(is_same_type<op_type, op_internal_minus>::yes)  { (*s_col_data) -= Pea[count];  count++; }
-              if(is_same_type<op_type, op_internal_schur>::yes)  { (*s_col_data) *= Pea[count];  count++; }
-              if(is_same_type<op_type, op_internal_div  >::yes)  { (*s_col_data) /= Pea[count];  count++; }
-              }
             }
           }
         }
