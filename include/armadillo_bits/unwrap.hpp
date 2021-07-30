@@ -130,6 +130,40 @@ struct unwrap< Col<eT> >
 
 
 
+template<typename eT>
+struct unwrap< subview_col<eT> >
+  {
+  typedef Col<eT> stored_type;
+
+  inline
+  unwrap(const subview_col<eT>& A)
+    : M(A.colmem, A.n_rows)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Col<eT> M;
+  };
+
+
+
+template<typename eT>
+struct unwrap< subview_cols<eT> >
+  {
+  typedef Mat<eT> stored_type;
+
+  inline
+  unwrap(const subview_cols<eT>& A)
+    : M(A.colptr(0), A.n_rows, A.n_cols)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  const Mat<eT> M;
+  };
+
+
+
 template<typename out_eT, typename T1, typename T2, typename glue_type>
 struct unwrap< mtGlue<out_eT, T1, T2, glue_type> >
   {
@@ -393,7 +427,7 @@ struct quasi_unwrap< subview_cols<eT> >
   inline
   quasi_unwrap(const subview_cols<eT>& A)
     : orig( A.m )
-    , M   ( const_cast<eT*>( A.m.colptr(A.aux_col1) ), A.m.n_rows, A.n_cols, false, false )
+    , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
     {
     arma_extra_debug_sigprint();
     }
@@ -1336,6 +1370,33 @@ struct partial_unwrap< subview_col<eT> >
   partial_unwrap(const subview_col<eT>& A)
     : orig( A.m )
     , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, false, false )
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  constexpr eT get_val() const { return eT(1); }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>& X) const { return (void_ptr(&X) == void_ptr(&orig)); }
+  
+  static constexpr bool do_trans = false;
+  static constexpr bool do_times = false;
+  
+  const Mat<eT>& orig;
+  const Col<eT>  M;
+  };
+
+
+
+template<typename eT>
+struct partial_unwrap< subview_cols<eT> >
+  {
+  typedef Mat<eT> stored_type;
+  
+  inline
+  partial_unwrap(const subview_cols<eT>& A)
+    : orig( A.m )
+    , M   ( const_cast<eT*>( A.colptr(0) ), A.n_rows, A.n_cols, false, false )
     {
     arma_extra_debug_sigprint();
     }
