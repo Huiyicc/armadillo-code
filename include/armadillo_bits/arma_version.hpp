@@ -21,8 +21,8 @@
 
 #define ARMA_VERSION_MAJOR 10
 #define ARMA_VERSION_MINOR 6
-#define ARMA_VERSION_PATCH 1
-#define ARMA_VERSION_NAME  "Keep Calm"
+#define ARMA_VERSION_PATCH 90
+#define ARMA_VERSION_NAME  "unstable - not for production use"
 
 
 
