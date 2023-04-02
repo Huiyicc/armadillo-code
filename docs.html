@@ -14189,22 +14189,14 @@ If no solution is found:
 </li>
 <br>
 <li>
-The <i>solver</i> argument is optional; <i>solver</i> is either <code>"superlu"</code> or <code>"lapack"</code>; by default <code>"superlu"</code> is used
+the <i>solver</i> argument is optional; <i>solver</i> is either <code>"superlu"</code> or <code>"lapack"</code>; by default <code>"superlu"</code> is used
 <ul>
 <li>
-For <code>"superlu"</code>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
+for <code>"superlu"</code>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
 </li>
 <li>
-For <code>"lapack"</code>, sparse matrix <i>A</i> is converted to a dense matrix before using the LAPACK solver; this considerably increases memory usage
+for <code>"lapack"</code>, sparse matrix <i>A</i> is converted to a dense matrix before using the LAPACK solver; this considerably increases memory usage
 </li>
-</ul>
-</li>
-<br>
-<li>
-<b>Notes</b>:
-<ul>
-<li>The SuperLU solver is mainly useful for very large and/or very sparse matrices</li>
-<li>If there is sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
 </ul>
 </li>
 <br>
@@ -14266,6 +14258,15 @@ struct superlu_opts
 </table>
 </ul>
 </li>
+</ul>
+</li>
+<br>
+<li>
+<b>Notes</b>:
+<ul>
+<li>to reuse the factorisation of <i>A</i> for finding solutions where <i>B</i> is iteratively changed, use the <a href="#spsolve_factoriser">spsolve_factoriser</a> class instead</li>
+<li>the SuperLU solver is mainly useful for very large and very sparse matrices</li>
+<li>if there is sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
 </ul>
 </li>
 <br>
