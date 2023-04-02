@@ -1445,6 +1445,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     char norm_id = '1';
     
+    arma_extra_debug_print("superlu::langs()");
     return superlu::langs<eT>(&norm_id, A);
     }
   
@@ -1465,6 +1466,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     superlu_stat_wrangler stat;
     
+    arma_extra_debug_print("superlu::gscon()");
     superlu::gscon<eT>(&norm_id, L, U, norm_val, &rcond_out, stat.get_ptr(), &info);
     
     return (info == 0) ? T(rcond_out) : T(0);
