@@ -486,7 +486,8 @@ Conrad Sanderson and Ryan Curtin.
 <tr style="background-color: #F5F5F5;"><td><a href="#eigs_sym">eigs_sym</a></td><td>&nbsp;</td><td>limited number of eigenvalues &amp; eigenvectors of sparse symmetric real matrix</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#eigs_gen">eigs_gen</a></td><td>&nbsp;</td><td>limited number of eigenvalues &amp; eigenvectors of sparse general square matrix</td></tr>
 <tr><td><a href="#spsolve">spsolve</a></td><td>&nbsp;</td><td>solve sparse systems of linear equations</td></tr>
-<tr><td><a href="#svds">svds</a></td><td>&nbsp;</td><td>truncated svd: limited number of singular values &amp; singular vectors of sparse matrix</td></tr>
+<tr><td><a href="#spsolve_factoriser">spsolve_factoriser</a></td><td>&nbsp;</td><td>factoriser for solving sparse systems of linear equations</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#svds">svds</a></td><td>&nbsp;</td><td>truncated svd: limited number of singular values &amp; singular vectors of sparse matrix</td></tr>
 </tbody>
 </table>
 </ul>
@@ -10944,6 +10945,7 @@ See also:
 <li><a href="#det">det()</a></li>
 <li><a href="#inv">inv()</a></li>
 <li><a href="#solve">solve()</a></li>
+<li><a href="#spsolve_factoriser">spsolve_factoriser</a></li>
 </ul>
 </li>
 <br>
@@ -14298,9 +14300,121 @@ spsolve(x, A, b, "superlu", opts);
 <li>
 See also:
 <ul>
+<li><a href="#spsolve_factoriser">spsolve_factoriser</a></li>
 <li><a href="#solve">solve()</a> - solve dense system of linear equations</li>
 <!-- <li><a href="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/">SuperLU home page</a> -->
 <li><a href="https://portal.nersc.gov/project/sparse/superlu/">SuperLU home page</a>
+<li><a href="https://mathworld.wolfram.com/LinearSystemofEquations.html">linear system of equations in MathWorld</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Linear_system_of_equations">system of linear equations in Wikipedia</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="spsolve_factoriser"></a>
+<b>spsolve_factoriser</b>
+<br>
+<ul>
+<li>
+Class for factorisation of <b>sparse</b> matrix <i>A</i> for solving systems of linear equations in the form <i>A*X&thinsp;=&thinsp;B</i>
+</li>
+<br>
+<li>
+Allows the factorisation of <i>A</i> to be reused for finding solutions in cases where <i>B</i> is iteratively changed
+</li>
+<br>
+<li>
+For an instance of <i>spsolve_factoriser</i> named as <i>SF</i>, the member functions are:
+<br>
+<br>
+<ul>
+<b>SF.factorise(</b>A<b>)</b>
+<br>
+<b>SF.factorise(</b>A<b>, </b>opts<b>)</b>
+<ul>
+<li>
+factorise square-sized sparse matrix <i>A</i>
+</li>
+<li>
+optional settings are given in the <i>opts</i> argument as per the <a href="#spsolve">spsolve()</a> function
+</li>
+<li>if the factorisation fails, a bool set to <i>false</i> is returned</li>
+</ul>
+<br>
+<b>SF.solve(</b>X<b>, </b>B<b>)</b>
+<ul>
+<li>
+using the given dense matrix <i>B</i> and the computed factorisation,
+store in <i>X</i> the solution to <i>A*X&thinsp;=&thinsp;B</i>
+</li>
+<li>if computing the solution fails, <i>X</i> is reset and a bool set to <i>false</i> is returned</li>
+</ul>
+<br>
+<b>SF.rcond()</b>
+<ul>
+<li>
+return the 1-norm estimate of the reciprocal condition number computed during the factorisation
+  <ul>
+  <li>
+  values close to 1 suggest that the factorised matrix is well-conditioned
+  </li>
+  <li>
+  values close to 0 suggest that the factorised matrix is badly conditioned
+  </li>
+  </ul>
+</li>
+</ul>
+<br>
+<b>SF.reset()</b>
+<ul>
+<li>
+reset the instance and release all memory related to the stored factorisation;
+this is automatically done when the instance goes out of scope
+</li>
+</ul>
+</ul>
+<br>
+<li><b>Notes:</b>
+<ul>
+<li>if the factorisation of <i>A</i> does not need to be reused, use <a href="#spsolve">spsolve()</a> instead</li>
+<li>this class internally uses the SuperLU solver; <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a></li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+sp_mat A = sprandu&lt;sp_mat&gt;(1000, 1000, 0.1);
+
+spsolve_factoriser SF;
+
+bool status = SF.factorise(A);
+
+if(status == false) { cout &lt;&lt; "factorisation failed" &lt;&lt; endl; }
+
+double rcond_value = SF.rcond();
+
+vec B1(1000, fill::randu);
+vec B2(1000, fill::randu);
+
+vec X1;
+vec X2;
+
+bool solution1_ok = SF.solve(X1,B1);
+bool solution2_ok = SF.solve(X2,B2);
+
+if(solution1_ok == false) { cout &lt;&lt; "couldn't find X1" &lt;&lt; endl; }
+if(solution2_ok == false) { cout &lt;&lt; "couldn't find X2" &lt;&lt; endl; }
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#spsolve">spsolve()</a></li>
 <li><a href="https://mathworld.wolfram.com/LinearSystemofEquations.html">linear system of equations in MathWorld</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Linear_system_of_equations">system of linear equations in Wikipedia</a></li>
 </ul>
