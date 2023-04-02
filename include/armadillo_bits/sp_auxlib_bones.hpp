@@ -86,12 +86,6 @@ class sp_auxlib
   template<typename T1, typename T2>
   inline static bool spsolve_refine(Mat<typename T1::elem_type>& out, typename T1::pod_type& out_rcond, const SpBase<typename T1::elem_type, T1>& A, const Base<typename T1::elem_type, T2>& B, const superlu_opts& user_opts);
   
-  // //
-  // // rcond() via SuperLU
-  // 
-  // template<typename T1>
-  // sinline static typename T1::pod_type rcond(const SpBase<typename T1::elem_type, T1>& A);
-  
   //
   // support functions
   
