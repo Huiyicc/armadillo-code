@@ -227,6 +227,35 @@ class superlu_array_wrangler
   inline eT* get_ptr();
   };
 
+
+template<typename eT>
+class superlu_worker
+  {
+  private:
+  
+  bool factorisation_valid = false;
+  
+  superlu_supermatrix_wrangler* l = nullptr;
+  superlu_supermatrix_wrangler* u = nullptr;
+  
+  superlu_array_wrangler<int> perm_c;
+  superlu_array_wrangler<int> perm_r;
+  
+  superlu_stat_wrangler stat;
+  
+  public:
+  
+  inline ~superlu_worker();
+  inline  superlu_worker();
+  
+  inline bool factorise(typename get_pod_type<eT>::result& out_rcond, const SpMat<eT>& A, const superlu_opts& user_opts);
+  
+  inline bool solve(Mat<eT>& X, const Mat<eT>& B);
+  
+  inline      superlu_worker(const superlu_worker&) = delete;
+  inline void operator=     (const superlu_worker&) = delete;
+  };
+
 #endif
 
 
