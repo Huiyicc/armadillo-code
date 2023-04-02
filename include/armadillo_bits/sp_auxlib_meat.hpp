@@ -1145,7 +1145,7 @@ sp_auxlib::eigs_gen(Col< std::complex<T> >& eigval, Mat< std::complex<T> >& eigv
     arma_ignore(form_val);
     arma_ignore(sigma);
     arma_ignore(opts);
-
+    
     arma_stop_logic_error("eigs_gen(): use of ARPACK must be enabled for decomposition of complex matrices");
     return false;
     }
@@ -1762,6 +1762,9 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 //     arma_debug_check( (type_matched == false),      "copy_to_spmat(): type mismatch"  );
 //     arma_debug_check( (A.Mtype != superlu::SLU_GE), "copy_to_spmat(): unknown layout" );
 //     
+//     // NOTE: the l and u instances of SuperMatrix resulting from superlu::gstrf()
+//     // NOTE: do not have the superlu::SLU_GE layout
+//     
 //     const superlu::NCformat* nc = (const superlu::NCformat*)(A.Store);
 //     
 //     if(nc == nullptr)  { out.reset(); return; }
@@ -1780,6 +1783,8 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
 //     
 //     arrayops::convert(access::rwp(out.col_ptrs),    nc->colptr, A_n_cols+1 );
 //     arrayops::convert(access::rwp(out.row_indices), nc->rowind, A_n_nonzero);
+//     
+//     out.remove_zeros();  // in case SuperLU has bugs and stores zeros in sparse matrices
 //     }
   
   
@@ -2192,6 +2197,7 @@ sp_auxlib::run_aupd_shiftinvert
       return;
       }
     
+    // NOTE: potential problem with inconsistent/mismatched use of eT and T types
     eT x_norm_val = sp_auxlib::norm1<T>(x.get_ptr());
     eT x_rcond    = sp_auxlib::lu_rcond<T>(l.get_ptr(), u.get_ptr(), x_norm_val);
     
