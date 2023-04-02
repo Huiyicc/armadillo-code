@@ -5728,9 +5728,11 @@ SpMat<eT>::remove_zeros()
   
   const eT* old_values = values;
   
+  constexpr eT zero = eT(0);
+  
   for(uword i=0; i < old_n_nonzero; ++i)
     {
-    new_n_nonzero += (old_values[i] != eT(0)) ? uword(1) : uword(0);
+    new_n_nonzero += (old_values[i] != zero) ? uword(1) : uword(0);
     }
   
   if(new_n_nonzero != old_n_nonzero)
@@ -5741,18 +5743,21 @@ SpMat<eT>::remove_zeros()
     
     uword new_index = 0;
     
-    const_iterator it     = begin();
-    const_iterator it_end = end();
+    const_iterator it     = cbegin();
+    const_iterator it_end = cend();
     
     for(; it != it_end; ++it)
       {
       const eT val = eT(*it);
       
-      if(val != eT(0))
+      if(val != zero)
         {
+        const uword it_row = it.row();
+        const uword it_col = it.col();
+        
         access::rw(tmp.values[new_index])      = val;
-        access::rw(tmp.row_indices[new_index]) = it.row();
-        access::rw(tmp.col_ptrs[it.col() + 1])++;
+        access::rw(tmp.row_indices[new_index]) = it_row;
+        access::rw(tmp.col_ptrs[it_col + 1])++;
         ++new_index;
         }
       }
