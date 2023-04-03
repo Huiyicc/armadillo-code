@@ -1033,93 +1033,13 @@ template<typename eT>
 template<typename T1>
 inline
 SpMat<eT>&
-SpMat<eT>::operator*=(const Base<eT, T1>& y)
+SpMat<eT>::operator*=(const Base<eT, T1>& x)
   {
   arma_extra_debug_sigprint();
   
   sync_csc();
   
-  const Proxy<T1> p(y.get_ref());
-  
-  arma_debug_assert_mul_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "matrix multiplication");
-  
-  // We assume the matrix structure is such that we will end up with a sparse
-  // matrix.  Assuming that every entry in the dense matrix is nonzero (which is
-  // a fairly valid assumption), each row with any nonzero elements in it (in this
-  // matrix) implies an entire nonzero column.  Therefore, we iterate over all
-  // the row_indices and count the number of rows with any elements in them
-  // (using the quasi-linked-list idea from SYMBMM -- see spglue_times_meat.hpp).
-  podarray<uword> index(n_rows);
-  index.fill(n_rows); // Fill with invalid links.
-  
-  uword last_index = n_rows + 1;
-  for(uword i = 0; i < n_nonzero; ++i)
-    {
-    if(index[row_indices[i]] == n_rows)
-      {
-      index[row_indices[i]] = last_index;
-      last_index = row_indices[i];
-      }
-    }
-  
-  // Now count the number of rows which have nonzero elements.
-  uword nonzero_rows = 0;
-  while(last_index != n_rows + 1)
-    {
-    ++nonzero_rows;
-    last_index = index[last_index];
-    }
-  
-  SpMat<eT> z(arma_reserve_indicator(), n_rows, p.get_n_cols(), (nonzero_rows * p.get_n_cols())); // upper bound on size
-  
-  // Now we have to fill all the elements using a modification of the NUMBMM algorithm.
-  uword cur_pos = 0;
-  
-  podarray<eT> partial_sums(n_rows);
-  partial_sums.zeros();
-  
-  for(uword lcol = 0; lcol < n_cols; ++lcol)
-    {
-    const_iterator it     = begin();
-    const_iterator it_end = end();
-    
-    while(it != it_end)
-      {
-      const eT value = (*it);
-      
-      partial_sums[it.row()] += (value * p.at(it.col(), lcol));
-      
-      ++it;
-      }
-    
-    // Now add all partial sums to the matrix.
-    for(uword i = 0; i < n_rows; ++i)
-      {
-      if(partial_sums[i] != eT(0))
-        {
-        access::rw(z.values[cur_pos]) = partial_sums[i];
-        access::rw(z.row_indices[cur_pos]) = i;
-        ++access::rw(z.col_ptrs[lcol + 1]);
-        //printf("colptr %d now %d\n", lcol + 1, z.col_ptrs[lcol + 1]);
-        ++cur_pos;
-        partial_sums[i] = 0; // Would it be faster to do this in batch later?
-        }
-      }
-    }
-  
-  // Now fix the column pointers.
-  for(uword c = 1; c <= z.n_cols; ++c)
-    {
-    access::rw(z.col_ptrs[c]) += z.col_ptrs[c - 1];
-    }
-  
-  // Resize to final correct size.
-  z.mem_resize(z.col_ptrs[z.n_cols]);
-  
-  // Now take the memory of the temporary matrix.
-  steal_mem(z);
-  
-  return *this;
+  return (*this).operator=( (*this) * x.get_ref() );
   }
 
 
