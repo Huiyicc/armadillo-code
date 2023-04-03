@@ -3056,8 +3056,8 @@ SpMat<eT>::shed_rows(const uword in_row1, const uword in_row2)
   
   // Now, copy over the elements.
   // i is the index in the old matrix; j is the index in the new matrix.
-  const_iterator it     = begin();
-  const_iterator it_end = end();
+  const_iterator it     = cbegin();
+  const_iterator it_end = cend();
   
   uword j = 0; // The index in the new matrix.
   while(it != it_end)
@@ -3858,8 +3858,8 @@ SpMat<eT>::reshape_helper_generic(const uword in_rows, const uword in_cols)
   
   arrayops::fill_zeros(new_col_ptrs, in_cols + 1);
   
-  const_iterator it     = begin();
-  const_iterator it_end = end();
+  const_iterator it     = cbegin();
+  const_iterator it_end = cend();
   
   for(; it != it_end; ++it)
     {
@@ -3898,7 +3898,7 @@ SpMat<eT>::reshape_helper_intovec()
   sync_csc();
   invalidate_cache();
   
-  const_iterator it = begin();
+  const_iterator it = cbegin();
   
   const uword t_n_rows    = n_rows;
   const uword t_n_nonzero = n_nonzero;
