@@ -10945,7 +10945,6 @@ See also:
 <li><a href="#det">det()</a></li>
 <li><a href="#inv">inv()</a></li>
 <li><a href="#solve">solve()</a></li>
-<li><a href="#spsolve_factoriser">spsolve_factoriser</a></li>
 </ul>
 </li>
 <br>
@@ -14282,7 +14281,7 @@ If no solution is found:
 </li>
 <br>
 <li>
-the <i>solver</i> argument is optional; <i>solver</i> is either <code>"superlu"</code> or <code>"lapack"</code>; by default <code>"superlu"</code> is used
+The <i>solver</i> argument is optional; <i>solver</i> is either <code>"superlu"</code> or <code>"lapack"</code>; by default <code>"superlu"</code> is used
 <ul>
 <li>
 for <code>"superlu"</code>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="#config_hpp">config.hpp</a>
@@ -14290,6 +14289,15 @@ for <code>"superlu"</code>, <i>ARMA_USE_SUPERLU</i> must be enabled in <a href="
 <li>
 for <code>"lapack"</code>, sparse matrix <i>A</i> is converted to a dense matrix before using the LAPACK solver; this considerably increases memory usage
 </li>
+</ul>
+</li>
+<br>
+<li>
+<b>Notes</b>:
+<ul>
+<li>the SuperLU solver is mainly useful for very large and very sparse matrices</li>
+<li>to reuse the SuperLU factorisation of <i>A</i> for finding solutions where <i>B</i> is iteratively changed, see the <a href="#spsolve_factoriser">spsolve_factoriser</a> class</li>
+<li>if there is sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
 </ul>
 </li>
 <br>
@@ -14355,15 +14363,6 @@ struct superlu_opts
 </li>
 <br>
 <li>
-<b>Notes</b>:
-<ul>
-<li>to reuse the factorisation of <i>A</i> for finding solutions where <i>B</i> is iteratively changed, use the <a href="#spsolve_factoriser">spsolve_factoriser</a> class instead</li>
-<li>the SuperLU solver is mainly useful for very large and very sparse matrices</li>
-<li>if there is sufficient amount of memory to store a dense version of matrix <i>A</i>, the LAPACK solver can be faster</li>
-</ul>
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -14415,7 +14414,7 @@ Class for factorisation of <b>sparse</b> matrix <i>A</i> for solving systems of 
 </li>
 <br>
 <li>
-Allows the factorisation of <i>A</i> to be reused for finding solutions in cases where <i>B</i> is iteratively changed
+Allows the SuperLU factorisation of <i>A</i> to be reused for finding solutions in cases where <i>B</i> is iteratively changed
 </li>
 <br>
 <li>
