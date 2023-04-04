@@ -320,8 +320,8 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   {
   arma_extra_debug_sigprint_this(this);
   
-  const unwrap<T1> locs_tmp( locations_expr.get_ref() );
-  const unwrap<T2> vals_tmp(      vals_expr.get_ref() );
+  const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
+  const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
   
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
@@ -393,8 +393,8 @@ SpMat<eT>::SpMat(const Base<uword,T1>& locations_expr, const Base<eT,T2>& vals_e
   {
   arma_extra_debug_sigprint_this(this);
   
-  const unwrap<T1> locs_tmp( locations_expr.get_ref() );
-  const unwrap<T2> vals_tmp(      vals_expr.get_ref() );
+  const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
+  const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
   
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
@@ -462,8 +462,8 @@ SpMat<eT>::SpMat(const bool add_values, const Base<uword,T1>& locations_expr, co
   {
   arma_extra_debug_sigprint_this(this);
   
-  const unwrap<T1> locs_tmp( locations_expr.get_ref() );
-  const unwrap<T2> vals_tmp(      vals_expr.get_ref() );
+  const quasi_unwrap<T1> locs_tmp( locations_expr.get_ref() );
+  const quasi_unwrap<T2> vals_tmp(      vals_expr.get_ref() );
   
   const Mat<uword>& locs = locs_tmp.M;
   const Mat<eT>&    vals = vals_tmp.M;
@@ -546,9 +546,9 @@ SpMat<eT>::SpMat
   {
   arma_extra_debug_sigprint_this(this);
   
-  const unwrap<T1> rowind_tmp( rowind_expr.get_ref() );
-  const unwrap<T2> colptr_tmp( colptr_expr.get_ref() );
-  const unwrap<T3>   vals_tmp( values_expr.get_ref() );
+  const quasi_unwrap<T1> rowind_tmp( rowind_expr.get_ref() );
+  const quasi_unwrap<T2> colptr_tmp( colptr_expr.get_ref() );
+  const quasi_unwrap<T3>   vals_tmp( values_expr.get_ref() );
   
   const Mat<uword>& rowind = rowind_tmp.M;
   const Mat<uword>& colptr = colptr_tmp.M;
