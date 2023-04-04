@@ -203,7 +203,7 @@ Manual installation involves simply copying the `include/armadillo` header
 **and** the associated `include/armadillo_bits` directory to a location
 such as `/usr/include/` which is searched by your C++ compiler.
 If you don't have sudo access or don't have write access to `/usr/include/`,
-use a directory within your own home directory (eg. `/home/blah/include/`).
+use a directory within your own home directory (eg. `/home/user/include/`).
 
 If required, modify `include/armadillo_bits/config.hpp`
 to indicate which libraries are currently available on your system.
@@ -234,17 +234,17 @@ instead of the Armadillo runtime library:
     g++ prog.cpp -o prog -O2 -std=c++11 -lopenblas -llapack
 
 If you have manually installed Armadillo in a non-standard location,
-such as `/home/blah/include/`, you will need to make sure 
-that your C++ compiler searches `/home/blah/include/` 
+such as `/home/user/include/`, you will need to make sure 
+that your C++ compiler searches `/home/user/include/` 
 by explicitly specifying the directory as an argument/option. 
 For example, using the `-I` switch in GCC and Clang:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/blah/include/ -lopenblas -llapack
+    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/user/include/ -lopenblas -llapack
 
 If you're getting linking issues (unresolved symbols),
 enable the `ARMA_DONT_USE_WRAPPER` option:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/blah/include/ -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
+    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/user/include/ -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
 
 If you don't have OpenBLAS, on Linux change `-lopenblas` to `-lblas`;
 on macOS change `-lopenblas -llapack` to `-framework Accelerate`
