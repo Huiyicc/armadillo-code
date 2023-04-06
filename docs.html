@@ -2495,13 +2495,13 @@ Provide access to individual elements or objects stored in a container object
 <tbody>
 <tr>
 <td style="vertical-align: top;">
-<code>(n)</code>
+<code>(i)</code>
 </td>
 <td style="vertical-align: top;">&nbsp;<br>
 </td>
 <td style="vertical-align: top;">
-For <i>vec</i> and <i>rowvec</i>, access the <i>n</i>-th element.
-For <i>mat</i>, <i>cube</i> and <i>field</i>, access the <i>n</i>-th element/object under the assumption of a flat layout,
+For <i>vec</i> and <i>rowvec</i>, access the element stored at index <i>i</i>.
+For <i>mat</i>, <i>cube</i> and <i>field</i>, access the element/object stored at index <i>i</i> under the assumption of a flat layout,
 with column-major ordering of data (ie. column by column).
 An exception is thrown if the requested element is out of bounds.
 </td>
@@ -2513,12 +2513,12 @@ An exception is thrown if the requested element is out of bounds.
 </tr>
 <tr>
 <td style="vertical-align: top;">
-<code>.at(n)</code>&nbsp;&nbsp;or&nbsp;&nbsp;<code>[n]</code>&nbsp;
+<code>.at(i)</code>&nbsp;&nbsp;or&nbsp;&nbsp;<code>[i]</code>&nbsp;
 </td>
 <td style="vertical-align: top;"><br>
 </td>
 <td style="vertical-align: top;">
-As for <code>(n)</code>, but without a bounds check; not recommended; see the caveats below
+As for <code>(i)</code>, but without a bounds check; not recommended; see the caveats below
 </td>
 </tr>
 <tr>
@@ -2528,12 +2528,12 @@ As for <code>(n)</code>, but without a bounds check; not recommended; see the ca
 </tr>
 <tr>
 <td style="vertical-align: top;">
-<code>(i,j)</code>
+<code>(r,c)</code>
 </td>
 <td style="vertical-align: top;"><br>
 </td>
 <td style="vertical-align: top;">
-For <i>mat</i> and <i>2D field</i> classes, access the element/object stored at the <i>i</i>-th row and <i>j</i>-th column.
+For <i>mat</i> and <i>2D field</i> classes, access the element/object stored at row <i>r</i> and column <i>c</i>.
 An exception is thrown if the requested element is out of bounds.
 </td>
 </tr>
@@ -2544,12 +2544,12 @@ An exception is thrown if the requested element is out of bounds.
 </tr>
 <tr>
 <td style="vertical-align: top;">
-<code>.at(i,j)</code>
+<code>.at(r,c)</code>
 </td>
 <td style="vertical-align: top;"><br>
 </td>
 <td style="vertical-align: top;">
-As for <code>(i,j)</code>, but without a bounds check; not recommended; see the caveats below
+As for <code>(r,c)</code>, but without a bounds check; not recommended; see the caveats below
 </td>
 <td style="vertical-align: top;"><br>
 </td>
@@ -2561,12 +2561,12 @@ As for <code>(i,j)</code>, but without a bounds check; not recommended; see the 
 </tr>
 <tr>
 <td style="vertical-align: top;">
-<code>(i,j,k)</code>
+<code>(r,c,s)</code>
 </td>
 <td style="vertical-align: top;"><br>
 </td>
 <td style="vertical-align: top;">
-For <i>cube</i> and <i>3D field</i> classes, access the element/object stored at the <i>i</i>-th row, <i>j</i>-th column and <i>k</i>-th slice.
+For <i>cube</i> and <i>3D field</i> classes, access the element/object stored at row <i>r</i>, column <i>c</i>, and slice <i>s</i>.
 An exception is thrown if the requested element is out of bounds.
 </td>
 </tr>
@@ -2577,12 +2577,12 @@ An exception is thrown if the requested element is out of bounds.
 </tr>
 <tr>
 <td style="vertical-align: top;">
-<code>.at(i,j,k)</code>
+<code>.at(r,c,s)</code>
 </td>
 <td style="vertical-align: top;"><br>
 </td>
 <td style="vertical-align: top;">
-As for <code>(i,j,k)</code>, but without a bounds check; not recommended; see the caveats below
+As for <code>(r,c,s)</code>, but without a bounds check; not recommended; see the caveats below
 </td>
 </tr>
 </tbody>
@@ -2605,8 +2605,8 @@ accessing elements without bounds checks is slightly faster, but is not recommen
 <li>
 indexing in C++ starts at 0
 </li>
-<li>accessing elements via <code>[i,j]</code> and <code>[i,j,k]</code> does not work correctly in C++;
-instead use <code>(i,j)</code> and <code>(i,j,k)</code> 
+<li>accessing elements via <code>[r,c]</code> and <code>[r,c,s]</code> does not work correctly in C++;
+instead use <code>(r,c)</code> and <code>(r,c,s)</code> 
 </li>
 </ul>
 </li>
