@@ -48,7 +48,7 @@ norm
     if(k == uword(1))  { return op_norm::vec_norm_1(P); }
     if(k == uword(2))  { return op_norm::vec_norm_2(P); }
     
-    arma_debug_check( (k == 0), "norm(): k must be greater than zero" );
+    arma_debug_check( (k == 0), "norm(): unsupported vector norm type" );
     
     return op_norm::vec_norm_k(P, int(k));
     }
