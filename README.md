@@ -114,7 +114,6 @@ Use of OpenBLAS (instead of standard BLAS) is strongly recommended on all system
 On macOS, the Accelerate framework can be used for BLAS and LAPACK functions.
 
 If sparse matrices are not needed, ARPACK and SuperLU are not required.
-Caveat: only SuperLU versions 5.2.x and 5.3.x can be used; SuperLU must be available as a shared library.
 
 Armadillo requires a C++ compiler that supports at least the C++11 standard.
 
@@ -127,6 +126,11 @@ and then running the following command in a terminal window:
     xcode-select --install
 
 On Windows systems, the MinGW toolset or Visual Studio C++ 2019 (MSVC) can be used.
+
+Caveats on the use of SuperLU:
+- SuperLU must be available as a shared library
+- Only the following SuperLU versions are supported: 5.2.x, 5.3.x, 6.0.x
+- SuperLU 6.0.x must be compiled with default integer size (32 bits)
 
 ---
 
