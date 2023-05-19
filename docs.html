@@ -150,7 +150,7 @@ hr.greyline
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
 <a name="top"></a>
-<big><b>API Documentation for Armadillo 12.2</b></big>
+<big><b>API Documentation for Armadillo 12.4</b></big>
 <br>
 <br>
 <br>
@@ -413,37 +413,39 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><a href="#min_and_max">min&nbsp;/&nbsp;max</a></td><td>&nbsp;</td><td>return extremum values</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#nonzeros">nonzeros</a></td><td>&nbsp;</td><td>return non-zero values</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#norm">norm</a></td><td>&nbsp;</td><td>various norms of vectors and matrices</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#normalise">normalise</a></td><td>&nbsp;</td><td>normalise vectors to unit <i>p</i>-norm</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#norm2est">norm2est</a></td><td>&nbsp;</td><td>fast estimate of the matrix 2-norm</td></tr>
+<tr><td><a href="#normalise">normalise</a></td><td>&nbsp;</td><td>normalise vectors to unit <i>p</i>-norm</td></tr>
 <tr><td><a href="#pow">pow</a></td><td>&nbsp;</td><td>element-wise power</td></tr>
 <tr><td><a href="#powmat">powmat</a></td><td>&nbsp;</td><td>matrix power</td></tr>
-<tr><td><a href="#prod">prod</a></td><td>&nbsp;</td><td>product of elements</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#prod">prod</a></td><td>&nbsp;</td><td>product of elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#rank">rank</a></td><td>&nbsp;</td><td>rank of matrix</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#rcond">rcond</a></td><td>&nbsp;</td><td>reciprocal condition number</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#repelem">repelem</a></td><td>&nbsp;</td><td>replicate elements</td></tr>
+<tr><td><a href="#repelem">repelem</a></td><td>&nbsp;</td><td>replicate elements</td></tr>
 <tr><td><a href="#repmat">repmat</a></td><td>&nbsp;</td><td>replicate matrix in block-like fashion</td></tr>
 <tr><td><a href="#reshape">reshape</a></td><td>&nbsp;</td><td>change size while keeping elements</td></tr>
-<tr><td><a href="#resize">resize</a></td><td>&nbsp;</td><td>change size while keeping elements and preserving layout</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#resize">resize</a></td><td>&nbsp;</td><td>change size while keeping elements and preserving layout</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#reverse">reverse</a></td><td>&nbsp;</td><td>reverse order of elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#roots">roots</a></td><td>&nbsp;</td><td>roots of polynomial</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#shift">shift</a></td><td>&nbsp;</td><td>shift elements</td></tr>
+<tr><td><a href="#shift">shift</a></td><td>&nbsp;</td><td>shift elements</td></tr>
 <tr><td><a href="#shuffle">shuffle</a></td><td>&nbsp;</td><td>randomly shuffle elements</td></tr>
 <tr><td><a href="#size">size</a></td><td>&nbsp;</td><td>obtain dimensions of given object</td></tr>
-<tr><td><a href="#sort">sort</a></td><td>&nbsp;</td><td>sort elements</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#sort">sort</a></td><td>&nbsp;</td><td>sort elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#sort_index">sort_index</a></td><td>&nbsp;</td><td>vector describing sorted order of elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#sqrtmat">sqrtmat</a></td><td>&nbsp;</td><td>square root of matrix</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#sqrtmat_sympd">sqrtmat_sympd</a></td><td>&nbsp;</td><td>square root of symmetric matrix</td></tr>
+<tr><td><a href="#sqrtmat_sympd">sqrtmat_sympd</a></td><td>&nbsp;</td><td>square root of symmetric matrix</td></tr>
 <tr><td><a href="#sum">sum</a></td><td>&nbsp;</td><td>sum of elements</td></tr>
 <tr><td><a href="#sub2ind">sub2ind</a></td><td>&nbsp;</td><td>convert subscripts to linear index</td></tr>
-<tr><td><a href="#symmat">symmatu&nbsp;/&nbsp;symmatl</a></td><td>&nbsp;</td><td>generate symmetric matrix from given matrix</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#symmat">symmatu&nbsp;/&nbsp;symmatl</a></td><td>&nbsp;</td><td>generate symmetric matrix from given matrix</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#trace">trace</a></td><td>&nbsp;</td><td>sum of diagonal elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#trans">trans</a></td><td>&nbsp;</td><td>transpose of matrix</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#trapz">trapz</a></td><td>&nbsp;</td><td>trapezoidal numerical integration</td></tr>
+<tr><td><a href="#trapz">trapz</a></td><td>&nbsp;</td><td>trapezoidal numerical integration</td></tr>
 <tr><td><a href="#trimat">trimatu&nbsp;/&nbsp;trimatl</a></td><td>&nbsp;</td><td>copy upper/lower triangular part</td></tr>
 <tr><td><a href="#trimat_ind">trimatu_ind&nbsp;/&nbsp;trimatl_ind</a></td><td>&nbsp;</td><td>obtain indices of upper/lower triangular part</td></tr>
-<tr><td><a href="#unique">unique</a></td><td>&nbsp;</td><td>return unique elements</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#unique">unique</a></td><td>&nbsp;</td><td>return unique elements</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#vecnorm">vecnorm</a></td><td>&nbsp;</td><td>obtain vector norm of each row or column of a matrix</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#vectorise">vectorise</a></td><td>&nbsp;</td><td>flatten matrix into vector</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#misc_fns">misc&nbsp;functions</a></td><td>&nbsp;</td><td>miscellaneous element-wise functions:&nbsp;exp,&nbsp;log,&nbsp;sqrt,&nbsp;round,&nbsp;sign,&nbsp;...</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#trig_fns">trig&nbsp;functions</a></td><td>&nbsp;</td><td>trigonometric element-wise functions:&nbsp;cos,&nbsp;sin,&nbsp;tan,&nbsp;...</td></tr>
+<tr><td><a href="#misc_fns">misc&nbsp;functions</a></td><td>&nbsp;</td><td>miscellaneous element-wise functions:&nbsp;exp,&nbsp;log,&nbsp;sqrt,&nbsp;round,&nbsp;sign,&nbsp;...</td></tr>
+<tr><td><a href="#trig_fns">trig&nbsp;functions</a></td><td>&nbsp;</td><td>trigonometric element-wise functions:&nbsp;cos,&nbsp;sin,&nbsp;tan,&nbsp;...</td></tr>
 </tbody>
 </table>
 </ul>
@@ -2106,8 +2108,8 @@ The following subset of operations &amp; functions is available for sparse matri
 <li><a href="#diag">diagonal views</a></li>
 <li><a href="#save_load_mat">saving and loading</a> (using <i>arma_binary</i>, <i>coord_ascii</i>, and <i>csv_ascii</i> formats)</li>
 <li>element-wise functions: <a href="#abs">abs()</a>, <a href="#misc_fns">ceil()</a>, <a href="#conj">conj()</a>, <a href="#misc_fns">floor()</a>, <a href="#imag_real">imag()</a>, <a href="#imag_real">real()</a>, <a href="#misc_fns">round()</a>, <a href="#misc_fns">sign()</a>, <a href="#misc_fns">sqrt()</a>, <a href="#misc_fns">square()</a>, <a href="#misc_fns">trunc()</a></li>
-<li>scalar functions of matrices: <a href="#accu">accu()</a>, <a href="#as_scalar">as_scalar()</a>, <a href="#dot">dot()</a>, <a href="#norm">norm()</a>, <a href="#trace">trace()</a></li>
-<li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vectorise">vectorise()</a></li>
+<li>scalar functions of matrices: <a href="#accu">accu()</a>, <a href="#as_scalar">as_scalar()</a>, <a href="#dot">dot()</a>, <a href="#norm">norm()</a>, <a href="#norm2est">norm2est()</a>, <a href="#trace">trace()</a></li>
+<li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vecnorm">vecnorm()</a>, <a href="#vectorise">vectorise()</a></li>
 <li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
 <li>generated matrices: <a href="#speye">speye()</a>, <a href="#spones">spones()</a>, <a href="#sprandu_sprandn">sprandu()</a>, <a href="#sprandu_sprandn">sprandn()</a>, <a href="#zeros_standalone">zeros()</a></li>
 <li>eigen and svd decomposition: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
@@ -10565,7 +10567,7 @@ See also:
 <br><b>norm( X, p )</b>
 <ul>
 <li>
-Compute the <i>p</i>-norm of <i>X</i>, where <i>X</i> can be a vector or matrix
+Compute the <i>p</i>-norm of <i>X</i>, where <i>X</i> is a vector or matrix
 </li>
 <br>
 <li>
@@ -10577,7 +10579,7 @@ For matrices, <i>p</i> is one of: 1, 2, <code>"inf"</code>, <code>"fro"</code>
 </li>
 <br>
 <li>
-<code>"-inf"</code> is the minimum norm, <code>"inf"</code> is the maximum norm, <code>"fro"</code> is the Frobenius norm
+<code>"-inf"</code> is the minimum quasi-norm, <code>"inf"</code> is the maximum norm, <code>"fro"</code> is the Frobenius norm
 </li>
 <br>
 <li>
@@ -10589,8 +10591,12 @@ For vector norm with <i>p&thinsp;=&thinsp;2</i> and matrix norm with <i>p&thinsp
 </li>
 <br>
 <li>
-To obtain the zero/Hamming pseudo-norm (the number of non-zero elements),
-use this expression: <code><a href="#accu">accu</a>(X&nbsp;!=&nbsp;0)</code>
+<b>Caveats:</b>
+<ul>
+<li>to obtain the zero/Hamming pseudo-norm (the number of non-zero elements), use this expression: <code><a href="#accu">accu</a>(X&nbsp;!=&nbsp;0)</code></li>
+<li>to obtain the vector norm of each row or column of a matrix, use <a href="#vecnorm">vecnorm()</a></li>
+<li>matrix 2-norm (spectral norm) is based on SVD, which is computationally intensive for large matrices; a possible alternative is <a href="#norm2est">norm2est()</a></li>
+</ul>
 </li>
 <br>
 <li>
@@ -10608,11 +10614,65 @@ double y = norm(q, "inf");
 <li>
 See also:
 <ul>
+<li><a href="#vecnorm">vecnorm()</a></li>
+<li><a href="#norm2est">norm2est()</a></li>
 <li><a href="#normalise">normalise()</a></li>
-<li><a href="#vectorise">vectorise()</a></li>
 <li><a href="#dot">dot()</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Norm_(mathematics)">vector norm in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/VectorNorm.html">vector norm in MathWorld</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Matrix_norm">matrix norm in Wikipedia</a></li>
+<li><a href="https://mathworld.wolfram.com/MatrixNorm.html">matrix norm in MathWorld</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="norm2est"></a>
+<b>norm2est( X )</b>
+<br><b>norm2est( X, tol )</b>
+<br><b>norm2est( X, tol, max_iter )</b>
+<ul>
+<li>
+Fast estimate of the 2-norm (spectral norm) of <i>X</i>, where <i>X</i> is a dense or sparse matrix
+</li>
+<br>
+<li>
+The estimate is found via an iterative algorithm which finishes when one of the following conditions is met:
+<ul>
+<li>
+the relative difference between two consecutive estimates is less than the specified tolerance,
+ie. |est<sub>1</sub>&thinsp;-&thinsp;est<sub>2</sub>| / max(est<sub>1</sub>&thinsp;,&thinsp;est<sub>2</sub>) &lt; tol
+</li>
+<li>the number of iterations is equal to <i>max_iter</i></li>
+</ul>
+</li>
+<br>
+<li>
+The optional argument <i>tol</i> specifies the tolerance for the relative difference; by default <i>tol&thinsp;=&thinsp;1e-6</i> is used
+</li>
+<br>
+<li>
+The optional argument <i>max_iter</i> specifies the maximum number of iterations; by default <i>max_iter&thinsp;=&thinsp;100</i> is used
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X(2000, 3000, fill::randu);
+
+double x = norm2est(X);
+double y = norm2est(X, 1e-5);
+double z = norm2est(X, 1e-4, 10);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#norm">norm()</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Matrix_norm">matrix norm in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/MatrixNorm.html">matrix norm in MathWorld</a></li>
 </ul>
@@ -10661,6 +10721,7 @@ mat Z = normalise(X, 2, 1);
 See also:
 <ul>
 <li><a href="#norm">norm()</a></li>
+<li><a href="#vecnorm">vecnorm()</a></li>
 <li><a href="#dot">norm_dot()</a></li>
 <li><a href="https://mathworld.wolfram.com/NormalizedVector.html">Normalised vector in MathWorld</a>
 <li><a href="https://en.wikipedia.org/wiki/Unit_vector">Unit vector in Wikipedia</a>
@@ -12064,6 +12125,53 @@ mat Y = unique(X);
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#nonzeros">nonzeros()</a></li>
 <li><a href="#intersect">intersect()</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="vecnorm"></a>
+<b>vecnorm( X )</b>
+<br><b>vecnorm( X, p )</b>
+<br><b>vecnorm( X, p, dim )</b>
+<ul>
+<li>
+Compute the <i>p</i>-norm of each column vector <i>(dim&thinsp;=&thinsp;0)</i> or row vector <i>(dim&thinsp;=&thinsp;1)</i> of matrix <i>X</i>
+</li>
+<br>
+<li>
+<i>p</i> is an integer &ge;&thinsp;1, or <code>"-inf"</code> (minimum quasi-norm), or <code>"inf"</code> (maximum norm)
+</li>
+<br>
+<li>
+The arguments <i>p</i> and <i>dim</i> are optional; by default <i>p&thinsp;=&thinsp;2</i> and <i>dim&thinsp;=&thinsp;0</i> are used
+</li>
+<br>
+<li>
+<b>Caveat:</b> to compute the matrix norm, use <a href="#norm">norm()</a> instead
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X(4, 5, fill::randu);
+
+rowvec r = vecnorm(X, 2);
+
+colvec c = vecnorm(X, "inf", 1);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#norm">norm()</a></li>
+<li><a href="#normalise">normalise()</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Norm_(mathematics)">vector norm in Wikipedia</a></li>
+<li><a href="https://mathworld.wolfram.com/VectorNorm.html">vector norm in MathWorld</a></li>
 </ul>
 </li>
 <br>
@@ -19872,6 +19980,14 @@ List of additions and changes for each version:
 
 
 
+<a name="version_124"></a>
+<li>Version 12.4:
+<ul>
+<li>added <a href="#norm2est">norm2est()</a> for finding fast estimates of matrix 2-norm (spectral norm)</li>
+<li>added <a href="#vecnorm">vecnorm()</a>for obtaing the norm of each row or column vector in a matrix</li>
+</ul>
+</li>
+<br>
 <a name="version_122"></a>
 <li>Version 12.2:
 <ul>
