@@ -300,7 +300,7 @@ inline
 void
 Cube<eT>::init_cold()
   {
-  arma_extra_debug_sigprint( arma_str::format("n_rows = %d, n_cols = %d, n_slices = %d") % n_rows % n_cols % n_slices );
+  arma_extra_debug_sigprint( arma_str::format("n_rows = %u, n_cols = %u, n_slices = %u") % n_rows % n_cols % n_slices );
   
   #if defined(ARMA_64BIT_WORD)
     const char* error_message = "Cube::init(): requested size is too large";
@@ -344,7 +344,7 @@ inline
 void
 Cube<eT>::init_warm(const uword in_n_rows, const uword in_n_cols, const uword in_n_slices)
   {
-  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %d, in_n_cols = %d, in_n_slices = %d") % in_n_rows % in_n_cols % in_n_slices );
+  arma_extra_debug_sigprint( arma_str::format("in_n_rows = %u, in_n_cols = %u, in_n_slices = %u") % in_n_rows % in_n_cols % in_n_slices );
   
   if( (n_rows == in_n_rows) && (n_cols == in_n_cols) && (n_slices == in_n_slices) )  { return; }
   
@@ -533,7 +533,7 @@ Cube<eT>::delete_mat()
       
       if(mat_ptr != nullptr)
         {
-        arma_extra_debug_print( arma_str::format("Cube::delete_mat(): destroying matrix %d") % s );
+        arma_extra_debug_print( arma_str::format("Cube::delete_mat(): destroying matrix %u") % s );
         delete mat_ptr;
         mat_ptrs[s] = nullptr;
         }
@@ -589,7 +589,7 @@ Cube<eT>::create_mat_ptr(const uword in_slice) const
   {
   arma_extra_debug_sigprint();
   
-  arma_extra_debug_print( arma_str::format("Cube::create_mat_ptr(): creating matrix %d") % in_slice );
+  arma_extra_debug_print( arma_str::format("Cube::create_mat_ptr(): creating matrix %u") % in_slice );
   
   const eT* mat_mem = (n_elem_slice > 0) ? slice_memptr(in_slice) : nullptr;
   
