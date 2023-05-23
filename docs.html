@@ -2305,8 +2305,10 @@ each element in the generated object is either 0 or 1, depending on the result o
 </li>
 <br>
 <li>
-<b>Caveat:</b> operators involving equality comparison (ie. <code><b>==</b></code>, <code><b>!=</b></code>, <code><b>&gt;=</b></code>, <code><b>&lt;=</b></code>)
-are not recommended for matrices of type <i>mat</i> or <i>fmat</i>, due to the necessarily <a href="https://en.wikipedia.org/wiki/Floating_point">limited precision</a> of the underlying element types;
+<b>Caveat:</b>
+operators involving equality comparison (ie. <code><b>==</b></code>, <code><b>!=</b></code>, <code><b>&gt;=</b></code>, <code><b>&lt;=</b></code>)
+are not recommended for matrices of type <i>mat</i> or <i>fmat</i>,
+due to the necessarily <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">limited precision of floating-point</a> element types;
 consider using <a href="#approx_equal">approx_equal()</a> instead
 </li>
 <br>
@@ -2369,7 +2371,7 @@ See also:
 <li><a href="#transform">.transform()</a></li>
 <li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;&nbsp; (vector operations repeated on each column or row)</li>
 <li><a href="#misc_fns">miscellaneous element-wise functions</a> &nbsp; (exp, log, sqrt, square, round, ...)</li>
-<li><a href="https://en.wikipedia.org/wiki/Floating_point">floating point representation in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">floating point arithmetic in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/Floating-PointRepresentation.html">floating point representation in MathWorld</a></li>
 </ul>
 </li>
@@ -3205,7 +3207,7 @@ Member function of <i>Mat</i>, <i>Col</i>, <i>Row</i>, <i>Cube</i> and <i>SpMat<
 <li>
 <b>Caveats:</b>
 <ul>
-<li>floating point numbers (<i>float</i> and <i>double</i>) are approximations due to their <a href="https://en.wikipedia.org/wiki/Floating_point">necessarily limited precision</a></li>
+<li>floating point numbers (<i>float</i> and <i>double</i>) are approximations due to their <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">necessarily limited precision</a></li>
 <li>for sparse matrices (<i>SpMat</i>), replacement is not done when <i>old_value&thinsp;=&thinsp;0</i></li>
 </ul>
 </li>
