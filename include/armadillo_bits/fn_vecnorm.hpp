@@ -106,6 +106,10 @@ vecnorm
 
 
 
+//
+
+
+
 template<typename T1>
 arma_warn_unused
 inline
@@ -283,6 +287,10 @@ vecnorm
   
   return mtSpOp<typename T1::pod_type, T1, spop_vecnorm>(X.get_ref(), k, dim);
   }
+
+
+
+//
 
 
 
