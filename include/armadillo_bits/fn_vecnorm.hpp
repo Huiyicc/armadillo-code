@@ -165,7 +165,7 @@ inline
 typename
 enable_if2
   <
-  is_arma_sparse_type<T1>::value && resolves_to_vector<T1>::yes, 
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::yes, 
   typename T1::pod_type
   >::result
 vecnorm
@@ -191,7 +191,7 @@ inline
 typename
 enable_if2
   <
-  is_arma_sparse_type<T1>::value && resolves_to_vector<T1>::yes, 
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::yes, 
   typename T1::pod_type
   >::result
 vecnorm
@@ -217,7 +217,7 @@ inline
 typename
 enable_if2
   <
-  is_arma_sparse_type<T1>::value && resolves_to_vector<T1>::no, 
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no, 
   const mtSpOp<typename T1::pod_type, T1, spop_vecnorm>
   >::result
 vecnorm
@@ -242,7 +242,7 @@ inline
 typename
 enable_if2
   <
-  is_arma_sparse_type<T1>::value && resolves_to_vector<T1>::no, 
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no, 
   const mtSpOp<typename T1::pod_type, T1, spop_vecnorm_ext>
   >::result
 vecnorm
