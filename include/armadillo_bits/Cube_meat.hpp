@@ -4551,7 +4551,7 @@ Cube<eT>::save(const std::string name, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "Cube::save(): couldn't write; file: ", name); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Cube::save(): write failed; file: ", name); }
   
   return save_okay;
   }
@@ -4607,7 +4607,7 @@ Cube<eT>::save(const hdf5_name& spec, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "Cube::save(): couldn't write; file: ", spec.filename);
+      arma_debug_warn_level(3, "Cube::save(): write failed; file: ", spec.filename);
       }
     }
   
@@ -4653,7 +4653,7 @@ Cube<eT>::save(std::ostream& os, const file_type type) const
       save_okay = false;
     }
   
-  if(save_okay == false)  { arma_debug_warn_level(3, "Cube::save(): couldn't write to stream"); }
+  if(save_okay == false)  { arma_debug_warn_level(3, "Cube::save(): stream write failed"); }
   
   return save_okay;
   }
@@ -4720,7 +4720,7 @@ Cube<eT>::load(const std::string name, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Cube::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "Cube::load(): read failed; file: ", name);
       }
     }
   
@@ -4771,7 +4771,7 @@ Cube<eT>::load(const hdf5_name& spec, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Cube::load(): couldn't read; file: ", spec.filename);
+      arma_debug_warn_level(3, "Cube::load(): read failed; file: ", spec.filename);
       }
     }
   
@@ -4832,7 +4832,7 @@ Cube<eT>::load(std::istream& is, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "Cube::load(): couldn't load from stream");
+      arma_debug_warn_level(3, "Cube::load(): stream read failed");
       }
     }
   

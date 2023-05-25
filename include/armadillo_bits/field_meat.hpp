@@ -1799,7 +1799,7 @@ field<oT>::save(const std::string name, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "field::save(): couldn't write; file: ", name);
+      arma_debug_warn_level(3, "field::save(): write failed; file: ", name);
       }
     }
   
@@ -1827,7 +1827,7 @@ field<oT>::save(std::ostream& os, const file_type type) const
       }
     else
       {
-      arma_debug_warn_level(3, "field::save(): couldn't write to stream");
+      arma_debug_warn_level(3, "field::save(): stream write failed");
       }
     }
   
@@ -1855,7 +1855,7 @@ field<oT>::load(const std::string name, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "field::load(): couldn't read; file: ", name);
+      arma_debug_warn_level(3, "field::load(): read failed; file: ", name);
       }
     }
   
@@ -1884,7 +1884,7 @@ field<oT>::load(std::istream& is, const file_type type)
       }
     else
       {
-      arma_debug_warn_level(3, "field::load(): couldn't read from stream");
+      arma_debug_warn_level(3, "field::load(): stream read failed");
       }
     }
   
