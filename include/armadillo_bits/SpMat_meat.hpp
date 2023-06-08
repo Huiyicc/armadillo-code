@@ -3127,8 +3127,8 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
   
   if(diff > 0)
     {
-    eT*    new_values      = memory::acquire<eT>   (n_nonzero - diff);
-    uword* new_row_indices = memory::acquire<uword>(n_nonzero - diff);
+    eT*    new_values      = memory::acquire<eT>   (n_nonzero + 1 - diff);
+    uword* new_row_indices = memory::acquire<uword>(n_nonzero + 1 - diff);
     
     // Copy first part.
     if(col_beg != 0)
@@ -3143,6 +3143,10 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
       arrayops::copy(new_values + col_beg, values + col_end, n_nonzero - col_end);
       arrayops::copy(new_row_indices + col_beg, row_indices + col_end, n_nonzero - col_end);
       }
+
+    // Copy sentry element.
+    new_values[n_nonzero - diff] = values[n_nonzero];
+    new_row_indices[n_nonzero - diff] = row_indices[n_nonzero];
     
     if(values)       { memory::release(access::rw(values));      }
     if(row_indices)  { memory::release(access::rw(row_indices)); }
