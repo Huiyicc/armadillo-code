@@ -665,13 +665,15 @@ Base<elem_type,derived>::is_finite() const
   {
   arma_extra_debug_sigprint();
   
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  
   const Proxy<derived> P( (*this).get_ref() );
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
     const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
     
-    return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
+    return U.M.internal_is_finite();
     }
   
   if(Proxy<derived>::use_at == false)
@@ -709,13 +711,15 @@ Base<elem_type,derived>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
+  
   const Proxy<derived> P( (*this).get_ref() );
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
     const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
     
-    return arrayops::has_inf( U.M.memptr(), U.M.n_elem );
+    return U.M.internal_has_inf();
     }
   
   if(Proxy<derived>::use_at == false)
@@ -753,13 +757,15 @@ Base<elem_type,derived>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
+  
   const Proxy<derived> P( (*this).get_ref() );
   
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
     const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
     
-    return arrayops::has_nan( U.M.memptr(), U.M.n_elem );
+    return U.M.internal_has_nan();
     }
   
   if(Proxy<derived>::use_at == false)

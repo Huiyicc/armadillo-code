@@ -430,6 +430,11 @@ class Mat : public Base< eT, Mat<eT> >
   arma_warn_unused inline bool has_nan()       const;
   arma_warn_unused inline bool has_nonfinite() const;
   
+  arma_warn_unused inline bool internal_is_finite()     const;
+  arma_warn_unused inline bool internal_has_inf()       const;
+  arma_warn_unused inline bool internal_has_nan()       const;
+  arma_warn_unused inline bool internal_has_nonfinite() const;
+  
   arma_warn_unused inline bool is_sorted(const char* direction = "ascend")       const;
   arma_warn_unused inline bool is_sorted(const char* direction, const uword dim) const;
   

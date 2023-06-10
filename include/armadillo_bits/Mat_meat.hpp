@@ -6251,7 +6251,11 @@ inline
 bool
 Mat<eT>::is_finite() const
   {
-  return arrayops::is_finite(memptr(), n_elem);
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  return (*this).internal_is_finite();
   }
 
 
@@ -6263,7 +6267,9 @@ Mat<eT>::has_inf() const
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::has_inf(memptr(), n_elem);
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  return (*this).internal_has_inf();
   }
 
 
@@ -6275,7 +6281,9 @@ Mat<eT>::has_nan() const
   {
   arma_extra_debug_sigprint();
   
-  return arrayops::has_nan(memptr(), n_elem);
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  return (*this).internal_has_nan();
   }
 
 
@@ -6284,6 +6292,56 @@ template<typename eT>
 inline
 bool
 Mat<eT>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  return (*this).internal_has_nonfinite();
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::internal_is_finite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::is_finite(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::internal_has_inf() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_inf(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::internal_has_nan() const
+  {
+  arma_extra_debug_sigprint();
+  
+  return arrayops::has_nan(memptr(), n_elem);
+  }
+
+
+
+template<typename eT>
+inline
+bool
+Mat<eT>::internal_has_nonfinite() const
   {
   arma_extra_debug_sigprint();
   

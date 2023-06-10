@@ -317,6 +317,11 @@ class Cube : public BaseCube< eT, Cube<eT> >
   arma_warn_unused inline bool has_nan()       const;
   arma_warn_unused inline bool has_nonfinite() const;
   
+  arma_warn_unused inline bool internal_is_finite()     const;
+  arma_warn_unused inline bool internal_has_inf()       const;
+  arma_warn_unused inline bool internal_has_nan()       const;
+  arma_warn_unused inline bool internal_has_nonfinite() const;
+  
   arma_warn_unused arma_inline bool in_range(const uword i) const;
   arma_warn_unused arma_inline bool in_range(const span& x) const;
   
