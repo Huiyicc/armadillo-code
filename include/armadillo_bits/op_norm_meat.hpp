@@ -255,7 +255,7 @@ op_norm::vec_norm_1_direct_mem(const uword N, const eT* A)
   {
   arma_extra_debug_sigprint();
   
-  #if defined(ARMA_SIMPLE_LOOPS) || (defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0))
+  #if (defined(ARMA_SIMPLE_LOOPS) || defined(__FAST_MATH__))
     {
     eT acc1 = eT(0);
     
@@ -565,7 +565,7 @@ op_norm::vec_norm_2_direct_mem(const uword N, const eT* A)
   
   eT acc;
   
-  #if defined(ARMA_SIMPLE_LOOPS) || (defined(__FINITE_MATH_ONLY__) && (__FINITE_MATH_ONLY__ > 0))
+  #if (defined(ARMA_SIMPLE_LOOPS) || defined(__FAST_MATH__))
     {
     eT acc1 = eT(0);
     
