@@ -1437,6 +1437,30 @@ subview_cube<eT>::has_nan() const
 
 template<typename eT>
 inline
+bool
+subview_cube<eT>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  const uword local_n_rows   = n_rows;
+  const uword local_n_cols   = n_cols;
+  const uword local_n_slices = n_slices;
+  
+  for(uword slice = 0; slice < local_n_slices; ++slice)
+    {
+    for(uword col = 0; col < local_n_cols; ++col)
+      {
+      if(arrayops::is_finite(slice_colptr(slice,col), local_n_rows) == false)  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename eT>
+inline
 eT
 subview_cube<eT>::at_alt(const uword i) const
   {
