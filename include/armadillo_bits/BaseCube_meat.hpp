@@ -405,6 +405,40 @@ BaseCube<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 inline
+bool
+BaseCube<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
+  
+  if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
+    {
+    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    
+    return U.M.internal_has_nonfinite();
+    }
+  
+  const uword n_r = P.get_n_rows();
+  const uword n_c = P.get_n_cols();
+  const uword n_s = P.get_n_slices();
+  
+  for(uword s=0; s<n_s; ++s)
+  for(uword c=0; c<n_c; ++c)
+  for(uword r=0; r<n_r; ++r)
+    {
+    if(arma_isfinite(P.at(r,c,s)) == false)  { return true; }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
 const CubeToMatOp<derived, op_row_as_mat>
 BaseCube<elem_type,derived>::row_as_mat(const uword in_row) const
   {

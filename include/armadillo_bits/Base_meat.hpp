@@ -798,6 +798,52 @@ Base<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 inline
+bool
+Base<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  const Proxy<derived> P( (*this).get_ref() );
+  
+  if(is_Mat<typename Proxy<derived>::stored_type>::value)
+    {
+    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    
+    return U.M.internal_has_nonfinite();
+    }
+  
+  if(Proxy<derived>::use_at == false)
+    {
+    const typename Proxy<derived>::ea_type Pea = P.get_ea();
+    
+    const uword n_elem = P.get_n_elem();
+    
+    for(uword i=0; i<n_elem; ++i)
+      {
+      if(arma_isfinite(Pea[i]) == false)  { return true; }
+      }
+    }
+  else
+    {
+    const uword n_rows = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
+    
+    for(uword col=0; col<n_cols; ++col)
+    for(uword row=0; row<n_rows; ++row)
+      {
+      if(arma_isfinite(P.at(row,col)) == false)  { return true; }
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
 const Op<derived,op_vectorise_col>
 Base<elem_type, derived>::as_col() const
   {

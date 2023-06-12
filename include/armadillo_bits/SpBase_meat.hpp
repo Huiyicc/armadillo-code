@@ -828,6 +828,40 @@ SpBase<elem_type,derived>::has_nan() const
 
 template<typename elem_type, typename derived>
 inline
+bool
+SpBase<elem_type,derived>::has_nonfinite() const
+  {
+  arma_extra_debug_sigprint();
+  
+  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
+  
+  const SpProxy<derived> P( (*this).get_ref() );
+  
+  if(is_SpMat<typename SpProxy<derived>::stored_type>::value)
+    {
+    const unwrap_spmat<typename SpProxy<derived>::stored_type> U(P.Q);
+    
+    return U.M.internal_has_nonfinite();
+    }
+  else
+    {
+    typename SpProxy<derived>::const_iterator_type it     = P.begin();
+    typename SpProxy<derived>::const_iterator_type it_end = P.end();
+    
+    while(it != it_end)
+      {
+      if(arma_isfinite(*it) == false)  { return true; }
+      ++it;
+      }
+    }
+  
+  return false;
+  }
+
+
+
+template<typename elem_type, typename derived>
+inline
 const SpOp<derived,spop_vectorise_col>
 SpBase<elem_type, derived>::as_col() const
   {
