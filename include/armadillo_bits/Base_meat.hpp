@@ -667,14 +667,14 @@ Base<elem_type,derived>::is_finite() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const Proxy<derived> P( (*this).get_ref() );
-  
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return U.M.internal_is_finite();
     }
+  
+  const Proxy<derived> P( (*this).get_ref() );
   
   if(Proxy<derived>::use_at == false)
     {
@@ -713,14 +713,14 @@ Base<elem_type,derived>::has_inf() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const Proxy<derived> P( (*this).get_ref() );
-  
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_inf();
     }
+  
+  const Proxy<derived> P( (*this).get_ref() );
   
   if(Proxy<derived>::use_at == false)
     {
@@ -759,14 +759,14 @@ Base<elem_type,derived>::has_nan() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const Proxy<derived> P( (*this).get_ref() );
-  
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_nan();
     }
+  
+  const Proxy<derived> P( (*this).get_ref() );
   
   if(Proxy<derived>::use_at == false)
     {
@@ -805,14 +805,14 @@ Base<elem_type,derived>::has_nonfinite() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const Proxy<derived> P( (*this).get_ref() );
-  
   if(is_Mat<typename Proxy<derived>::stored_type>::value)
     {
-    const quasi_unwrap<typename Proxy<derived>::stored_type> U(P.Q);
+    const quasi_unwrap<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_nonfinite();
     }
+  
+  const Proxy<derived> P( (*this).get_ref() );
   
   if(Proxy<derived>::use_at == false)
     {
