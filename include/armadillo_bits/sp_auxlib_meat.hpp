@@ -1315,7 +1315,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
     
     if(A.n_nonzero == uword(0))  { X.soft_reset(); return false; }
     
-    if(arma_config::check_nonfinite && (A.internal_has_nonfinite() || X.internal_has_nonfinite()))
+    if(arma_config::check_nonfinite && (A.internal_has_nonfinite() || B.internal_has_nonfinite()))
       {
       arma_debug_warn_level(3, "spsolve(): detected non-finite elements");
       return false;
