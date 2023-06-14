@@ -310,14 +310,14 @@ BaseCube<elem_type,derived>::is_finite() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const ProxyCube<derived> P( (*this).get_ref() );
-  
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return U.M.internal_is_finite();
     }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
   
   const uword n_r = P.get_n_rows();
   const uword n_c = P.get_n_cols();
@@ -344,14 +344,14 @@ BaseCube<elem_type,derived>::has_inf() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const ProxyCube<derived> P( (*this).get_ref() );
-  
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_inf();
     }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
   
   const uword n_r = P.get_n_rows();
   const uword n_c = P.get_n_cols();
@@ -378,14 +378,14 @@ BaseCube<elem_type,derived>::has_nan() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const ProxyCube<derived> P( (*this).get_ref() );
-  
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_nan();
     }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
   
   const uword n_r = P.get_n_rows();
   const uword n_c = P.get_n_cols();
@@ -412,14 +412,14 @@ BaseCube<elem_type,derived>::has_nonfinite() const
   
   if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
   
-  const ProxyCube<derived> P( (*this).get_ref() );
-  
   if(is_Cube<typename ProxyCube<derived>::stored_type>::value)
     {
-    const unwrap_cube<typename ProxyCube<derived>::stored_type> U(P.Q);
+    const unwrap_cube<derived> U( (*this).get_ref() );
     
     return U.M.internal_has_nonfinite();
     }
+  
+  const ProxyCube<derived> P( (*this).get_ref() );
   
   const uword n_r = P.get_n_rows();
   const uword n_c = P.get_n_cols();

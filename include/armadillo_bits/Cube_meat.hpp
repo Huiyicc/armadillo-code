@@ -3630,21 +3630,6 @@ Cube<eT>::operator--(int)
 
 
 
-//! returns true if all of the elements are finite
-template<typename eT>
-inline
-bool
-Cube<eT>::is_finite() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_is_finite();
-  }
-
-
-
 //! returns true if the cube has no elements
 template<typename eT>
 arma_inline
@@ -3652,48 +3637,6 @@ bool
 Cube<eT>::is_empty() const
   {
   return (n_elem == 0);
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::has_inf() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_inf();
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::has_nan() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_nan();
-  }
-
-
-
-template<typename eT>
-inline
-bool
-Cube<eT>::has_nonfinite() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_nonfinite();
   }
 
 
