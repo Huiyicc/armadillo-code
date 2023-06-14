@@ -3395,21 +3395,6 @@ SpMat<eT>::is_square() const
 
 
 
-//! returns true if all of the elements are finite
-template<typename eT>
-inline
-bool
-SpMat<eT>::is_finite() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "is_finite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_is_finite();
-  }
-
-
-
 template<typename eT>
 inline
 bool
@@ -3498,48 +3483,6 @@ SpMat<eT>::is_hermitian(const typename get_pod_type<elem_type>::result tol) cons
   const T norm_A_At = as_scalar( arma::max(sum(abs(A - A.t()), 1), 0) );
   
   return ( (norm_A_At / norm_A) <= tol );
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::has_inf() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_inf(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_inf();
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::has_nan() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nan(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_nan();
-  }
-
-
-
-template<typename eT>
-inline
-bool
-SpMat<eT>::has_nonfinite() const
-  {
-  arma_extra_debug_sigprint();
-  
-  if(arma_config::fast_math)  { arma_debug_warn_level(2, "has_nonfinite(): detection of non-finite values is not reliable in fast math mode"); }
-  
-  return (*this).internal_has_nonfinite();
   }
 
 
