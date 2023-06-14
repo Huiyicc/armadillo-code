@@ -671,7 +671,7 @@ Base<elem_type,derived>::is_finite() const
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
-    return U.M.internal_is_finite();
+    return arrayops::is_finite( U.M.memptr(), U.M.n_elem );
     }
   
   const Proxy<derived> P( (*this).get_ref() );
@@ -717,7 +717,7 @@ Base<elem_type,derived>::has_inf() const
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
-    return U.M.internal_has_inf();
+    return arrayops::has_inf( U.M.memptr(), U.M.n_elem );
     }
   
   const Proxy<derived> P( (*this).get_ref() );
@@ -763,7 +763,7 @@ Base<elem_type,derived>::has_nan() const
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
-    return U.M.internal_has_nan();
+    return arrayops::has_nan( U.M.memptr(), U.M.n_elem );
     }
   
   const Proxy<derived> P( (*this).get_ref() );
@@ -809,7 +809,7 @@ Base<elem_type,derived>::has_nonfinite() const
     {
     const quasi_unwrap<derived> U( (*this).get_ref() );
     
-    return U.M.internal_has_nonfinite();
+    return (arrayops::is_finite( U.M.memptr(), U.M.n_elem ) == false);
     }
   
   const Proxy<derived> P( (*this).get_ref() );
