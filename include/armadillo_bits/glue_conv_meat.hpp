@@ -264,7 +264,7 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   out.set_size( out_n_rows, out_n_cols );
   
-  if( (arma_config::openmp) && (out_n_cols >= 2) )
+  if( (arma_config::openmp) && (out_n_cols >= 2) && (mp_thread_limit::in_parallel() == false) )
     {
     #if defined(ARMA_USE_OPENMP)
       {
