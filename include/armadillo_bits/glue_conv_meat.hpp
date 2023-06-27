@@ -63,11 +63,28 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   
   eT* out_mem = out.memptr();
   
-  for(uword i=0; i < out_n_elem; ++i)
+  if( (arma_config::openmp) && (x_n_elem >= 128) && (h_n_elem >= 64) && (mp_thread_limit::in_parallel() == false) )
     {
-    // out_mem[i] = dot( hh, xx.subvec(i, (i + h_n_elem_m1)) );
-    
-    out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
+    #if defined(ARMA_USE_OPENMP)
+      {
+      const int n_threads = mp_thread_limit::get();
+      
+      #pragma omp parallel for schedule(static) num_threads(n_threads)
+      for(uword i=0; i < out_n_elem; ++i)
+        {
+        out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
+        }
+      }
+    #endif
+    }
+  else
+    {
+    for(uword i=0; i < out_n_elem; ++i)
+      {
+      // out_mem[i] = dot( hh, xx.subvec(i, (i + h_n_elem_m1)) );
+      
+      out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
+      }
     }
   }
 
