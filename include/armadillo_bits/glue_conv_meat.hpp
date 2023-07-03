@@ -63,28 +63,11 @@ glue_conv::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B, const bool A_
   
   eT* out_mem = out.memptr();
   
-  if( (arma_config::openmp) && (x_n_elem >= 128) && (h_n_elem >= 64) && (mp_thread_limit::in_parallel() == false) )
+  for(uword i=0; i < out_n_elem; ++i)
     {
-    #if defined(ARMA_USE_OPENMP)
-      {
-      const int n_threads = mp_thread_limit::get();
-      
-      #pragma omp parallel for schedule(static) num_threads(n_threads)
-      for(uword i=0; i < out_n_elem; ++i)
-        {
-        out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
-        }
-      }
-    #endif
-    }
-  else
-    {
-    for(uword i=0; i < out_n_elem; ++i)
-      {
-      // out_mem[i] = dot( hh, xx.subvec(i, (i + h_n_elem_m1)) );
-      
-      out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
-      }
+    // out_mem[i] = dot( hh, xx.subvec(i, (i + h_n_elem_m1)) );
+    
+    out_mem[i] = op_dot::direct_dot( h_n_elem, hh_mem, &(xx_mem[i]) );
     }
   }
 
@@ -281,57 +264,24 @@ glue_conv2::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
   
   out.set_size( out_n_rows, out_n_cols );
   
-  if( (arma_config::openmp) && (out_n_cols >= 2) && (mp_thread_limit::in_parallel() == false) )
+  for(uword col=0; col < out_n_cols; ++col)
     {
-    #if defined(ARMA_USE_OPENMP)
+    eT* out_colptr = out.colptr(col);
+    
+    for(uword row=0; row < out_n_rows; ++row)
       {
-      const int n_threads = mp_thread_limit::get();
+      // out.at(row, col) = accu( H % X(row, col, size(H)) );
       
-      #pragma omp parallel for schedule(static) num_threads(n_threads)
-      for(uword col=0; col < out_n_cols; ++col)
-        {
-        eT* out_colptr = out.colptr(col);
-        
-        for(uword row=0; row < out_n_rows; ++row)
-          {
-          // out.at(row, col) = accu( H % X(row, col, size(H)) );
-          
-          eT acc = eT(0);
-          
-          for(uword H_col = 0; H_col < H_n_cols; ++H_col)
-            {
-            const eT* X_colptr = X.colptr(col + H_col);
-            
-            acc += op_dot::direct_dot( H_n_rows, H.colptr(H_col), &(X_colptr[row]) );
-            }
-          
-          out_colptr[row] = acc;
-          }
-        }
-      }
-    #endif
-    }
-  else
-    {
-    for(uword col=0; col < out_n_cols; ++col)
-      {
-      eT* out_colptr = out.colptr(col);
+      eT acc = eT(0);
       
-      for(uword row=0; row < out_n_rows; ++row)
+      for(uword H_col = 0; H_col < H_n_cols; ++H_col)
         {
-        // out.at(row, col) = accu( H % X(row, col, size(H)) );
+        const eT* X_colptr = X.colptr(col + H_col);
         
-        eT acc = eT(0);
-        
-        for(uword H_col = 0; H_col < H_n_cols; ++H_col)
-          {
-          const eT* X_colptr = X.colptr(col + H_col);
-          
-          acc += op_dot::direct_dot( H_n_rows, H.colptr(H_col), &(X_colptr[row]) );
-          }
-        
-        out_colptr[row] = acc;
+        acc += op_dot::direct_dot( H_n_rows, H.colptr(H_col), &(X_colptr[row]) );
         }
+      
+      out_colptr[row] = acc;
       }
     }
   }
