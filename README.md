@@ -461,7 +461,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 16: Related Software Using Armadillo
 
-* ensmallen: fast and flexible library for numerical optimisation  
+* ensmallen: fast library for non-linear numerical optimisation  
   https://ensmallen.org/
 
 * MLPACK: extensive library of machine learning algorithms  
@@ -470,7 +470,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 * CARMA: bidirectional interface between Python and Armadillo  
   https://github.com/RUrlus/carma
 
-* RcppArmadillo: integration of Armadillo with the R system and environment  
+* RcppArmadillo: integration of Armadillo with R  
   https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 
 * PyArmadillo: streamlined linear algebra library for Python  
