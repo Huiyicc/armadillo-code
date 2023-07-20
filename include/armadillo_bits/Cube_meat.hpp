@@ -1970,7 +1970,7 @@ Cube<eT>::each_slice(const Base<uword, T1>& indices) const
 //! apply a lambda function to each slice, where each slice is interpreted as a matrix
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::each_slice(const std::function< void(Mat<eT>&) >& F)
   {
   arma_extra_debug_sigprint();
@@ -2008,7 +2008,7 @@ Cube<eT>::each_slice(const std::function< void(const Mat<eT>&) >& F) const
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::each_slice(const std::function< void(Mat<eT>&) >& F, const bool use_mp)
   {
   arma_extra_debug_sigprint();
@@ -3854,12 +3854,14 @@ Cube<eT>::slice_colptr(const uword uslice, const uword col) const
 //! change the cube to have user specified dimensions (data is not preserved)
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::set_size(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
   
   init_warm(new_n_rows, new_n_cols, new_n_slices);
+  
+  return *this;
   }
 
 
@@ -3867,12 +3869,14 @@ Cube<eT>::set_size(const uword new_n_rows, const uword new_n_cols, const uword n
 //! change the cube to have user specified dimensions (data is preserved)
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::reshape(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
   
   op_reshape::apply_cube_inplace((*this), new_n_rows, new_n_cols, new_n_slices);
+  
+  return *this;
   }
 
 
@@ -3880,48 +3884,56 @@ Cube<eT>::reshape(const uword new_n_rows, const uword new_n_cols, const uword ne
 //! change the cube to have user specified dimensions (data is preserved)
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::resize(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
   
   op_resize::apply_cube_inplace((*this), new_n_rows, new_n_cols, new_n_slices);
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::set_size(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
   
   init_warm(s.n_rows, s.n_cols, s.n_slices);
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::reshape(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
   
   op_reshape::apply_cube_inplace((*this), s.n_rows, s.n_cols, s.n_slices);
+  
+  return *this;
   }
 
 
 
 template<typename eT>
 inline
-void
+Cube<eT>&
 Cube<eT>::resize(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
   
   op_resize::apply_cube_inplace((*this), s.n_rows, s.n_cols, s.n_slices);
+  
+  return *this;
   }
 
 
@@ -3930,12 +3942,14 @@ Cube<eT>::resize(const SizeCube& s)
 template<typename eT>
 template<typename eT2>
 inline
-void
+Cube<eT>&
 Cube<eT>::copy_size(const Cube<eT2>& m)
   {
   arma_extra_debug_sigprint();
   
   init_warm(m.n_rows, m.n_cols, m.n_slices);
+  
+  return *this;
   }
 
 
@@ -3944,7 +3958,7 @@ Cube<eT>::copy_size(const Cube<eT2>& m)
 template<typename eT>
 template<typename functor>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::for_each(functor F)
   {
   arma_extra_debug_sigprint();
@@ -4005,7 +4019,7 @@ Cube<eT>::for_each(functor F) const
 template<typename eT>
 template<typename functor>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::transform(functor F)
   {
   arma_extra_debug_sigprint();
@@ -4042,7 +4056,7 @@ Cube<eT>::transform(functor F)
 template<typename eT>
 template<typename functor>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::imbue(functor F)
   {
   arma_extra_debug_sigprint();
@@ -4074,7 +4088,7 @@ Cube<eT>::imbue(functor F)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::replace(const eT old_val, const eT new_val)
   {
   arma_extra_debug_sigprint();
@@ -4088,7 +4102,7 @@ Cube<eT>::replace(const eT old_val, const eT new_val)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::clean(const typename get_pod_type<eT>::result threshold)
   {
   arma_extra_debug_sigprint();
@@ -4102,7 +4116,7 @@ Cube<eT>::clean(const typename get_pod_type<eT>::result threshold)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::clamp(const eT min_val, const eT max_val)
   {
   arma_extra_debug_sigprint();
@@ -4127,7 +4141,7 @@ Cube<eT>::clamp(const eT min_val, const eT max_val)
 //! fill the cube with the specified value
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::fill(const eT val)
   {
   arma_extra_debug_sigprint();
@@ -4141,7 +4155,7 @@ Cube<eT>::fill(const eT val)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::zeros()
   {
   arma_extra_debug_sigprint();
@@ -4155,7 +4169,7 @@ Cube<eT>::zeros()
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::zeros(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
@@ -4169,7 +4183,7 @@ Cube<eT>::zeros(const uword new_n_rows, const uword new_n_cols, const uword new_
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::zeros(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
@@ -4181,7 +4195,7 @@ Cube<eT>::zeros(const SizeCube& s)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::ones()
   {
   arma_extra_debug_sigprint();
@@ -4193,7 +4207,7 @@ Cube<eT>::ones()
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::ones(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
@@ -4207,7 +4221,7 @@ Cube<eT>::ones(const uword new_n_rows, const uword new_n_cols, const uword new_n
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::ones(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
@@ -4219,7 +4233,7 @@ Cube<eT>::ones(const SizeCube& s)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randu()
   {
   arma_extra_debug_sigprint();
@@ -4233,7 +4247,7 @@ Cube<eT>::randu()
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randu(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
@@ -4247,7 +4261,7 @@ Cube<eT>::randu(const uword new_n_rows, const uword new_n_cols, const uword new_
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randu(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
@@ -4259,7 +4273,7 @@ Cube<eT>::randu(const SizeCube& s)
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randn()
   {
   arma_extra_debug_sigprint();
@@ -4273,7 +4287,7 @@ Cube<eT>::randn()
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randn(const uword new_n_rows, const uword new_n_cols, const uword new_n_slices)
   {
   arma_extra_debug_sigprint();
@@ -4287,7 +4301,7 @@ Cube<eT>::randn(const uword new_n_rows, const uword new_n_cols, const uword new_
 
 template<typename eT>
 inline
-const Cube<eT>&
+Cube<eT>&
 Cube<eT>::randn(const SizeCube& s)
   {
   arma_extra_debug_sigprint();
