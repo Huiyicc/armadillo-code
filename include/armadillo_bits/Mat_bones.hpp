@@ -393,6 +393,14 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename T2, typename glue_type> inline Mat& operator%=(const mtGlue<eT, T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline Mat& operator/=(const mtGlue<eT, T1, T2, glue_type>& X);
   
+  template<typename T1, typename T2, typename glue_type> inline             Mat(const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator= (const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator+=(const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator-=(const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator*=(const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator%=(const SpToDGlue<T1, T2, glue_type>& X);
+  template<typename T1, typename T2, typename glue_type> inline Mat& operator/=(const SpToDGlue<T1, T2, glue_type>& X);
+  
   
   arma_warn_unused arma_inline const eT& at_alt     (const uword ii) const;
   
