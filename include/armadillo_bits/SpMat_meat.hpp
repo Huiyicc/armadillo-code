@@ -3728,14 +3728,9 @@ SpMat<eT>::set_size(const uword in_rows, const uword in_cols)
   
   invalidate_cache(); // placed here, as set_size() is used during matrix modification
   
-  if( (n_rows == in_rows) && (n_cols == in_cols) )
-    {
-    return;
-    }
-  else
-    {
-    init(in_rows, in_cols);
-    }
+  if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
+  
+  init(in_rows, in_cols);
   }
 
 
@@ -3761,11 +3756,7 @@ SpMat<eT>::resize(const uword in_rows, const uword in_cols)
   
   if( (n_rows == in_rows) && (n_cols == in_cols) )  { return; }
   
-  if( (n_elem == 0) || (n_nonzero == 0) )
-    {
-    set_size(in_rows, in_cols);
-    return;
-    }
+  if( (n_elem == 0) || (n_nonzero == 0) )  { set_size(in_rows, in_cols); return; }
   
   SpMat<eT> tmp(in_rows, in_cols);
   
@@ -3810,11 +3801,7 @@ SpMat<eT>::reshape(const uword in_rows, const uword in_cols)
   if(vec_state == 1)  { arma_debug_check( (in_cols != 1), "SpMat::reshape(): object is a column vector; requested size is not compatible" ); }
   if(vec_state == 2)  { arma_debug_check( (in_rows != 1), "SpMat::reshape(): object is a row vector; requested size is not compatible"    ); }
   
-  if(n_nonzero == 0)
-    {
-    (*this).zeros(in_rows, in_cols);
-    return;
-    }
+  if(n_nonzero == 0)  { (*this).zeros(in_rows, in_cols); return; }
   
   if(in_cols == 1)
     {
@@ -3978,10 +3965,7 @@ SpMat<eT>::for_each(functor F) const
   
   const uword N = (*this).n_nonzero;
   
-  for(uword i=0; i < N; ++i)
-    {
-    F(values[i]);
-    }
+  for(uword i=0; i < N; ++i)  { F(values[i]); }
   
   return *this;
   }
@@ -4109,10 +4093,7 @@ SpMat<eT>::zeros()
   
   const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) );
   
-  if(already_done == false)
-    {
-    init(n_rows, n_cols);
-    }
+  if(already_done == false)  { init(n_rows, n_cols); }
   
   return *this;
   }
@@ -4149,10 +4130,7 @@ SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   
   const bool already_done = ( (sync_state != 1) && (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) );
   
-  if(already_done == false)
-    {
-    init(in_rows, in_cols);
-    }
+  if(already_done == false)  { init(in_rows, in_cols); }
   
   return *this;
   }
@@ -4436,20 +4414,12 @@ void
 SpMat<eT>::reset()
   {
   arma_extra_debug_sigprint();
-
+  
   switch(vec_state)
     {
-    default:
-      init(0, 0);
-      break;
-      
-    case 1:
-      init(0, 1);
-      break;
-    
-    case 2:
-      init(1, 0);
-      break;
+    default:  init(0, 0); break;
+    case 1:   init(0, 1); break;
+    case 2:   init(1, 0); break;
     }
   }
 
