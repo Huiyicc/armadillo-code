@@ -94,9 +94,9 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
   const uword x_n_cols = x.n_cols;
   const uword y_n_rows = y.n_rows;
   const uword y_n_cols = y.n_cols;
-
+  
   arma_debug_assert_mul_size(x_n_rows, x_n_cols, y_n_rows, y_n_cols, "matrix multiplication");
-
+  
   // First we must determine the structure of the new matrix (column pointers).
   // This follows the algorithm described in 'Sparse Matrix Multiplication
   // Package (SMMP)' (R.E. Bank and C.C. Douglas, 2001).  Their description of
@@ -118,7 +118,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
   
   typename SpMat<eT>::const_iterator y_it  = y.begin();
   typename SpMat<eT>::const_iterator y_end = y.end();
-
+  
   // SYMBMM: calculate column pointers for resultant matrix to obtain a good
   // upper bound on the number of nonzero elements.
   uword cur_col_length = 0;
@@ -141,20 +141,20 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
         last_ind = x_it_row;
         ++cur_col_length;
         }
-
+      
       ++x_it;
       }
-
+    
     const uword old_col = y_it.col();
     ++y_it;
-
+    
     // See if column incremented.
     if(old_col != y_it.col())
       {
       // Set column pointer (this is not a cumulative count; that is done later).
       access::rw(c.col_ptrs[old_col + 1]) = cur_col_length;
       cur_col_length = 0;
-
+      
       // Return index markers to zero.  Use last_ind for traversal.
       while(last_ind != x_n_rows + 1)
         {
@@ -165,17 +165,20 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
       }
     }
   while(y_it != y_end);
-
+  
   // Accumulate column pointers.
   for(uword i = 0; i < c.n_cols; ++i)
     {
     access::rw(c.col_ptrs[i + 1]) += c.col_ptrs[i];
     }
-
-  // Now that we know a decent bound on the number of nonzero elements, allocate
-  // the memory and fill it.
-  c.mem_resize(c.col_ptrs[c.n_cols]);
-
+  
+  // Now that we know a decent bound on the number of nonzero elements,
+  // allocate the memory and fill it.
+  
+  const uword max_n_nonzero = c.col_ptrs[c.n_cols];
+  
+  c.mem_resize(max_n_nonzero);
+  
   // Now the implementation of the NUMBMM algorithm.
   uword cur_pos = 0; // Current position in c matrix.
   podarray<eT> sums(x_n_rows); // Partial sums.
@@ -196,15 +199,12 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
       access::rw(c.col_ptrs[cur_col]) = cur_pos;
       ++cur_col;
       }
-
-    if(cur_col == c.n_cols)
-      {
-      break;
-      }
-
+    
+    if(cur_col == c.n_cols)  { break; }
+    
     // Update current column pointer.
     access::rw(c.col_ptrs[cur_col]) = cur_pos;
-
+    
     // Check all elements in this column.
     typename SpMat<eT>::const_iterator y_col_it = y.begin_col_no_sync(cur_col);
     
@@ -215,9 +215,9 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
       // Check all elements in the column of the other matrix corresponding to
       // the row of this column.
       typename SpMat<eT>::const_iterator x_col_it = x.begin_col_no_sync(y_col_it_row);
-
+      
       const eT y_value = (*y_col_it);
-
+      
       while(x_col_it.col() == y_col_it_row)
         {
         const uword x_col_it_row = x_col_it.row();
@@ -226,26 +226,26 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
         // Add to partial sum.
         const eT x_value = (*x_col_it);
         sums[x_col_it_row] += (x_value * y_value);
-
+        
         // Add point if it hasn't already been marked.
         if(index[x_col_it_row] == x_n_rows)
           {
           index[x_col_it_row] = last_ind;
           last_ind = x_col_it_row;
           }
-
+        
         ++x_col_it;
         }
-
+      
       ++y_col_it;
       }
-
+    
     // Now sort the indices that were used in this column.
     uword cur_index = 0;
     while(last_ind != x_n_rows + 1)
       {
       const uword tmp = last_ind;
-
+      
       // Check that it wasn't a "fake" nonzero element.
       if(sums[tmp] != eT(0))
         {
@@ -257,7 +257,7 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
       last_ind = index[tmp];
       index[tmp] = x_n_rows;
       }
-
+    
     // Now sort the indices.
     if(cur_index != 0)
       {
@@ -276,10 +276,15 @@ spglue_times::apply_noalias(SpMat<eT>& c, const SpMat<eT>& x, const SpMat<eT>& y
     // Move to next column.
     ++cur_col;
     }
-
+  
   // Update last column pointer and resize to actual memory size.
+  
+  // access::rw(c.col_ptrs[c.n_cols]) = cur_pos;
+  // c.mem_resize(cur_pos);
+  
   access::rw(c.col_ptrs[c.n_cols]) = cur_pos;
-  c.mem_resize(cur_pos);
+  
+  if(cur_pos < max_n_nonzero)  { c.mem_resize(cur_pos); }
   }
 
 
