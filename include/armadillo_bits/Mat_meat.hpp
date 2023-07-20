@@ -5111,10 +5111,23 @@ Mat<eT>&
 Mat<eT>::operator+=(const eOp<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
-  eop_type::apply_inplace_plus(*this, X);
+  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
+  
+  if(bad_alias == false)
+    {
+    eop_type::apply_inplace_plus(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator+=(tmp);
+    }
   
   return *this;
   }
@@ -5128,10 +5141,23 @@ Mat<eT>&
 Mat<eT>::operator-=(const eOp<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
-  eop_type::apply_inplace_minus(*this, X);
+  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
+  
+  if(bad_alias == false)
+    {
+    eop_type::apply_inplace_minus(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator-=(tmp);
+    }
   
   return *this;
   }
@@ -5162,10 +5188,23 @@ Mat<eT>&
 Mat<eT>::operator%=(const eOp<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
-  eop_type::apply_inplace_schur(*this, X);
+  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
+  
+  if(bad_alias == false)
+    {
+    eop_type::apply_inplace_schur(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator%=(tmp);
+    }
   
   return *this;
   }
@@ -5179,10 +5218,23 @@ Mat<eT>&
 Mat<eT>::operator/=(const eOp<T1, eop_type>& X)
   {
   arma_extra_debug_sigprint();
-
+  
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
-  eop_type::apply_inplace_div(*this, X);
+  const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
+  
+  if(bad_alias == false)
+    {
+    eop_type::apply_inplace_div(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator/=(tmp);
+    }
   
   return *this;
   }
@@ -5793,7 +5845,25 @@ Mat<eT>::operator+=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
-  eglue_type::apply_inplace_plus(*this, X);
+  const bool bad_alias =
+    (
+    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+    ||
+    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+    );
+  
+  if(bad_alias == false)
+    {
+    eglue_type::apply_inplace_plus(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator+=(tmp);
+    }
   
   return *this;
   }
@@ -5812,7 +5882,25 @@ Mat<eT>::operator-=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
-  eglue_type::apply_inplace_minus(*this, X);
+  const bool bad_alias =
+    (
+    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+    ||
+    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+    );
+  
+  if(bad_alias == false)
+    {
+    eglue_type::apply_inplace_minus(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator-=(tmp);
+    }
   
   return *this;
   }
@@ -5848,7 +5936,25 @@ Mat<eT>::operator%=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
-  eglue_type::apply_inplace_schur(*this, X);
+  const bool bad_alias =
+    (
+    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+    ||
+    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+    );
+  
+  if(bad_alias == false)
+    {
+    eglue_type::apply_inplace_schur(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator%=(tmp);
+    }
   
   return *this;
   }
@@ -5866,7 +5972,25 @@ Mat<eT>::operator/=(const eGlue<T1, T2, eglue_type>& X)
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
   
-  eglue_type::apply_inplace_div(*this, X);
+  const bool bad_alias =
+    (
+    (eGlue<T1, T2, eglue_type>::proxy1_type::has_subview  &&  X.P1.is_alias(*this))
+    ||
+    (eGlue<T1, T2, eglue_type>::proxy2_type::has_subview  &&  X.P2.is_alias(*this))
+    );
+  
+  if(bad_alias == false)
+    {
+    eglue_type::apply_inplace_div(*this, X);
+    }
+  else
+    {
+    arma_extra_debug_print("bad_alias = true");
+    
+    const Mat<eT> tmp(X);
+    
+    (*this).operator/=(tmp);
+    }
   
   return *this;
   }
