@@ -5984,6 +5984,136 @@ Mat<eT>::operator/=(const mtGlue<eT, T1, T2, glue_type>& X)
 
 
 
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>::Mat(const SpToDGlue<T1, T2, glue_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_alloc(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_extra_debug_sigprint_this(this);
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  glue_type::apply(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  glue_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator+=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator-=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator*=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator%=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename T2, typename glue_type>
+inline
+Mat<eT>&
+Mat<eT>::operator/=(const SpToDGlue<T1, T2, glue_type>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  arma_type_check(( is_same_type< eT, typename T2::elem_type >::no ));
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator/=(m);
+  }
+
+
+
 //! linear element accessor (treats the matrix as a vector); no bounds check; assumes memory is aligned
 template<typename eT>
 arma_inline
