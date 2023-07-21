@@ -313,14 +313,14 @@ spglue_times_misc::sparse_times_dense(Mat<typename T1::elem_type>& out, const T1
     const SpMat<eT>& A = UA.M;
     const   Mat<eT>& B = UB.M;
     
-    if( (resolves_to_vector<T2>::no) && (B.is_vec() == false) && B.is_diagmat() )
-      {
-      const SpMat<eT> tmp(diagmat(B));
-      
-      out = A * tmp;
-      
-      return;
-      }
+    // if( (resolves_to_vector<T2>::no) && (B.is_vec() == false) && B.is_diagmat() )
+    //   {
+    //   const SpMat<eT> tmp(diagmat(B));
+    //   
+    //   out = A * tmp;
+    //   
+    //   return;
+    //   }
     
     const uword A_n_rows = A.n_rows;
     const uword A_n_cols = A.n_cols;
@@ -403,14 +403,14 @@ spglue_times_misc::dense_times_sparse(Mat<typename T1::elem_type>& out, const T1
     const   Mat<eT>& A = UA.M;
     const SpMat<eT>& B = UB.M;
     
-    if( (resolves_to_vector<T1>::no) && (A.is_vec() == false) && A.is_diagmat() )
-      {
-      const SpMat<eT> tmp(diagmat(A));
-      
-      out = tmp * B;
-      
-      return;
-      }
+    // if( (resolves_to_vector<T1>::no) && (A.is_vec() == false) && A.is_diagmat() )
+    //   {
+    //   const SpMat<eT> tmp(diagmat(A));
+    //   
+    //   out = tmp * B;
+    //   
+    //   return;
+    //   }
     
     arma_debug_assert_mul_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
     
