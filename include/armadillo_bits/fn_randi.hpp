@@ -182,6 +182,8 @@ inline
 sword
 randi()
   {
+  arma_extra_debug_sigprint();
+  
   return sword( arma_rng::randi<sword>() );
   }
 
@@ -193,6 +195,8 @@ inline
 typename arma_scalar_only<eT>::result
 randi()
   {
+  arma_extra_debug_sigprint();
+  
   return eT( arma_rng::randi<eT>() );
   }
 
