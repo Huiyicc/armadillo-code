@@ -3256,7 +3256,7 @@ Cube<eT>::operator+=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias)  { const Cube<eT> tmp(X); (*this).operator+=(tmp); }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator+=(tmp); }
   
   eglue_type::apply_inplace_plus(*this, X);
   
