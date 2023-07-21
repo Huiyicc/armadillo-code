@@ -2882,18 +2882,11 @@ Cube<eT>::operator=(const eOpCube<T1, eop_type>& X)
   
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
-  if(bad_alias == false)
-    {
-    init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
-    
-    eop_type::apply(*this, X);
-    }
-  else
-    {
-    Cube<eT> tmp(X);
-    
-    steal_mem(tmp);
-    }
+  if(bad_alias)  { Cube<eT> tmp(X); steal_mem(tmp); return *this; }
+  
+  init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
+  
+  eop_type::apply(*this, X);
   
   return *this;
   }
@@ -2913,16 +2906,9 @@ Cube<eT>::operator+=(const eOpCube<T1, eop_type>& X)
   
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
-  if(bad_alias == false)
-    {
-    eop_type::apply_inplace_plus(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator+=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator+=(tmp); }
+  
+  eop_type::apply_inplace_plus(*this, X);
   
   return *this;
   }
@@ -2942,16 +2928,9 @@ Cube<eT>::operator-=(const eOpCube<T1, eop_type>& X)
   
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
-  if(bad_alias == false)
-    {
-    eop_type::apply_inplace_minus(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator-=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator-=(tmp); }
+  
+  eop_type::apply_inplace_minus(*this, X);
   
   return *this;
   }
@@ -2968,19 +2947,12 @@ Cube<eT>::operator%=(const eOpCube<T1, eop_type>& X)
   arma_extra_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-
+  
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
-  if(bad_alias == false)
-    {
-    eop_type::apply_inplace_schur(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator%=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator%=(tmp); }
+  
+  eop_type::apply_inplace_schur(*this, X);
   
   return *this;
   }
@@ -2997,19 +2969,12 @@ Cube<eT>::operator/=(const eOpCube<T1, eop_type>& X)
   arma_extra_debug_sigprint();
   
   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-
+  
   const bool bad_alias = ( X.P.has_subview  &&  X.P.is_alias(*this) );
   
-  if(bad_alias == false)
-    {
-    eop_type::apply_inplace_div(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator/=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator/=(tmp); }
+  
+  eop_type::apply_inplace_div(*this, X);
   
   return *this;
   }
@@ -3266,18 +3231,11 @@ Cube<eT>::operator=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias == false)
-    {
-    init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
-    
-    eglue_type::apply(*this, X);
-    }
-  else
-    {
-    Cube<eT> tmp(X);
-    
-    steal_mem(tmp);
-    }
+  if(bad_alias)  { Cube<eT> tmp(X); steal_mem(tmp); return *this; }
+  
+  init_warm(X.get_n_rows(), X.get_n_cols(), X.get_n_slices());
+  
+  eglue_type::apply(*this, X);
   
   return *this;
   }
@@ -3298,16 +3256,9 @@ Cube<eT>::operator+=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias == false)
-    {
-    eglue_type::apply_inplace_plus(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator+=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); (*this).operator+=(tmp); }
+  
+  eglue_type::apply_inplace_plus(*this, X);
   
   return *this;
   }
@@ -3328,16 +3279,9 @@ Cube<eT>::operator-=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias == false)
-    {
-    eglue_type::apply_inplace_minus(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator-=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator-=(tmp); }
+  
+  eglue_type::apply_inplace_minus(*this, X);
   
   return *this;
   }
@@ -3358,16 +3302,9 @@ Cube<eT>::operator%=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias == false)
-    {
-    eglue_type::apply_inplace_schur(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator%=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator%=(tmp); }
+  
+  eglue_type::apply_inplace_schur(*this, X);
   
   return *this;
   }
@@ -3388,16 +3325,9 @@ Cube<eT>::operator/=(const eGlueCube<T1, T2, eglue_type>& X)
   
   const bool bad_alias = ( (X.P1.has_subview  &&  X.P1.is_alias(*this))  ||  (X.P2.has_subview  &&  X.P2.is_alias(*this)) );
   
-  if(bad_alias == false)
-    {
-    eglue_type::apply_inplace_div(*this, X);
-    }
-  else
-    {
-    const Cube<eT> tmp(X);
-    
-    (*this).operator/=(tmp);
-    }
+  if(bad_alias)  { const Cube<eT> tmp(X); return (*this).operator/=(tmp); }
+  
+  eglue_type::apply_inplace_div(*this, X);
   
   return *this;
   }
