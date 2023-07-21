@@ -9542,7 +9542,7 @@ Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::operator=(const fixed<fixed_n_rows, 
     
     const bool bad_alias = (eOp<T1, eop_type>::proxy_type::has_subview  &&  X.P.is_alias(*this));
     
-    if(bad_alias)  { Mat<eT> tmp(X); (*this) = tmp; return *this; }
+    if(bad_alias)  { const Mat<eT> tmp(X); (*this) = tmp; return *this; }
     
     arma_debug_assert_same_size(fixed_n_rows, fixed_n_cols, X.get_n_rows(), X.get_n_cols(), "Mat::fixed::operator=");
     
