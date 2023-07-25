@@ -69,7 +69,7 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
   
   out.set_size(A.n_rows, B.n_cols);
   
-  if((A.n_elem == 0) || (B.n_nonzero == 0))  { return; }
+  if((A.n_elem == 0) || (B.n_nonzero == 0))  { out.zeros(); return; }
   
   if((resolves_to_rowvector<T1>::value) || (A.n_rows == 1))
     {
