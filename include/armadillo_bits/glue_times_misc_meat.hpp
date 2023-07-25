@@ -156,8 +156,8 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
         {
         arma_extra_debug_print("openmp implementation");
         
-              eT*  out_mem = out.memptr();
-        const eT*    A_mem =   A.memptr();
+              eT* out_mem = out.memptr();
+        const eT*   A_mem =   A.memptr();
         
         const uword B_n_cols  = B.n_cols;
         const int   n_threads = mp_thread_limit::get();
@@ -174,8 +174,8 @@ glue_times_dense_sparse::apply_noalias(Mat<typename T1::elem_type>& out, const T
       {
       arma_extra_debug_print("serial implementation");
       
-            eT*  out_mem = out.memptr();
-      const eT*    A_mem =   A.memptr();
+            eT* out_mem = out.memptr();
+      const eT*   A_mem =   A.memptr();
       
       const uword B_n_cols = B.n_cols;
       
