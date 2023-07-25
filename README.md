@@ -461,7 +461,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 16: Related Software Using Armadillo
 
-* Bandicoot: C++ library for accelerated linear algebra on GPUs
+* Bandicoot: C++ library for accelerated linear algebra on GPUs  
   https://coot.sourceforge.io
 
 * ensmallen: fast library for non-linear numerical optimisation  
