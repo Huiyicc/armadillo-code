@@ -699,6 +699,10 @@ it is possible to use other matrix types instead, eg. <i>fmat</i>
 </li>
 <br>
 <li>
+Matrix types with integer elements (such as <i>umat</i> and <i>imat</i>) cannot hold special values such as NaN and Inf
+</li>
+<br>
+<li>
 Functions which use LAPACK (generally matrix decompositions) are only valid for the following matrix types:
 <i>mat</i>, <i>dmat</i>, <i>fmat</i>, <i>cx_mat</i>, <i>cx_dmat</i>, <i>cx_fmat</i>
 </li>
@@ -906,12 +910,13 @@ See also:
 <li><a href="#iterators_mat">element iterators</a></li>
 <li><a href="#eval_member">.eval()</a></li>
 <li><a href="#conv_to">conv_to()</a> (convert between matrix types)</li>
-<li><a href="https://cplusplus.com/doc/tutorial/other_data_types/">explanation of <i>typedef</i></a> (cplusplus.com)
 <li><a href="#Col">Col class</a></li>
 <li><a href="#Row">Row class</a></li>
 <li><a href="#Cube">Cube class</a></li>
 <li><a href="#SpMat">SpMat class</a> (sparse matrix with compressed sparse column format)</li>
 <li><a href="#config_hpp">config.hpp</a></li>
+<li><a href="https://cplusplus.com/doc/tutorial/other_data_types/">explanation of <i>typedef</i></a> (cplusplus.com)
+<li><a href="https://en.wikipedia.org/wiki/C_data_types">C data types</a> (Wikipedia)
 </ul>
 </li>
 <br>
