@@ -20007,7 +20007,7 @@ See also:
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="api_additions"></a>
 <a name="changelog"></a>
-<b>History of API Additions, Changes and Deprecations</b>
+<b>History of API Additions and Changes</b>
 <br>
 <ul>
 <li>API Stability and Version Policy:
@@ -20019,15 +20019,15 @@ Each release of Armadillo has its public API (functions, classes, constants) des
 </li>
 <br>
 <li>
-Each release of Armadillo has its full version specified as <i>A.B.C</i>, where <i>A</i> is a major version number, <i>B</i> is a minor version number, and <i>C</i> is a patch level (indicating bug fixes).
-The version specification has explicit meaning, similar to <a href="https://semver.org/">Semantic Versioning</a>, as follows:
+Each release of Armadillo has its full version specified as <i>A.B.C</i>, where <i>A</i> is a major version number, <i>B</i> is a minor version number, and <i>C</i> is a patch level.
+The version specification has explicit meaning (similar to <a href="https://semver.org/">Semantic Versioning</a>) as follows:
 </li>
 <br>
 <ul>
 <li>
 Within a major version (eg. 10), each minor version (eg. 10.2) has a public API that strongly strives to be <b>backwards compatible</b> (at the source level) with the public API of preceding minor versions.
 For example, user code written for version 10.0 should work with version 10.1, 10.2, etc.
-However, later minor versions may have more features (API additions and extensions) than preceding minor versions.
+However, subsequent minor versions may have more features (API additions and extensions) than preceding minor versions.
 As such, user code <i>specifically</i> written for version 10.2 may not work with 10.1.
 </li>
 <br>
