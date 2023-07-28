@@ -1905,7 +1905,7 @@ F.save("mat_field");
 <br><b>sp_cx_mat</b>
 <ul>
 <li>
-Classes for sparse matrices; intended for storing very large matrices, where the vast majority of elements is zero
+Classes for sparse matrices; intended for storing large matrices, where most of the elements are zeros
 </li>
 <br>
 <li>
@@ -2047,9 +2047,15 @@ zero-valued elements are never stored
 </li>
 <br>
 <li>
-This class behaves in a similar manner to the <a href="#Mat">Mat</a> class;
+This class behaves in a similar manner to the dense matrix <a href="#Mat">Mat</a> class;
 however, member functions which set all elements to non-zero values (and hence do not make sense for sparse matrices) have been deliberately omitted;
 examples of omitted functions: <a href="#fill">.fill()</a>, <a href="#ones_member">.ones()</a>, +=&nbsp;scalar, etc.
+</li>
+<br>
+<li>
+<b>Caveat:</b>
+the sparse matrix class is not intended for small matrices (eg. with size &leq; 100x100), due to the overhead of the compressed storage format;
+for small matrices use the <a href="#Mat">Mat</a> class, even if most of the elements are zeros
 </li>
 <br>
 <li>
@@ -2118,17 +2124,9 @@ The following subset of operations &amp; functions is available for sparse matri
 <li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vecnorm">vecnorm()</a>, <a href="#vectorise">vectorise()</a></li>
 <li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#diags_spdiags">spdiags()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
 <li>generated matrices: <a href="#speye">speye()</a>, <a href="#spones">spones()</a>, <a href="#sprandu_sprandn">sprandu()</a>, <a href="#sprandu_sprandn">sprandn()</a>, <a href="#zeros_standalone">zeros()</a></li>
-<li>eigen and svd decomposition: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
+<li>eigen decompositions and SVD: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
 <li>solution of sparse linear systems: <a href="#spsolve">spsolve()</a>
 <li>miscellaneous: <a href="#approx_equal">approx_equal()</a>, <a href="#element_access">element access</a>, <a href="#iterators_spmat">element iterators</a>, <a href="#as_col_row">.as_col()&nbsp;/&nbsp;.as_row()</a>, <a href="#for_each">.for_each()</a>, <a href="#print">.print()</a>, <a href="#clean">.clean()</a>, <a href="#replace">.replace()</a>, <a href="#transform">.transform()</a>, <a href="#is_finite">.is_finite()</a>, <a href="#is_symmetric">.is_symmetric()</a>, <a href="#is_hermitian">.is_hermitian()</a>, <a href="#is_trimat">.is_trimatu()</a>, <a href="#is_trimat">.is_trimatl()</a>, <a href="#is_diagmat">.is_diagmat()</a></li>
-</ul>
-</li>
-<br>
-<li>
-<b>Caveats:</b>
-<ul>
-<li>the sparse matrix class is not intended for small matrices (eg. &leq; 100x100), due to the overhead of the compressed storage format</li>
-<li>for small matrices, use the <a href="#Mat">dense matrix</a> class, even if the vast majority of elements is zero</li>
 </ul>
 </li>
 <br>
