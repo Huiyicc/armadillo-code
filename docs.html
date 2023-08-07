@@ -227,7 +227,7 @@ Conrad Sanderson and Ryan Curtin.
 <br>
 <li><a href="#part_sigproc">signal &amp; image processing</a></li>
 <li><a href="#part_stats">statistics and clustering</a></li>
-<li><a href="#part_misc">miscellaneous (constants, configuration)</a></li>
+<li><a href="#part_misc">miscellaneous (constants, configuration options, ...)</a></li>
 </ul>
 <br>
 
@@ -3010,10 +3010,6 @@ optionally first changing the size to specified dimensions
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -3025,8 +3021,6 @@ B.randu( size(A) );
 
 mat C(5, 10, fill::zeros);
 C.randu();
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -3041,6 +3035,7 @@ See also:
 <li><a href="#ones_member">.ones()</a></li>
 <li><a href="#zeros_member">.zeros()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
@@ -7622,6 +7617,7 @@ See also:
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#linspace">linspace()</a></li>
 <li><a href="#regspace">regspace()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -7840,10 +7836,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 <b>Caveat:</b> to generate a matrix with random integer values instead of floating point values, use <a href="#randi">randi()</a> instead 
 </li>
 <br>
@@ -7865,8 +7857,6 @@ mat A2 = randu(5, 6, distr_param(10,20));
 
 fmat B1 = randu&lt;fmat&gt;(5, 6);
 fmat B2 = randu&lt;fmat&gt;(5, 6, distr_param(10,20));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -7882,6 +7872,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#sprandu_sprandn">sprandu()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -7930,10 +7921,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -7951,8 +7938,6 @@ mat A2 = randn(5, 6, distr_param(10,5));
 
 fmat B1 = randn&lt;fmat&gt;(5, 6);
 fmat B2 = randn&lt;fmat&gt;(5, 6, distr_param(10,5));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -7967,6 +7952,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#imbue">.imbue()</a></li>
 <li><a href="#sprandu_sprandn">sprandn()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -8031,10 +8017,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -8060,6 +8042,7 @@ fmat B2 = randg&lt;fmat&gt;(10, 10, distr_param(2,1));
 <li><a href="#chi2rnd">chi2rnd()</a></li>
 <li><a href="#imbue">.imbue()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Gamma_distribution">gamma distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -8108,10 +8091,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 <b>Caveat:</b> to generate a matrix with random floating point values (ie. <i>float</i> or <i>double</i>) instead of integers, use <a href="#randu">randu()</a> instead 
 </li>
 <br>
@@ -8127,8 +8106,6 @@ imat A2 = randi(5, 6, distr_param(-10, +20));
 
 mat B1 = randi&lt;mat&gt;(5, 6);
 mat B2 = randi&lt;mat&gt;(5, 6, distr_param(-10, +20));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -8141,6 +8118,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#zeros_standalone">zeros()</a></li>
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -8249,10 +8227,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -8267,6 +8241,7 @@ sp_mat A = sprandu&lt;sp_mat&gt;(100, 200, 0.1);
 <li><a href="#randu">randu()</a></li>
 <li><a href="#randn">randn()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
@@ -11467,6 +11442,7 @@ See also:
 <li><a href="#unique">unique()</a></li>
 <li><a href="#randi">randi()</a></li>
 <li><a href="#randperm">randperm()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -18037,6 +18013,97 @@ cout &lt;&lt; "number of seconds: " &lt;&lt; n &lt;&lt; endl;
 See also:
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Elapsed_real_time">elapsed real time</a> in Wikipedia</li>
+</ul>
+</li>
+</ul>
+<br>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="rng_seed"></a>
+<b>RNG seed setting</b>
+<ul>
+<li>
+There are two functions to change the seed used by the random number generator (RNG):
+<br>
+<br>
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <b><code>arma_rng::set_seed(value)</code></b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the RNG seed to the specified <i>value</i>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b><code>arma_rng::set_seed_random()</code></b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the RNG seed to a value drawn from
+      <a href="https://en.cppreference.com/w/cpp/numeric/random/random_device">std::random_device</a> (if the reported entropy is not zero),
+      or <a href="https://en.wikipedia.org/wiki//dev/random">/dev/urandom</a> (on Linux and macOS),
+      or based on the current time (on systems without <i>/dev/urandom</i>)
+      </td>
+    </tr>
+  </tbody>
+</table>
+</li>
+<br>
+<li>
+Since Armadillo 12.6.2, the default RNG on all systems is the 64-bit version of the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> (aka MT19937-64)
+</li>
+<br>
+<li>
+<b>Caveat:</b> when using a framework such as OpenMP for multi-threading and the underlying system properly supports <a href="https://en.cppreference.com/w/cpp/language/storage_duration">thread_local</a>,
+the above functions change the seed only within the thread they are running on
+</li>
+<br>
+<li>
+To change the seeds on all OpenMP threads to the same value, adapt the following code:
+<pre>
+#pragma omp parallel
+  {
+  arma_rng::set_seed(123);
+  }
+</pre>
+</li>
+<br>
+<li>
+To change the seeds on all OpenMP threads to unique values, adapt the following code:
+<pre>
+std::atomic&lt;std::size_t&gt; counter(0);
+
+#pragma omp parallel
+  {
+  arma_rng::set_seed(123 + counter++);
+  }
+</pre>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li>
+<a href="#randu">randu()</a>,
+<a href="#randn">randn()</a>,
+<a href="#randg">randg()</a>,
+<a href="#randi">randi()</a>,
+<a href="#sprandu_sprandn">sprandu()</a>,
+<a href="#sprandu_sprandn">sprandn()</a>,
+<a href="#shuffle">shuffle()</a>,
+<a href="#randperm">randperm()</a>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">Pseudo-random number generator in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki//dev/random">/dev/random in Wikipedia</a></li>
+<li><a href="https://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine">std::mersenne_twister_engine in cppreference.com</a></li>
+<li><a href="https://en.cppreference.com/w/cpp/numeric/random/random_device">std::random_device in cppreference.com</a></li>
 </ul>
 </li>
 </ul>
