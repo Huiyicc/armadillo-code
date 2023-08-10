@@ -159,8 +159,8 @@
   #undef  ARMA_GCC_VERSION
   #define ARMA_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
   
-  #if (ARMA_GCC_VERSION < 40800)
-    #error "*** newer compiler required; need gcc 4.8 or later ***"
+  #if (ARMA_GCC_VERSION < 40803)
+    #error "*** newer compiler required; need gcc 4.8.3 or newer ***"
   #endif
   
   // #if (ARMA_GCC_VERSION < 60100)
