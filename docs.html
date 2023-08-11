@@ -18061,7 +18061,7 @@ Since Armadillo 12.6.2, the default RNG on all systems is the 64-bit version of 
 </li>
 <br>
 <li>
-<b>Caveat:</b> when using a framework such as OpenMP for multi-threading and the underlying system supports the <a href="https://en.cppreference.com/w/cpp/language/storage_duration">thread_local</a> storage specifier,
+<b>Caveat:</b> when using a multi-threading framework (such as OpenMP) and the underlying system supports the <a href="https://en.cppreference.com/w/cpp/language/storage_duration">thread_local</a> storage specifier,
 the above functions change the seed only within the thread they are running on
 </li>
 <br>
@@ -18208,11 +18208,33 @@ log_a, log_b and log_c must have the same type
 <b>cx_double</b>, <b>cx_float</b> 
 <ul>
 <li>
-<i>cx_double</i> is a shorthand / typedef for <i>std::complex&lt;double&gt;</i>
-</li>
+Convenience short forms (typedefs) for complex element types:
 <br>
-<li>
-<i>cx_float</i> is a shorthand / typedef for <i>std::complex&lt;float&gt;</i>
+<br>
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>
+      <b><code>cx_double</code></b>
+      </td>
+      <td>&nbsp;<br>
+      </td>
+      <td>
+      equivalent to <code>std::complex&lt;double&gt;</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <b><code>cx_float</code></b>
+      </td>
+      <td>&nbsp;<br>
+      </td>
+      <td>
+      equivalent to <code>std::complex&lt;float&gt;</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
 </li>
 <br>
 <li>
@@ -18221,7 +18243,9 @@ Example:
 <pre>
 cx_mat X(5, 5, fill::randu);
 
-X(1,2) = cx_double(2.0, 3.0);
+X(1,2) = cx_double(3.4, 5.6);
+
+cx_double val = X(2,3);
 </pre>
 </ul>
 </li>
