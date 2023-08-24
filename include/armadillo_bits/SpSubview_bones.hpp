@@ -121,7 +121,7 @@ class SpSubview : public SpBase< eT, SpSubview<eT> >
   
   inline bool check_overlap(const SpSubview& x) const;
   
-  inline bool is_vec() const;
+  arma_warn_unused inline bool is_vec() const;
   
   inline       SpSubview_row<eT> row(const uword row_num);
   inline const SpSubview_row<eT> row(const uword row_num) const;
