@@ -10971,10 +10971,10 @@ See also:
 <li>Any singular values less than <i>tolerance</i> are treated as zero</li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
 <li><i>max_rc</i> = max(X.n_rows,&thinsp;X.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>X</i></li>
+<li><i>max_sv</i> = maximum singular value of <i>X</i>  (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13312,10 +13312,10 @@ The dimension of the range space is the number of singular values of <i>A</i> no
 </li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
 <li><i>max_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13374,10 +13374,10 @@ The dimension of the range space is the number of singular values of <i>A</i> gr
 </li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
-<li><i>mar_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13431,12 +13431,11 @@ See also:
 The computation is based on singular value decomposition
 </li>
 <br>
-<li>The <i>tolerance</i> argument is optional</li>
-<br>
-<li>The default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+<li>The <i>tolerance</i> argument is optional;
+by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
 <li><i>mar_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13470,7 +13469,7 @@ the divide-and-conquer method provides slightly different results than the stand
 <ul>
 <li>
 to find approximate solutions to under-/over-determined or rank deficient systems of linear equations,
-using <a href="#solve">solve()</a> can be considerably faster and/or more accurate
+<a href="#solve">solve()</a> can be considerably faster and/or more accurate
 </li>
 <li>
 if the given matrix <i>A</i> is square-sized and only occasionally rank deficient,
