@@ -100,9 +100,9 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     if(allow_approx)  { arma_extra_debug_print("allow_approx"); }
     if(no_ugly     )  { arma_extra_debug_print("no_ugly");      }
     
-    arma_debug_check( (no_ugly && allow_approx), "inv(): options 'no_ugly' and 'allow_approx' are mutually exclusive" );
     arma_debug_check( (fast    && allow_approx), "inv(): options 'fast' and 'allow_approx' are mutually exclusive"    );
     arma_debug_check( (fast    && no_ugly     ), "inv(): options 'fast' and 'no_ugly' are mutually exclusive"         );
+    arma_debug_check( (no_ugly && allow_approx), "inv(): options 'no_ugly' and 'allow_approx' are mutually exclusive" );
     }
   
   if(no_ugly)
