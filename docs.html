@@ -330,7 +330,7 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#print">.print</a></td><td>&nbsp;</td><td>print object to <i>std::cout</i> or user specified stream</td></tr>
 <tr><td><a href="#raw_print">.raw_print</a></td><td>&nbsp;</td><td>print object without formatting</td></tr>
-<tr><td><a href="#brief_print">.brief_print</a></td><td>&nbsp;</td><td>print object in abridged form</td></tr>
+<tr><td><a href="#brief_print">.brief_print</a></td><td>&nbsp;</td><td>print object in shortened/abridged form</td></tr>
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#save_load_mat">.save/.load&nbsp;(matrices&thinsp;&amp;&thinsp;cubes)</a></td><td>&nbsp;</td><td>save/load matrices and cubes in files or streams</td></tr>
 <tr><td><a href="#save_load_field">.save/.load&nbsp;(fields)</a></td><td>&nbsp;</td><td>save/load fields in files or streams</td></tr>
@@ -6942,8 +6942,12 @@ Member functions of <i>Mat</i>, <i>Col</i>, <i>Row</i>, <i>SpMat</i> and <i>Cube
 </li>
 <br>
 <li>
-Similar to the <a href="#print">.print()</a> member function,
-with the difference that an abridged version of the object is printed
+Print a shortened/abridged version of an object and its size to the <i>std::cout</i> stream (default),
+or a user specified stream, with an optional header string
+</li>
+<br>
+<li>
+Can be useful for gaining a glimpse of large matrices
 </li>
 <br>
 <li>
