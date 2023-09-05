@@ -45,7 +45,6 @@ class op_inv_gen_full
     {
     static constexpr uword n2 = row + col*2;
     static constexpr uword n3 = row + col*3;
-    static constexpr uword n4 = row + col*4;
     };
   
   template<typename T1>
@@ -59,9 +58,6 @@ class op_inv_gen_full
   
   template<typename eT>
   arma_cold inline static bool apply_tiny_3x3(Mat<eT>& X);
-  
-  template<typename eT>
-  arma_cold inline static bool apply_tiny_4x4(Mat<eT>& X);
   };
 
 

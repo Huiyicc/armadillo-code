@@ -190,20 +190,6 @@ op_inv_spd_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
       
       if(status)  { return true; }
       }
-    else
-    if((N == 3) && tiny)
-      {
-      const bool status = op_inv_spd_full::apply_tiny_3x3(out);
-      
-      if(status)  { return true; }
-      }
-    else
-    if((N == 4) && tiny)
-      {
-      const bool status = op_inv_spd_full::apply_tiny_4x4(out);
-      
-      if(status)  { return true; }
-      }
     
     // fallthrough if optimisation failed
     }
@@ -277,66 +263,6 @@ op_inv_spd_full::apply_tiny_2x2(Mat<eT>& X)
   Xm[1] = -c;
   Xm[2] = -c;
   Xm[3] =  a;
-  
-  return true;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-op_inv_spd_full::apply_tiny_3x3(Mat<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  // NOTE: assuming matrix X is square sized
-  // NOTE: assuming matrix X is symmetric
-  // NOTE: assuming matrix X is real
-  
-  Mat<eT> Y(3, 3, arma_nozeros_indicator());
-  
-  arrayops::copy(Y.memptr(), X.memptr(), uword(3*3));
-  
-  const bool is_posdef = auxlib::chol_simple(Y);
-  
-  if(is_posdef == false)  { return false; }
-  
-  const bool status = op_inv_gen_full::apply_tiny_3x3(X);
-  
-  if(status == false)  { return false; }
-  
-  X = symmatl(X);
-  
-  return true;
-  }
-
-
-
-template<typename eT>
-inline
-bool
-op_inv_spd_full::apply_tiny_4x4(Mat<eT>& X)
-  {
-  arma_extra_debug_sigprint();
-  
-  // NOTE: assuming matrix X is square sized
-  // NOTE: assuming matrix X is symmetric
-  // NOTE: assuming matrix X is real
-  
-  Mat<eT> Y(4, 4, arma_nozeros_indicator());
-  
-  arrayops::copy(Y.memptr(), X.memptr(), uword(4*4));
-  
-  const bool is_posdef = auxlib::chol_simple(Y);
-  
-  if(is_posdef == false)  { return false; }
-  
-  const bool status = op_inv_gen_full::apply_tiny_4x4(X);
-  
-  if(status == false)  { return false; }
-  
-  X = symmatl(X);
   
   return true;
   }

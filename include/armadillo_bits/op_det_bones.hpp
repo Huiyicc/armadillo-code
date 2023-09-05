@@ -31,7 +31,6 @@ class op_det
     {
     static constexpr uword n2 = row + col*2;
     static constexpr uword n3 = row + col*3;
-    static constexpr uword n4 = row + col*4;
     };
   
   template<typename T1>
