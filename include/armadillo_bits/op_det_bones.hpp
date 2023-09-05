@@ -47,9 +47,6 @@ class op_det
   
   template<typename eT>
   arma_cold inline static eT apply_tiny_3x3(const Mat<eT>& X);
-  
-  template<typename eT>
-  arma_cold inline static eT apply_tiny_4x4(const Mat<eT>& X);
   };
 
 

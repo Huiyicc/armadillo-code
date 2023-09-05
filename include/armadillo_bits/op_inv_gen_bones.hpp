@@ -114,13 +114,15 @@ namespace inv_opts
   // The values can change without notice.
   
   static constexpr uword flag_none         = uword(0       );
-  static constexpr uword flag_tiny         = uword(1u <<  0);
+  static constexpr uword flag_fast         = uword(1u <<  0);
+  static constexpr uword flag_tiny         = uword(1u <<  0);  // deprecated
   static constexpr uword flag_allow_approx = uword(1u <<  1);
-  static constexpr uword flag_likely_sympd = uword(1u <<  2);
-  static constexpr uword flag_no_sympd     = uword(1u <<  3);
+  static constexpr uword flag_likely_sympd = uword(1u <<  2);  // deprecated
+  static constexpr uword flag_no_sympd     = uword(1u <<  3);  // deprecated
   static constexpr uword flag_no_ugly      = uword(1u <<  4);
   
   struct opts_none         : public opts { inline constexpr opts_none()         : opts(flag_none        ) {} };
+  struct opts_fast         : public opts { inline constexpr opts_fast()         : opts(flag_fast        ) {} };
   struct opts_tiny         : public opts { inline constexpr opts_tiny()         : opts(flag_tiny        ) {} };
   struct opts_allow_approx : public opts { inline constexpr opts_allow_approx() : opts(flag_allow_approx) {} };
   struct opts_likely_sympd : public opts { inline constexpr opts_likely_sympd() : opts(flag_likely_sympd) {} };
@@ -128,6 +130,7 @@ namespace inv_opts
   struct opts_no_ugly      : public opts { inline constexpr opts_no_ugly()      : opts(flag_no_ugly     ) {} };
   
   static constexpr opts_none         none;
+  static constexpr opts_fast         fast;
   static constexpr opts_tiny         tiny;
   static constexpr opts_allow_approx allow_approx;
   static constexpr opts_likely_sympd likely_sympd;

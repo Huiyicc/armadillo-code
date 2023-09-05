@@ -88,24 +88,21 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   if(has_user_flags == true )  { arma_extra_debug_print("op_inv_gen_full: has_user_flags = true");  }
   if(has_user_flags == false)  { arma_extra_debug_print("op_inv_gen_full: has_user_flags = false"); }
   
-  const bool tiny         = has_user_flags && bool(flags & inv_opts::flag_tiny        );
+  const bool fast         = has_user_flags && bool(flags & inv_opts::flag_fast        );
   const bool allow_approx = has_user_flags && bool(flags & inv_opts::flag_allow_approx);
-  const bool likely_sympd = has_user_flags && bool(flags & inv_opts::flag_likely_sympd);
-  const bool no_sympd     = has_user_flags && bool(flags & inv_opts::flag_no_sympd    );
   const bool no_ugly      = has_user_flags && bool(flags & inv_opts::flag_no_ugly     );
   
   if(has_user_flags)
     {
     arma_extra_debug_print("op_inv_gen_full: enabled flags:");
     
-    if(tiny        )  { arma_extra_debug_print("tiny");         }
+    if(fast        )  { arma_extra_debug_print("fast");         }
     if(allow_approx)  { arma_extra_debug_print("allow_approx"); }
-    if(likely_sympd)  { arma_extra_debug_print("likely_sympd"); }
-    if(no_sympd    )  { arma_extra_debug_print("no_sympd");     }
     if(no_ugly     )  { arma_extra_debug_print("no_ugly");      }
     
-    arma_debug_check( (no_sympd && likely_sympd), "inv(): options 'no_sympd' and 'likely_sympd' are mutually exclusive" );
-    arma_debug_check( (no_ugly  && allow_approx), "inv(): options 'no_ugly' and 'allow_approx' are mutually exclusive"  );
+    arma_debug_check( (no_ugly && allow_approx), "inv(): options 'no_ugly' and 'allow_approx' are mutually exclusive" );
+    arma_debug_check( (fast    && allow_approx), "inv(): options 'fast' and 'allow_approx' are mutually exclusive"    );
+    arma_debug_check( (fast    && no_ugly     ), "inv(): options 'fast' and 'no_ugly' are mutually exclusive"         );
     }
   
   if(no_ugly)
@@ -115,7 +112,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     const bool status = op_inv_gen_rcond::apply_direct(out, inv_state, expr);
     
     // workaround for bug in gcc 4.8
-    const uword local_size  = inv_state.size;  
+    const uword local_size  = inv_state.size;
     const T     local_rcond = inv_state.rcond;
     
     if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))  { return false; }
@@ -132,7 +129,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     const bool status = op_inv_gen_rcond::apply_direct(tmp, inv_state, expr);
     
     // workaround for bug in gcc 4.8
-    const uword local_size  = inv_state.size;  
+    const uword local_size  = inv_state.size;
     const T     local_rcond = inv_state.rcond;
     
     if((status == false) || (local_rcond < ((std::max)(local_size, uword(1)) * std::numeric_limits<T>::epsilon())) || arma_isnan(local_rcond))
@@ -222,7 +219,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  const bool try_sympd = arma_config::optimise_sym && ((no_sympd) ? false : (likely_sympd ? true : sym_helper::guess_sympd(out)));
+  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(out);
   
   if(try_sympd)
     {
