@@ -5398,7 +5398,7 @@ auxlib::solve_band_rcond_common(Mat<typename T1::elem_type>& out, typename T1::p
     blas_int info     = blas_int(0);
     T        norm_val = T(0);
     
-    podarray<T>        junk(1);
+  //podarray<T>        junk(1);
     podarray<blas_int> ipiv(N + 2);  // +2 for paranoia
     
     // // NOTE: lapack::langb() and lapack::gbtrf() use incompatible storage formats for the band matrix
