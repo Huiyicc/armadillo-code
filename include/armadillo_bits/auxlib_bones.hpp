@@ -439,6 +439,9 @@ class auxlib
   
   template<typename eT>
   inline static typename get_pod_type<eT>::result norm1_sym(const Mat<eT>& A);
+  
+  template<typename eT>
+  inline static typename get_pod_type<eT>::result norm1_band(const Mat<eT>& A, const uword KL, const uword KU);
   };
 
 
