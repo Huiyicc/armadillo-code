@@ -16129,6 +16129,10 @@ Generate a random matrix sampled from the Wishart distribution with parameters <
 </li>
 <br>
 <li>
+<b>Caveat:</b> for the inverse (inverted) Wishart distribution, use <a href="#iwishrnd">iwishrnd()</a>
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -16169,7 +16173,7 @@ See also:
 <b>iwishrnd( W, T, df, Dinv )</b>
 <ul>
 <li>
-Generate a random matrix sampled from the inverse Wishart distribution with parameters <i>T</i> and <i>df</i>:
+Generate a random matrix sampled from the <b>inverse</b> Wishart distribution with parameters <i>T</i> and <i>df</i>:
 <ul>
 <li><i>T</i> is a symmetric positive definite matrix</li>
 <li><i>df</i> is a scalar specifying the degrees of freedom; it can be a non-integer value</li>
@@ -16186,6 +16190,10 @@ Generate a random matrix sampled from the inverse Wishart distribution with para
 <li><i>W = iwishrnd(T, df)</i> and <i>W = iwishrnd(T, df, Dinv)</i> reset <i>W</i> and throw a <i>std::runtime_error</i> exception</li>
 <li><i>iwishrnd(W, T, df)</i> and <i>iwishrnd(W, T, df, Dinv)</i> reset <i>W</i> and return a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
+</li>
+<br>
+<li>
+<b>Caveat:</b> for the plain (non-inverse) Wishart distribution, use <a href="#wishrnd">wishrnd()</a>
 </li>
 <br>
 <li>
