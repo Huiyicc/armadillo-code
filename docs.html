@@ -4163,7 +4163,7 @@ See also:
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="diag"></a>
 <b>.diag()</b>
-<br><b>.diag( k )</b>
+<br><b>.diag(</b> k <b>)</b>
 <ul>
 <li>
 Member function of <i>Mat</i> and <i>SpMat</i>
@@ -4173,11 +4173,16 @@ Member function of <i>Mat</i> and <i>SpMat</i>
 Read/write access to a diagonal in a matrix
 </li>
 <br>
-<li>The argument <i>k</i> is optional; by default the main diagonal is accessed (<i>k&thinsp;=&thinsp;0</i>)</li>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
 <br>
-<li>For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is accessed (top-right corner)</li>
-<br>
-<li>For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is accessed (bottom-left corner)</li>
+<li>
+The argument <i>k</i> specifies the diagonal to use:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
+</li>
 <br>
 <li>The diagonal is interpreted as a column vector within expressions</li>
 <br>
@@ -9064,27 +9069,29 @@ Generate a diagonal matrix from vector <i>V</i> or matrix <i>X</i>
 </li>
 <br>
 <li>
-Given vector <i>V</i>, generate a square matrix with the <i>k</i>-th diagonal containing a copy of the vector; all other elements are set to zero
+Given vector <i>V</i>:
+<ul>
+<li>generate a square matrix with the <i>k</i>-th diagonal containing a copy of the vector; all other elements are set to zero</li>
+</ul>
 </li>
 <br>
 <li>
-Given matrix <i>X</i>, generate a matrix with the <i>k</i>-th diagonal containing a copy of the <i>k</i>-th diagonal of <i>X</i>; all other elements are set to zero
+Given matrix <i>X</i>:
+<ul>
+<li>generate a matrix with the <i>k</i>-th diagonal containing a copy of the <i>k</i>-th diagonal of <i>X</i>; all other elements are set to zero</li>
+<li>if <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements</li>
+</ul>
 </li>
 <br>
-<li>
-The argument <i>k</i> is optional; by default the main diagonal is used (<i>k&thinsp;=&thinsp;0</i>)
-</li>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
 <br>
 <li>
-For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is used (above main diagonal, towards top-right corner)
-</li>
-<br>
-<li>
-For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is used (below main diagonal, towards bottom-left corner)
-</li>
-<br>
-<li>
-If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
+The argument <i>k</i> specifies the diagonal to use:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
 </li>
 <br>
 <li>
@@ -9129,13 +9136,16 @@ See also:
 Extract the <i>k</i>-th diagonal from matrix <i>X</i>
 </li>
 <br>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
+<br>
 <li>
-The argument <i>k</i> is optional; by default the main diagonal is extracted (<i>k&thinsp;=&thinsp;0</i>)
+The argument <i>k</i> specifies the diagonal to extract:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
 </li>
-<br>
-<li>For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is extracted (top-right corner)</li>
-<br>
-<li>For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is extracted (bottom-left corner)</li>
 <br>
 <li>
 The extracted diagonal is interpreted as a column vector
@@ -9195,9 +9205,9 @@ The number of columns in given matrix <i>V</i> must match the number of elements
 <li>
 Each element in vector <i>D</i> specifies diagonal <i>k</i>, where:
 <ul>
-<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal
-<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)
-<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
 </ul>
 </li>
 <br>
