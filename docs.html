@@ -4223,19 +4223,11 @@ See also:
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="each_colrow"></a>
-<b>.each_col()</b>
-<br>
-<b>.each_row()</b>
-<br>
-<br>
-<b>.each_col(</b>&nbsp;vector_of_indices&nbsp;<b>)</b>
-<br>
-<b>.each_row(</b>&nbsp;vector_of_indices&nbsp;<b>)</b>
-<br>
-<br>
-<b>.each_col(</b> lambda_function <b>)</b>&nbsp;&nbsp;&nbsp;
-<br>
-<b>.each_row(</b> lambda_function <b>)</b>&nbsp;&nbsp;&nbsp;
+<table>
+<tr><td><b>.each_col()</b></td>                                    <td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row()</b></td>                                    <td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;1)</td></tr>
+<tr><td><b>.each_col(</b>&nbsp;vector_of_indices&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row(</b>&nbsp;vector_of_indices&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;2)</td></tr>
+<tr><td><b>.each_col(</b> lambda_function <b>)</b></td>            <td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row(</b> lambda_function <b>)</b></td>            <td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;3)</td></tr>
+</table>
 <ul>
 <li>
 Member functions of <i>Mat</i>
@@ -4246,11 +4238,11 @@ Apply a vector operation to each column or row of a matrix
 </li>
 <br>
 <li>
-Similar to "broadcasting" in Matlab/Octave
+Similar to "broadcasting" in Matlab&thinsp;/&thinsp;Octave
 </li>
 <br>
 <li>
-Supported operations for <i>.each_col()&nbsp;/&nbsp;.each_row()</i> and <i>.each_col(vector_of_indices)&nbsp;/&nbsp;.each_row(vector_of_indices)</i> forms:
+Supported operations for forms 1 and 2:
 <br>
 <br>
 <ul>
@@ -4264,16 +4256,20 @@ Supported operations for <i>.each_col()&nbsp;/&nbsp;.each_row()</i> and <i>.each
 </ul>
 </li>
 <br>
-<li>The argument <i>vector_of_indices</i> is optional; by default all columns or rows are used</li>
-<br>
 <li>
-If the argument <i>vector_of_indices</i> is specified, it must evaluate to a vector of type <i><a href="#Col">uvec</a></i>;
-the vector contains a list of indices of the columns or rows to be used
+For form 2:
+<ul>
+<li>the argument <i>vector_of_indices</i> contains a list of indices of the columns/rows to be used; it must evaluate to a vector of type <i><a href="#Col">uvec</a></i></li>
+<li>arithmetic operations as per form 1 are supported</li>
+</ul>
 </li>
 <br>
 <li>
-If the <i>lambda_function</i> is specified,
-the function must accept a reference to a <a href="#Col">Col</a> or <a href="#Row">Row</a> object with the same element type as the underlying matrix
+For form 3:
+<ul>
+<li>apply the given <i>lambda_function</i> to each slice</li>
+<li>the function must accept a reference to a <a href="#Col">Col</a> or <a href="#Row">Row</a> object with the same element type as the underlying matrix</li>
+</ul>
 </li>
 <br>
 <li>
@@ -4339,7 +4335,7 @@ Apply a matrix operation to each slice of a cube, with each slice treated as a m
 </li>
 <br>
 <li>
-Similar to "broadcasting" in Matlab/Octave
+Similar to "broadcasting" in Matlab&thinsp;/&thinsp;Octave
 </li>
 <br>
 <li>
@@ -4369,7 +4365,8 @@ For form 2:
 <li>
 For form 3:
 <ul>
-<li>apply the given <i>lambda_function</i> to each slice; the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube</li>
+<li>apply the given <i>lambda_function</i> to each slice</li>
+<li>the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube</li>
 </ul>
 </li>
 <br>
@@ -4377,7 +4374,7 @@ For form 3:
 For form 4:
 <ul>
 <li>apply the given <i>lambda_function</i> to each slice, as per form 3</li>
-<li>the argument <i>use_mp</i> is a bool which enables the use of OpenMP for multi-threaded execution of <i>lambda_function</i> on multiple slices at the same time</li>
+<li>the argument <i>use_mp</i> is a bool to enable the use of OpenMP for multi-threaded execution of <i>lambda_function</i> on multiple slices at the same time</li>
 <li>the order of processing the slices is not deterministic (eg. slice&nbsp;2 can be processed before slice&nbsp;1)</li>
 <li><i>lambda_function</i> must be thread-safe, ie. it must not write to variables outside of its scope
 </li>
