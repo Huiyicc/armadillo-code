@@ -8779,11 +8779,13 @@ See also:
 <ul>
 <li>Return the condition number of matrix <i>A</i> (the ratio of the largest singular value to the smallest)</li>
 <br>
-<li>The ideal condition number is close to 1; large condition numbers suggest that matrix <i>A</i> is nearly singular</li>
+<li>Matrix <i>A</i> is well-conditioned when the condition number is close to 1</li>
+<br>
+<li>Matrix <i>A</i> is ill-conditioned (poorly conditioned) when the condition number is large</li>
 <br>
 <li>The computation is based on singular value decomposition</li>
 <br>
-<li><b>Caveat:</b> <a href="#rcond">rcond()</a> is considerably faster</li>
+<li><b>Caveat:</b> calculating the approximate reciprocal condition number via <a href="#rcond">rcond()</a> is considerably more efficient</li>
 <br>
 <li>
 Examples:
