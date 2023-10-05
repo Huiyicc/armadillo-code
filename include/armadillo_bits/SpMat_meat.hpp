@@ -5197,6 +5197,8 @@ SpMat<eT>::init_simple(const SpMat<eT>& x)
   
   if(this == &x)  { return; }
   
+  if(x.n_nonzero == 0)  { zeros(x.n_rows, x.n_cols); return; }
+  
   init(x.n_rows, x.n_cols, x.n_nonzero);
   
   if(x.values     )  { arrayops::copy(access::rwp(values),      x.values,      x.n_nonzero + 1); }
