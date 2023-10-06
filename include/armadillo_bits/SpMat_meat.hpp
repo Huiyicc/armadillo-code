@@ -2971,12 +2971,11 @@ SpMat<eT>::swap_cols(const uword in_col1, const uword in_col2)
   
   // TODO: this is a rudimentary implementation
   
-  SpMat<eT> tmp = (*this);
+  const SpMat<eT> tmp1 = (*this).col(in_col1);
+  const SpMat<eT> tmp2 = (*this).col(in_col2);
   
-  tmp.col(in_col1) = (*this).col(in_col2);
-  tmp.col(in_col2) = (*this).col(in_col1);
-  
-  steal_mem(tmp);
+  (*this).col(in_col2) = tmp1;
+  (*this).col(in_col1) = tmp2;
   
   // for(uword lrow = 0; lrow < n_rows; ++lrow)
   //   {
