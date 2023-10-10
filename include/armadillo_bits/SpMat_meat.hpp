@@ -4098,9 +4098,14 @@ SpMat<eT>::zeros()
   {
   arma_extra_debug_sigprint();
   
-  const bool already_done = ( (n_nonzero == 0) && (sync_state != 1) && (values != nullptr) );
-  
-  if(already_done == false)  { init(n_rows, n_cols); }
+  if((n_nonzero == 0) && (values != nullptr))
+    {
+    invalidate_cache();
+    }
+  else
+    {
+    init(n_rows, n_cols);
+    }
   
   return *this;
   }
@@ -4135,9 +4140,14 @@ SpMat<eT>::zeros(const uword in_rows, const uword in_cols)
   {
   arma_extra_debug_sigprint();
   
-  const bool already_done = ( (n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) && (sync_state != 1) && (values != nullptr) );
-  
-  if(already_done == false)  { init(in_rows, in_cols); }
+  if((n_nonzero == 0) && (n_rows == in_rows) && (n_cols == in_cols) && (values != nullptr))
+    {
+    invalidate_cache();
+    }
+  else
+    {
+    init(in_rows, in_cols);
+    }
   
   return *this;
   }
