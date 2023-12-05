@@ -2919,13 +2919,22 @@ diskio::save_csv_ascii(const SpMat<eT>& x, std::ostream& f, const char separator
   uword x_n_rows = x.n_rows;
   uword x_n_cols = x.n_cols;
   
+  const eT eT_zero = eT(0);
+  
   for(uword row=0; row < x_n_rows; ++row)
     {
     for(uword col=0; col < x_n_cols; ++col)
       {
       const eT val = x.at(row,col);
       
-      if(val != eT(0))  { arma_ostream::raw_print_elem(f, val); }
+      if(val == eT_zero)
+        {
+        f.put('0');
+        }
+      else
+        {
+        arma_ostream::raw_print_elem(f, val);
+        }
       
       if( col < (x_n_cols-1) )  { f.put(separator); }
       }
