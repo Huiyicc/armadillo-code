@@ -426,7 +426,7 @@ The version specification has explicit meaning
 **CAVEAT:**
 the above policy applies only to the public API described in the documentation.
 Any functionality within Armadillo which is _not explicitly_ described
-in the public API documentation is considered as internal implementation details,
+in the public API documentation is considered as internal implementation detail,
 and may be changed or removed without notice.
 
 ---
