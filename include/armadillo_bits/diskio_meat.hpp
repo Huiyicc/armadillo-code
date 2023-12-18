@@ -445,9 +445,9 @@ diskio::convert_token(eT& val, const std::string& token)
   {
   const size_t N = size_t(token.length());
   
-  if(N == 0)  { val = eT(0); return true; }
-  
   const char* str = token.c_str();
+  
+  if( (N == 0) || ((N == 1) && (str[0] == '0')) )  { val = eT(0); return true; }
   
   if( (N == 3) || (N == 4) )
     {
