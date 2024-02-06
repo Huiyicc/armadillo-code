@@ -2125,7 +2125,7 @@ The following subset of operations &amp; functions is available for sparse matri
 <li><a href="#submat">submatrix views</a>: most contiguous forms and the non-contiguous form of <i>X.cols(vector_of_column_indices)</i></li>
 <li><a href="#diag">diagonal views</a></li>
 <li><a href="#save_load_mat">saving and loading</a> (using <i>arma_binary</i>, <i>coord_ascii</i>, and <i>csv_ascii</i> formats)</li>
-<li>element-wise functions: <a href="#abs">abs()</a>, <a href="#misc_fns">ceil()</a>, <a href="#conj">conj()</a>, <a href="#misc_fns">floor()</a>, <a href="#imag_real">imag()</a>, <a href="#imag_real">real()</a>, <a href="#misc_fns">round()</a>, <a href="#misc_fns">sign()</a>, <a href="#misc_fns">sqrt()</a>, <a href="#misc_fns">square()</a>, <a href="#misc_fns">trunc()</a></li>
+<li>element-wise functions: <a href="#abs">abs()</a>, <a href="#misc_fns">cbrt()</a>, <a href="#misc_fns">ceil()</a>, <a href="#conj">conj()</a>, <a href="#misc_fns">floor()</a>, <a href="#imag_real">imag()</a>, <a href="#imag_real">real()</a>, <a href="#misc_fns">round()</a>, <a href="#misc_fns">sign()</a>, <a href="#misc_fns">sqrt()</a>, <a href="#misc_fns">square()</a>, <a href="#misc_fns">trunc()</a></li>
 <li>scalar functions of matrices: <a href="#accu">accu()</a>, <a href="#as_scalar">as_scalar()</a>, <a href="#dot">dot()</a>, <a href="#norm">norm()</a>, <a href="#norm2est">norm2est()</a>, <a href="#trace">trace()</a></li>
 <li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vecnorm">vecnorm()</a>, <a href="#vectorise">vectorise()</a></li>
 <li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#diags_spdiags">spdiags()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
@@ -12317,8 +12317,8 @@ See also:
 <ul>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td><b>exp      </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log      </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>square</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>floor </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>erf   </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>tgamma</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>sign  </b></td></tr>
-<tr><td><b>exp2     </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log2     </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>sqrt</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>ceil  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>erfc  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>lgamma</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
-<tr><td><b>exp10    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log10    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>round </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
+<tr><td><b>exp2     </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log2     </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>sqrt  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>ceil  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>erfc  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>lgamma</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
+<tr><td><b>exp10    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log10    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>cbrt  </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>round </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
 <tr><td><b>expm1    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>log1p    </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>trunc </b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
 <tr><td><b>trunc_exp</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>trunc_log</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>&nbsp;</b></td></tr>
 </table>
@@ -12469,6 +12469,17 @@ Usage:
     </td>
     <td style="vertical-align: top;">
       square root: <i>&radic;x</i>
+    </td>
+  </tr>
+  <tr style="background-color: #F5F5F5;">
+    <td style="vertical-align: top; text-align: right;">
+       <code>cbrt(A)</code>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      cube root: <i>&#8731;x</i>
     </td>
   </tr>
   <tr>
@@ -20197,6 +20208,7 @@ List of additions and changes for each version:
 <li>Version 12.8:
 <ul>
 <li>expanded <a href="#conv_to">conv_to</a> for more flexible conversions between sparse and dense matrices</li>
+<li>added <a href="#misc_fns">cbrt()</a></li>
 <li>...</li>
 </ul>
 </li>
