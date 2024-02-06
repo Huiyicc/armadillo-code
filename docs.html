@@ -2128,7 +2128,7 @@ The following subset of operations &amp; functions is available for sparse matri
 <li>element-wise functions: <a href="#abs">abs()</a>, <a href="#misc_fns">cbrt()</a>, <a href="#misc_fns">ceil()</a>, <a href="#conj">conj()</a>, <a href="#misc_fns">floor()</a>, <a href="#imag_real">imag()</a>, <a href="#imag_real">real()</a>, <a href="#misc_fns">round()</a>, <a href="#misc_fns">sign()</a>, <a href="#misc_fns">sqrt()</a>, <a href="#misc_fns">square()</a>, <a href="#misc_fns">trunc()</a></li>
 <li>scalar functions of matrices: <a href="#accu">accu()</a>, <a href="#as_scalar">as_scalar()</a>, <a href="#dot">dot()</a>, <a href="#norm">norm()</a>, <a href="#norm2est">norm2est()</a>, <a href="#trace">trace()</a></li>
 <li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vecnorm">vecnorm()</a>, <a href="#vectorise">vectorise()</a></li>
-<li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#diags_spdiags">spdiags()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
+<li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#diags_spdiags">spdiags()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#shift">shift()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
 <li>generated matrices: <a href="#speye">speye()</a>, <a href="#spones">spones()</a>, <a href="#sprandu_sprandn">sprandu()</a>, <a href="#sprandu_sprandn">sprandn()</a>, <a href="#zeros_standalone">zeros()</a></li>
 <li>eigen decompositions and SVD: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
 <li>solution of sparse linear systems: <a href="#spsolve">spsolve()</a>
@@ -20207,6 +20207,7 @@ List of additions and changes for each version:
 <a name="version_128"></a>
 <li>Version 12.8:
 <ul>
+<li>expanded <a href="#shift">shift()</a> to handle sparse matrices</li>
 <li>expanded <a href="#conv_to">conv_to</a> for more flexible conversions between sparse and dense matrices</li>
 <li>added <a href="#misc_fns">cbrt()</a></li>
 <li>...</li>
