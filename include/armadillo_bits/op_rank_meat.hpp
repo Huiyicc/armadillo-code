@@ -48,12 +48,17 @@ op_rank::apply(uword& out, const Base<typename T1::elem_type,T1>& expr, const ty
   
   if( (is_sym_size_ok) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) )
     {
-    bool is_approx_sym   = false;
-    bool is_approx_sympd = false;
+    do_sym = is_sym_expr<T1>::eval(expr.get_ref());
     
-    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-    
-    do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+    if(do_sym == false)
+      {
+      bool is_approx_sym   = false;
+      bool is_approx_sympd = false;
+      
+      sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
+      
+      do_sym = (is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd);
+      }
     }
   
   if(do_sym)
