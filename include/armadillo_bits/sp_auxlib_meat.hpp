@@ -1986,14 +1986,12 @@ sp_auxlib::run_aupd_plain
           // We need to calculate the matrix-vector multiplication y = OP * x
           // where x is of length n and starts at workd(ipntr(0)),
           // and y is of length n and starts at workd(ipntr(1)).
-          // 
-          // Set the output to point at the right memory.
-          // We have to subtract one from FORTRAN pointers...
+          // We have to subtract one from FORTRAN pointers.
           
           Row<T> out(workd.memptr() + ipntr(1) - 1, n, false, true);
           Row<T>  in(workd.memptr() + ipntr(0) - 1, n, false, true);
           
-          out = in * Xst;
+          out = in * Xst;  // using transposed version
           
           break;
           }
@@ -2228,13 +2226,10 @@ sp_auxlib::run_aupd_shiftinvert
           // We need to calculate the matrix-vector multiplication y = OP * x
           // where x is of length n and starts at workd(ipntr(0)),
           // and y is of length n and starts at workd(ipntr(1)).
-          // 
-          // Set the output to point at the right memory.
-          // We have to subtract one from FORTRAN pointers...
+          // We have to subtract one from FORTRAN pointers.
           
-          Col<T> out(workd.memptr() + ipntr(1) - 1, n, false /* don't copy */);
-          // Set the input to point at the right memory.
-          Col<T> in(workd.memptr() + ipntr(0) - 1, n, false /* don't copy */);
+          Col<T> out(workd.memptr() + ipntr(1) - 1, n, false, true);
+          Col<T>  in(workd.memptr() + ipntr(0) - 1, n, false, true);
           
           // Consider getting the LU factorization from ZGSTRF, and then
           // solve the system L*U*out = in (possibly with permutation matrix?)
