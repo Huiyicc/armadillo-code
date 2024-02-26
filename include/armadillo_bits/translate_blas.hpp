@@ -145,6 +145,9 @@ namespace blas
         
         eT result[2];  // paranoia: using two elements instead of one
         
+        result[0] = eT(0);
+        result[1] = eT(0);
+        
         blas::gemv(&trans, &m, &n, &alpha, x, &m, y, &inc, &beta, &result[0], &inc);
         
         return result[0];
@@ -186,11 +189,14 @@ namespace blas
       
       eT result[2];  // paranoia: using two elements instead of one
       
+      result[0] = eT(0);
+      result[1] = eT(0);
+      
       blas::gemv(&trans, &m, &n, &alpha, x, &m, y, &inc, &beta, &result[0], &inc);
       
       return result[0];
       }
-
+    
     return eT(0);
     }
   
@@ -205,11 +211,13 @@ namespace blas
     
     if(is_float<eT>::value)
       {
+      // WARNING: sasum() from Accelerate framework (macOS) may return 'double' instead of 'float'
+      
       blas_int n   = blas_int(n_elem);
       blas_int inc = 1;
       
       typedef float T;
-      return arma_fortran(arma_sasum)(&n, (const T*)x, &inc);
+      return eT( arma_fortran(arma_sasum)(&n, (const T*)x, &inc) );
       }
     else
     if(is_double<eT>::value)
@@ -218,7 +226,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef double T;
-      return arma_fortran(arma_dasum)(&n, (const T*)x, &inc);
+      return eT( arma_fortran(arma_dasum)(&n, (const T*)x, &inc) );
       }
     
     return eT(0);
@@ -235,6 +243,8 @@ namespace blas
     
     if(is_float<eT>::value)
       {
+      // WARNING: snrm2() from Accelerate framework (macOS) may return 'double' instead of 'float'
+      
       blas_int n   = blas_int(n_elem);
       blas_int inc = 1;
       
