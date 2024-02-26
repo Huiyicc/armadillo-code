@@ -226,26 +226,28 @@ op_norm::vec_norm_1_direct_std(const Mat<eT>& X)
   const uword N = X.n_elem;
   const eT*   A = X.memptr();
   
-  if(N < uword(32))
+  #if defined(ARMA_USE_ATLAS)
     {
-    return op_norm::vec_norm_1_direct_mem(N,A);
+    arma_extra_debug_print("atlas::cblas_asum()");
+    return atlas::cblas_asum(N,A);
     }
-  else
+  #elif defined(ARMA_USE_BLAS)
     {
-    #if defined(ARMA_USE_ATLAS)
-      {
-      return atlas::cblas_asum(N,A);
-      }
-    #elif defined(ARMA_USE_BLAS)
-      {
-      return blas::asum(N,A);
-      }
-    #else
+    if(has_blas_float_bug<eT>::value)
       {
       return op_norm::vec_norm_1_direct_mem(N,A);
       }
-    #endif
+    else
+      {
+      arma_extra_debug_print("blas::asum()");
+      return blas::asum(N,A);
+      }
     }
+  #else
+    {
+    return op_norm::vec_norm_1_direct_mem(N,A);
+    }
+  #endif
   }
 
 
@@ -525,26 +527,28 @@ op_norm::vec_norm_2_direct_std(const Mat<eT>& X)
   
   eT result = eT(0);
   
-  if(N < uword(32))
+  #if defined(ARMA_USE_ATLAS)
     {
-    result = op_norm::vec_norm_2_direct_mem(N,A);
+    arma_extra_debug_print("atlas::cblas_nrm2()");
+    result = atlas::cblas_nrm2(N,A);
     }
-  else
+  #elif defined(ARMA_USE_BLAS)
     {
-    #if defined(ARMA_USE_ATLAS)
-      {
-      result = atlas::cblas_nrm2(N,A);
-      }
-    #elif defined(ARMA_USE_BLAS)
-      {
-      result = blas::nrm2(N,A);
-      }
-    #else
+    if(has_blas_float_bug<eT>::value)
       {
       result = op_norm::vec_norm_2_direct_mem(N,A);
       }
-    #endif
+    else
+      {
+      arma_extra_debug_print("blas::nrm2()");
+      result = blas::nrm2(N,A);
+      }
     }
+  #else
+    {
+    result = op_norm::vec_norm_2_direct_mem(N,A);
+    }
+  #endif
   
   if( (result != eT(0)) && arma_isfinite(result) )
     {
@@ -677,7 +681,7 @@ op_norm::vec_norm_2_direct_robust(const Mat<eT>& X)
     acc1 += val_i * val_i;
     }
   
-  const eT out_val = std::sqrt(acc) * max_val;
+  const eT out_val = std::sqrt(acc1 + acc2) * max_val;
   
   return (out_val <= eT(0)) ? eT(0) : out_val;
   }
