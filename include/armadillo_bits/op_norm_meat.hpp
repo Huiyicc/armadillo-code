@@ -29,16 +29,18 @@ op_norm::vec_norm_1(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
+  typedef typename T1::pod_type T;
+  
   const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
   if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    return op_norm::vec_norm_1_direct_std(tmp.M);
+    const T out_val = op_norm::vec_norm_1_direct_std(tmp.M);
+    
+    return (out_val <= T(0)) ? T(0) : out_val;
     }
-  
-  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
@@ -308,16 +310,18 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
+  typedef typename T1::pod_type T;
+  
   const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
   if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    return op_norm::vec_norm_2_direct_std(tmp.M);
+    const T out_val = op_norm::vec_norm_2_direct_std(tmp.M);
+    
+    return (out_val <= T(0)) ? T(0) : out_val;
     }
-  
-  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
@@ -519,7 +523,7 @@ op_norm::vec_norm_2_direct_std(const Mat<eT>& X)
   const uword N = X.n_elem;
   const eT*   A = X.memptr();
   
-  eT result;
+  eT result = eT(0);
   
   if(N < uword(32))
     {
@@ -563,7 +567,7 @@ op_norm::vec_norm_2_direct_mem(const uword N, const eT* A)
   {
   arma_extra_debug_sigprint();
   
-  eT acc;
+  eT acc = eT(0);
   
   #if (defined(ARMA_SIMPLE_LOOPS) || defined(__FAST_MATH__))
     {
@@ -673,7 +677,9 @@ op_norm::vec_norm_2_direct_robust(const Mat<eT>& X)
     acc1 += val_i * val_i;
     }
   
-  return ( std::sqrt(acc1 + acc2) * max_val ); 
+  const eT out_val = std::sqrt(acc) * max_val;
+  
+  return (out_val <= eT(0)) ? eT(0) : out_val;
   }
 
 
@@ -882,9 +888,12 @@ op_norm::mat_norm_2(const Mat<eT>& X)
   if(X.internal_has_nonfinite())  { arma_debug_warn_level(1, "norm(): given matrix has non-finite elements"); }
   
   Col<T> S;
+  
   svd(S, X);
   
-  return (S.n_elem > 0) ? S[0] : T(0);
+  const T out_val = (S.n_elem > 0) ? S[0] : T(0);
+  
+  return (out_val <= T(0)) ? T(0) : out_val;
   }
 
 
