@@ -29,18 +29,16 @@ op_norm::vec_norm_1(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
-  
   const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
   if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    const T out_val = op_norm::vec_norm_1_direct_std(tmp.M);
-    
-    return (out_val <= T(0)) ? T(0) : out_val;
+    return op_norm::vec_norm_1_direct_std(tmp.M);
     }
+  
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
@@ -176,7 +174,7 @@ op_norm::vec_norm_1(const Proxy<T1>& P, const typename arma_cx_only<typename T1:
     }
   else
     {
-    arma_extra_debug_print("op_norm::vec_norm_1(): detected possible underflow or overflow");
+    arma_extra_debug_print("detected possible underflow or overflow");
     
     const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
     
@@ -226,28 +224,32 @@ op_norm::vec_norm_1_direct_std(const Mat<eT>& X)
   const uword N = X.n_elem;
   const eT*   A = X.memptr();
   
+  eT out_val = eT(0);
+  
   #if defined(ARMA_USE_ATLAS)
     {
     arma_extra_debug_print("atlas::cblas_asum()");
-    return atlas::cblas_asum(N,A);
+    out_val = atlas::cblas_asum(N,A);
     }
   #elif defined(ARMA_USE_BLAS)
     {
     if(has_blas_float_bug<eT>::value)
       {
-      return op_norm::vec_norm_1_direct_mem(N,A);
+      out_val = op_norm::vec_norm_1_direct_mem(N,A);
       }
     else
       {
       arma_extra_debug_print("blas::asum()");
-      return blas::asum(N,A);
+      out_val = blas::asum(N,A);
       }
     }
   #else
     {
-    return op_norm::vec_norm_1_direct_mem(N,A);
+    out_val = op_norm::vec_norm_1_direct_mem(N,A);
     }
   #endif
+  
+  return (out_val <= eT(0)) ? eT(0) : out_val;
   }
 
 
@@ -312,18 +314,16 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
   arma_extra_debug_sigprint();
   arma_ignore(junk);
   
-  typedef typename T1::pod_type T;
-  
   const bool use_direct_mem = (is_Mat<typename Proxy<T1>::stored_type>::value) || (is_subview_col<typename Proxy<T1>::stored_type>::value) || (arma_config::openmp && Proxy<T1>::use_mp);
   
   if(use_direct_mem)
     {
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
-    const T out_val = op_norm::vec_norm_2_direct_std(tmp.M);
-    
-    return (out_val <= T(0)) ? T(0) : out_val;
+    return op_norm::vec_norm_2_direct_std(tmp.M);
     }
+  
+  typedef typename T1::pod_type T;
   
   T acc = T(0);
   
@@ -403,7 +403,7 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_not_cx<typename T1::
     }
   else
     {
-    arma_extra_debug_print("op_norm::vec_norm_2(): detected possible underflow or overflow");
+    arma_extra_debug_print("detected possible underflow or overflow");
     
     const quasi_unwrap<typename Proxy<T1>::stored_type> tmp(P.Q);
     
@@ -482,7 +482,7 @@ op_norm::vec_norm_2(const Proxy<T1>& P, const typename arma_cx_only<typename T1:
     }
   else
     {
-    arma_extra_debug_print("op_norm::vec_norm_2(): detected possible underflow or overflow");
+    arma_extra_debug_print("detected possible underflow or overflow");
     
     const quasi_unwrap<typename Proxy<T1>::stored_type> R(P.Q);
     
@@ -525,38 +525,38 @@ op_norm::vec_norm_2_direct_std(const Mat<eT>& X)
   const uword N = X.n_elem;
   const eT*   A = X.memptr();
   
-  eT result = eT(0);
+  eT out_val = eT(0);
   
   #if defined(ARMA_USE_ATLAS)
     {
     arma_extra_debug_print("atlas::cblas_nrm2()");
-    result = atlas::cblas_nrm2(N,A);
+    out_val = atlas::cblas_nrm2(N,A);
     }
   #elif defined(ARMA_USE_BLAS)
     {
     if(has_blas_float_bug<eT>::value)
       {
-      result = op_norm::vec_norm_2_direct_mem(N,A);
+      out_val = op_norm::vec_norm_2_direct_mem(N,A);
       }
     else
       {
       arma_extra_debug_print("blas::nrm2()");
-      result = blas::nrm2(N,A);
+      out_val = blas::nrm2(N,A);
       }
     }
   #else
     {
-    result = op_norm::vec_norm_2_direct_mem(N,A);
+    out_val = op_norm::vec_norm_2_direct_mem(N,A);
     }
   #endif
   
-  if( (result != eT(0)) && arma_isfinite(result) )
+  if( (out_val != eT(0)) && arma_isfinite(out_val) )
     {
-    return result;
+    return (out_val < eT(0)) ? eT(0) : out_val;
     }
   else
     {
-    arma_extra_debug_print("op_norm::vec_norm_2_direct_std(): detected possible underflow or overflow");
+    arma_extra_debug_print("detected possible underflow or overflow");
     
     return op_norm::vec_norm_2_direct_robust(X);
     }
