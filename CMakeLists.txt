@@ -18,6 +18,7 @@
 
 ## NOTE: If you prefer to link your programs _directly_ with OpenBLAS, BLAS or LAPACK,
 ## NOTE: do not use this installer.
+## 
 ## NOTE: To use Armadillo without installation, compile your programs along these lines:
 ## NOTE: g++ prog.cpp -o prog -O2 -I /home/user/armadillo-12.2.0/include -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
 ## NOTE: The above command line assumes that you have unpacked the armadillo archive into /home/user/  
@@ -45,14 +46,22 @@ if(NOT (CMAKE_VERSION VERSION_LESS "3.1"))
   message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
 endif()
 
+if(WIN32)
+  message(STATUS "")
+  message(STATUS "*** WARNING: installation via cmake is not supported on this platform.")
+  message(STATUS "*** WARNING: suggest to use manual installation instead;")
+  message(STATUS "*** WARNING: see README for details")
+  message(STATUS "")
+endif()
+
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
 include(CheckLibraryExists)
 
-set(ARMA_USE_WRAPPER true)
 
 # the settings below will be automatically configured by the rest of this script
 
+set(ARMA_USE_WRAPPER true)
 set(ARMA_USE_LAPACK  false)
 set(ARMA_USE_BLAS    false)
 set(ARMA_USE_ATLAS   false)
@@ -60,7 +69,7 @@ set(ARMA_USE_ARPACK  false)
 set(ARMA_USE_SUPERLU false)  # Caveat: only SuperLU version 5.x can be used!
 
 
-## extract version from sources
+# extract version from sources
 
 set(ARMA_VERSION_FILE_NAME "${PROJECT_SOURCE_DIR}/include/armadillo_bits/arma_version.hpp")
 
@@ -212,19 +221,16 @@ option(BUILD_SMOKE_TEST "Build the smoke test" ON)
 ## ctest
 
 
-if(WIN32)
-  message(STATUS "")
-  message(STATUS "*** WARNING: automatic installation is experimental for this platform.")
-  message(STATUS "*** WARNING: if anything breaks, you get to keep all the pieces.")
-  message(STATUS "*** WARNING: manual installation is described in the README file.")
-  message(STATUS "")
-endif()
-
-if(MSVC AND BUILD_SHARED_LIBS)
-  message(STATUS "")
-  message(STATUS "*** WARNING: building shared library with MSVC is not supported." )
-  message(STATUS "*** WARNING: if anything breaks, you get to keep all the pieces.")
-  message(STATUS "")
+if(MSVC)
+  if(BUILD_SHARED_LIBS)
+    message(STATUS "")
+    message(STATUS "*** WARNING: building shared library with MSVC is not supported." )
+    message(STATUS "*** WARNING: suggest to use manual installation instead;")
+    message(STATUS "*** WARNING: see README for details")
+    message(STATUS "")
+  else()
+    set(ARMA_USE_WRAPPER false)
+  endif()
 endif()
 
 
