@@ -217,7 +217,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef float T;
-      return eT( arma_fortran(arma_sasum)(&n, (const T*)x, &inc) );
+      return arma_fortran(arma_sasum)(&n, (const T*)x, &inc);
       }
     else
     if(is_double<eT>::value)
@@ -226,7 +226,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef double T;
-      return eT( arma_fortran(arma_dasum)(&n, (const T*)x, &inc) );
+      return arma_fortran(arma_dasum)(&n, (const T*)x, &inc);
       }
     
     return eT(0);
@@ -249,7 +249,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef float T;
-      return eT( arma_fortran(arma_snrm2)(&n, (const T*)x, &inc) );
+      return arma_fortran(arma_snrm2)(&n, (const T*)x, &inc);
       }
     else
     if(is_double<eT>::value)
@@ -258,7 +258,7 @@ namespace blas
       blas_int inc = 1;
       
       typedef double T;
-      return eT( arma_fortran(arma_dnrm2)(&n, (const T*)x, &inc) );
+      return arma_fortran(arma_dnrm2)(&n, (const T*)x, &inc);
       }
     
     return eT(0);
