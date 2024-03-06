@@ -942,11 +942,19 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
   
   uword x_n_rows = uword(list.size());
   uword x_n_cols = 0;
+  uword x_n_elem = 0;
   
   auto it     = list.begin();
   auto it_end = list.end();
   
-  for(; it != it_end; ++it)  { x_n_cols = (std::max)(x_n_cols, uword((*it).size())); }
+  for(; it != it_end; ++it)
+    {
+    const uword x_n_cols_new = uword((*it).size());
+    
+    x_n_elem += x_n_cols_new;
+    
+    x_n_cols = (std::max)(x_n_cols, x_n_cols_new);
+    }
   
   Mat<eT>& t = (*this);
   
@@ -958,6 +966,9 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
     {
     t.set_size(x_n_rows, x_n_cols);
     }
+  
+  // if the inner lists have varying number of elements, treat missing elements as zeros 
+  if(t.n_elem != x_n_elem)  { t.zeros(); }
   
   uword row_num = 0;
   
@@ -975,11 +986,6 @@ Mat<eT>::init(const std::initializer_list< std::initializer_list<eT> >& list)
       {
       t.at(row_num, col_num) = (*col_it);
       ++col_num;
-      }
-    
-    for(uword c=col_num; c < x_n_cols; ++c)
-      {
-      t.at(row_num, c) = eT(0);
       }
     
     ++row_num;
