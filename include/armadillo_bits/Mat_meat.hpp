@@ -6802,21 +6802,10 @@ Mat<eT>::set_size(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  switch(vec_state)
-    {
-    case 0:
-      // fallthrough
-    case 1:
-      init_warm(new_n_elem, 1);
-      break;
-    
-    case 2:
-      init_warm(1, new_n_elem);
-      break;
-      
-    default:
-      ;
-    }
+  const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+  const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
+  
+  init_warm(new_n_rows, new_n_cols);
   
   return *this;
   }
@@ -6860,23 +6849,10 @@ Mat<eT>::resize(const uword new_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  switch(vec_state)
-    {
-    case 0:
-      // fallthrough
-    case 1:
-      (*this).resize(new_n_elem, 1);
-      break;
-    
-    case 2:
-      (*this).resize(1, new_n_elem);
-      break;
-      
-    default:
-      ;
-    }
+  const uword new_n_rows = (vec_state == 2) ? uword(1         ) : uword(new_n_elem);
+  const uword new_n_cols = (vec_state == 2) ? uword(new_n_elem) : uword(1         );
   
-  return *this;
+  return (*this).resize(new_n_rows, new_n_cols);
   }
 
 
