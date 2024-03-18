@@ -12741,7 +12741,7 @@ Forms 1 to 4 require <i>X</i> to be positive definite
 </li>
 <br>
 <li>
-Forms 5 to 6 require <i>X</i> to be positive semi-definite; these forms use pivoted decomposition and provide a permutation vector/matrix <i>P</i> with type <a href="#Col">uvec</a> or <a href="#Mat">umat</a>
+Forms 5 to 6 require <i>X</i> to be positive semi-definite; pivoted decomposition provides a permutation vector/matrix <i>P</i> with type <a href="#Col">uvec</a> or <a href="#Mat">umat</a>
 </li>
 <br>
 <li>
@@ -12762,6 +12762,10 @@ The decomposition has the following form:
 <li>the forms <i>R = chol(X)</i> and <i>R = chol(X,layout)</i> reset <i>R</i> and throw a <i>std::runtime_error</i> exception</li>
 <li>the other forms reset <i>R</i> and <i>P</i>, and return a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
+</li>
+<br>
+<li>
+<b>Caveat:</b> to find the inverse of a positive definite matrix, use <a href="#inv_sympd">inv_sympd()</a>
 </li>
 <br>
 <li>
