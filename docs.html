@@ -5919,11 +5919,11 @@ If the matrix expression appears to be singular, the output matrix is reset and 
 <b>Caveats:</b>
 <ul>
 <li>
-if matrix <i>A</i> is know to be symmetric positive definite, it is faster to use <a href="#inv_sympd">inv_sympd()</a> instead 
+if matrix <i>A</i> is know to be symmetric positive definite, <a href="#inv_sympd">inv_sympd()</a> is faster
 </li>
 <li>
 to solve a system of linear equations, such as <i>Z&nbsp;=&nbsp;inv(X)*Y</i>,
-using <a href="#solve">solve()</a> can be faster and/or more accurate
+<a href="#solve">solve()</a> can be faster and/or more accurate
 </li>
 </ul>
 </li>
@@ -9409,7 +9409,7 @@ See also:
 <b>Caveats:</b>
 <ul>
 <li>the matrix exponential operation is generally <b>not</b> the same as applying the <a href="#misc_fns">exp()</a> function to each element</li>
-<li>if matrix <i>A</i> is symmetric, using <a href="#expmat_sym">expmat_sym()</a> is faster</li>
+<li>if matrix <i>A</i> is symmetric, <a href="#expmat_sym">expmat_sym()</a> is faster</li>
 </ul>
 </li>
 <br>
@@ -10419,7 +10419,7 @@ See also:
 <li><b>Caveats:</b>
 <ul>
 <li>the matrix logarithm operation is generally <b>not</b> the same as applying the <a href="#misc_fns">log()</a> function to each element</li>
-<li>if matrix <i>A</i> is symmetric positive definite, using <a href="#logmat_sympd">logmat_sympd()</a> is faster</li>
+<li>if matrix <i>A</i> is symmetric positive definite, <a href="#logmat_sympd">logmat_sympd()</a> is faster</li>
 </ul>
 </li>
 <br>
@@ -11664,7 +11664,7 @@ If matrix <i>A</i> appears to be singular, an approximate square root is attempt
 <li><b>Caveats:</b>
 <ul>
 <li>the square root of a matrix is generally <b>not</b> the same as applying the <a href="#misc_fns">sqrt()</a> function to each element</li>
-<li>if matrix <i>A</i> is symmetric positive definite, using <a href="#sqrtmat_sympd">sqrtmat_sympd()</a> is faster</li>
+<li>if matrix <i>A</i> is symmetric positive definite, <a href="#sqrtmat_sympd">sqrtmat_sympd()</a> is faster</li>
 </ul>
 </li>
 <br>
@@ -13134,10 +13134,10 @@ If <i>A</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 <li>
 <b>Caveats:</b>
 <ul>
-<li>if matrix <i>A</i> is know to be symmetric positive definite, using <a href="#inv_sympd">inv_sympd()</a> is faster</li>
+<li>if matrix <i>A</i> is know to be symmetric positive definite, <a href="#inv_sympd">inv_sympd()</a> is faster</li>
 <li>if matrix <i>A</i> is know to be diagonal, use <i>inv(&thinsp;diagmat(A)&thinsp;)</i></li>
 <li>if matrix <i>A</i> is know to be triangular, use <i>inv(&thinsp;trimatu(A)&thinsp;)</i> or <i>inv(&thinsp;trimatl(A)&thinsp;)</i></li>
-<li>to solve a system of linear equations, such as <i>Z&thinsp;=&thinsp;inv(X)*Y</i>, using <a href="#solve">solve()</a> can be faster and/or more accurate</li>
+<li>to solve a system of linear equations, such as <i>Z&thinsp;=&thinsp;inv(X)*Y</i>, <a href="#solve">solve()</a> can be faster and/or more accurate</li>
 </ul>
 </li>
 <br>
