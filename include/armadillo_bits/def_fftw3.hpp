@@ -22,7 +22,7 @@
 // prefix for single precision: fftwf_
 // prefix for double precision: fftw_
 
-  
+
 typedef void fftwf_complex;
 typedef void  fftw_complex;
 
