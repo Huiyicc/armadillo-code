@@ -115,7 +115,7 @@ On macOS, the Accelerate framework can be used for BLAS and LAPACK functions.
 
 If sparse matrices are not needed, ARPACK and SuperLU are not required.
 
-Armadillo requires a C++ compiler that supports at least the C++11 standard.
+Armadillo requires a C++ compiler that supports at least the C++14 standard.
 
 On Linux-based systems, install the GCC C++ compiler, which is available as a pre-built package.
 The package name might be `g++` or `gcc-c++` depending on your system.
@@ -230,12 +230,12 @@ and hence you will need to link your programs directly with OpenBLAS, LAPACK, et
 If you have installed Armadillo via the cmake installer,
 use the following command to compile your programs:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -larmadillo
+    g++ prog.cpp -o prog -O2 -std=c++14 -larmadillo
 
 If you have installed Armadillo manually, link with OpenBLAS and LAPACK
 instead of the Armadillo runtime library:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -lopenblas -llapack
+    g++ prog.cpp -o prog -O2 -std=c++14 -lopenblas -llapack
 
 If you have manually installed Armadillo in a non-standard location,
 such as `/home/user/include/`, you will need to make sure 
@@ -243,12 +243,12 @@ that your C++ compiler searches `/home/user/include/`
 by explicitly specifying the directory as an argument/option. 
 For example, using the `-I` switch in GCC and Clang:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/user/include/ -lopenblas -llapack
+    g++ prog.cpp -o prog -O2 -std=c++14 -I /home/user/include/ -lopenblas -llapack
 
 If you're getting linking issues (unresolved symbols),
 enable the `ARMA_DONT_USE_WRAPPER` option:
 
-    g++ prog.cpp -o prog -O2 -std=c++11 -I /home/user/include/ -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
+    g++ prog.cpp -o prog -O2 -std=c++14 -I /home/user/include/ -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
 
 If you don't have OpenBLAS, on Linux change `-lopenblas` to `-lblas`;
 on macOS change `-lopenblas -llapack` to `-framework Accelerate`

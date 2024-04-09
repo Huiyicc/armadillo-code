@@ -4,10 +4,10 @@ How to compile example1.cpp
 ** Linux and macOS **
 
 If you have installed Armadillo via the CMake installer:
-  g++ example1.cpp -o example1 -std=c++11 -O2 -larmadillo
+  g++ example1.cpp -o example1 -std=c++14 -O2 -larmadillo
   
 Otherwise, if you want to use Armadillo without installation:
-  g++ example1.cpp -o example1 -std=c++11 -O2 -I /home/user/armadillo-12.2.0/include -DARMA_DONT_USE_WRAPPER -lopenblas
+  g++ example1.cpp -o example1 -std=c++14 -O2 -I /home/user/armadillo-12.2.0/include -DARMA_DONT_USE_WRAPPER -lopenblas
   
 The above command assumes that the armadillo archive was unpacked into /home/user/
 The command needs to be adjusted if the archive was unpacked into a different directory,

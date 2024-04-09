@@ -579,7 +579,7 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword B_
 
 
 
-//! stop if given matrices have different sizes
+//! stop if given matrices do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -600,7 +600,7 @@ arma_assert_same_size(const Mat<eT1>& A, const Mat<eT2>& B, const char* x)
 
 
 
-//! stop if given proxies have different sizes
+//! stop if given proxies do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -804,7 +804,7 @@ arma_assert_same_size(const uword A_n_rows, const uword A_n_cols, const uword A_
 
 
 
-//! stop if given cubes have different sizes
+//! stop if given cubes do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -883,7 +883,7 @@ arma_assert_same_size(const subview_cube<eT>& A, const ProxyCube<T1>& B, const c
 
 
 
-//! stop if given cube proxies have different sizes
+//! stop if given cube proxies do not have the same size
 template<typename eT1, typename eT2>
 arma_hot
 inline
@@ -1401,16 +1401,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
       inline
       arma_first_extra_debug_message()
         {
-        union
-          {
-          unsigned short a;
-          unsigned char  b[sizeof(unsigned short)];
-          } endian_test;
-          
-        endian_test.a = 1;
-        
-        const bool  little_endian = (endian_test.b[0] == 1);
-        const char* nickname      = ARMA_VERSION_NAME;
+        const char* nickname = ARMA_VERSION_NAME;
         
         std::ostream& out = get_cerr_stream();
         
@@ -1420,7 +1411,6 @@ arma_assert_atlas_size(const T1& A, const T2& B)
             << " (" << nickname << ")\n";
         
         out << "@ arma_config::wrapper          = " << arma_config::wrapper          << '\n';
-        out << "@ arma_config::cxx14            = " << arma_config::cxx14            << '\n';
         out << "@ arma_config::cxx17            = " << arma_config::cxx17            << '\n';
         out << "@ arma_config::cxx20            = " << arma_config::cxx20            << '\n';
         out << "@ arma_config::cxx23            = " << arma_config::cxx23            << '\n';
@@ -1451,10 +1441,8 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         out << "@ sizeof(long)     = " << sizeof(long)     << '\n';
         out << "@ sizeof(uword)    = " << sizeof(uword)    << '\n';
         out << "@ sizeof(blas_int) = " << sizeof(blas_int) << '\n';
-        out << "@ little_endian    = " << little_endian    << '\n';
         out << "@ ---" << std::endl;
         }
-      
       };
     
     static arma_first_extra_debug_message arma_first_extra_debug_message_run;

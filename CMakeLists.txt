@@ -29,22 +29,18 @@
 ## NOTE: More details: https://arma.sourceforge.net/faq.html
 
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
-  if(POLICY CMP0025)
-    # enable differentiation between vanilla Clang and AppleClang
-    cmake_policy(SET CMP0025 NEW)
-    message(STATUS "*** set cmake policy CMP0025 to NEW")
-  endif()
+if(POLICY CMP0025)
+  # enable differentiation between vanilla Clang and AppleClang
+  cmake_policy(SET CMP0025 NEW)
+  message(STATUS "*** set cmake policy CMP0025 to NEW")
 endif()
 
-if(NOT (CMAKE_VERSION VERSION_LESS "3.1"))
-  set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_CXX_EXTENSIONS OFF)
-  message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
-endif()
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
 
 if(WIN32)
   message(STATUS "")
@@ -92,7 +88,7 @@ if(NOT CXX_FLAGS_EMPTY)
 endif()
 
 
-# NOTE: Armadillo requires compiler support for thread_local and C++11
+# NOTE: Armadillo requires compiler support for thread_local and C++14
 # NOTE: for Linux, this is available with gcc 4.8.3 onwards
 # NOTE: for macOS, thread_local is supoported in Xcode 8 (mid 2016 onwards) in C++11 mode
 
@@ -101,17 +97,13 @@ endif()
 
 if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if(NOT (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.8.3))
-      message(STATUS "Detected gcc 4.8.3 or newer")
-      if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.1.0)
-        message(STATUS "*** WARNING: support for gcc versions older than 6.1 is deprecated")
-      endif()
+    if(NOT (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.1.0))
       if(NOT DEFINED CMAKE_CXX_STANDARD)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-        message(STATUS "Added '-std=c++11' to compiler flags")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+        message(STATUS "Added '-std=c++14' to compiler flags")
       endif()
     else()
-      message(FATAL_ERROR "Compiler too old")
+      message(FATAL_ERROR "Compiler too old; need at least gcc 6.1")
     endif()
   else()
     if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
