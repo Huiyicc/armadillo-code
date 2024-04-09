@@ -335,7 +335,7 @@ inline
 elem_type
 SpBase<elem_type, derived>::min() const
   {
-  return spop_min::min( (*this).get_ref() );
+  return op_sp_min::min( (*this).get_ref() );
   }
 
 
@@ -345,7 +345,7 @@ inline
 elem_type
 SpBase<elem_type, derived>::max() const
   {
-  return spop_max::max( (*this).get_ref() );
+  return op_sp_max::max( (*this).get_ref() );
   }
 
 
@@ -357,7 +357,7 @@ SpBase<elem_type, derived>::min(uword& index_of_min_val) const
   {
   const SpProxy<derived> P( (*this).get_ref() );
   
-  return spop_min::min_with_index(P, index_of_min_val);
+  return op_sp_min::min_with_index(P, index_of_min_val);
   }
 
 
@@ -369,7 +369,7 @@ SpBase<elem_type, derived>::max(uword& index_of_max_val) const
   {
   const SpProxy<derived> P( (*this).get_ref() );
   
-  return spop_max::max_with_index(P, index_of_max_val);
+  return op_sp_max::max_with_index(P, index_of_max_val);
   }
 
 
@@ -383,7 +383,7 @@ SpBase<elem_type, derived>::min(uword& row_of_min_val, uword& col_of_min_val) co
   
   uword index = 0;
   
-  const elem_type val = spop_min::min_with_index(P, index);
+  const elem_type val = op_sp_min::min_with_index(P, index);
   
   const uword local_n_rows = P.get_n_rows();
   
@@ -404,7 +404,7 @@ SpBase<elem_type, derived>::max(uword& row_of_max_val, uword& col_of_max_val) co
   
   uword index = 0;
   
-  const elem_type val = spop_max::max_with_index(P, index);
+  const elem_type val = op_sp_max::max_with_index(P, index);
   
   const uword local_n_rows = P.get_n_rows();
   
@@ -431,7 +431,7 @@ SpBase<elem_type,derived>::index_min() const
     }
   else
     {
-    spop_min::min_with_index(P, index);
+    op_sp_min::min_with_index(P, index);
     }
   
   return index;
@@ -454,7 +454,7 @@ SpBase<elem_type,derived>::index_max() const
     }
   else
     {
-    spop_max::max_with_index(P, index);
+    op_sp_max::max_with_index(P, index);
     }
   
   return index;

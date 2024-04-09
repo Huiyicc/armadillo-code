@@ -140,7 +140,7 @@ min(const T1& x)
   {
   arma_extra_debug_sigprint();
   
-  return spop_min::vector_min(x);
+  return op_sp_min::vector_min(x);
   }
 
 
@@ -152,13 +152,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1, spop_min>
+  const SpToDOp<T1, op_sp_min>
   >::result
 min(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return SpOp<T1, spop_min>(X, 0, 0);
+  return SpToDOp<T1, op_sp_min>(X, 0, 0);
   }
 
 
@@ -170,13 +170,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1, spop_min>
+  const SpToDOp<T1, op_sp_min>
   >::result
 min(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  return SpOp<T1, spop_min>(X, dim, 0);
+  return SpToDOp<T1, op_sp_min>(X, dim, 0);
   }
 
 

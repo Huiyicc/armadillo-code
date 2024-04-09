@@ -140,7 +140,7 @@ max(const T1& x)
   {
   arma_extra_debug_sigprint();
   
-  return spop_max::vector_max(x);
+  return op_sp_max::vector_max(x);
   }
 
 
@@ -152,13 +152,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1, spop_max>
+  const SpToDOp<T1, op_sp_max>
   >::result
 max(const T1& X)
   {
   arma_extra_debug_sigprint();
   
-  return SpOp<T1, spop_max>(X, 0, 0);
+  return SpToDOp<T1, op_sp_max>(X, 0, 0);
   }
 
 
@@ -170,13 +170,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1, spop_max>
+  const SpToDOp<T1, op_sp_max>
   >::result
 max(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  return SpOp<T1, spop_max>(X, dim, 0);
+  return SpToDOp<T1, op_sp_max>(X, dim, 0);
   }
 
 
