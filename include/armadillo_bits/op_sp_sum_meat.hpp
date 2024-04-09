@@ -16,6 +16,10 @@
 // ------------------------------------------------------------------------
 
 
+//! \addtogroup op_sp_sum
+//! @{
+
+
 
 template<typename T1>
 inline
@@ -82,3 +86,7 @@ op_sp_sum::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_sum>& 
       }
     }
   }
+
+
+
+//! @}
