@@ -802,12 +802,12 @@ SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
   {
   arma_extra_debug_sigprint_this(this);
   
-  typedef typename T1::elem_type T;
+  typedef typename T1::elem_type T1_eT;
   
   // Make sure the type is compatible.
-  arma_type_check(( is_same_type< eT, T >::no ));
+  arma_type_check(( is_same_type< eT, T1_eT >::no ));
   
-  op_type::apply(*this, expr);
+  (*this) = Mat<eT>(expr);
   }
 
 

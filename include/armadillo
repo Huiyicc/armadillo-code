@@ -316,6 +316,7 @@ namespace arma
   #include "armadillo_bits/op_rcond_bones.hpp"
   #include "armadillo_bits/op_sp_plus_bones.hpp"
   #include "armadillo_bits/op_sp_minus_bones.hpp"
+  #include "armadillo_bits/op_sp_sum_bones.hpp"
   #include "armadillo_bits/op_powmat_bones.hpp"
   #include "armadillo_bits/op_rank_bones.hpp"
   #include "armadillo_bits/op_row_as_mat_bones.hpp"
@@ -354,7 +355,6 @@ namespace arma
   
   #include "armadillo_bits/spop_max_bones.hpp"
   #include "armadillo_bits/spop_min_bones.hpp"
-  #include "armadillo_bits/spop_sum_bones.hpp"
   #include "armadillo_bits/spop_strans_bones.hpp"
   #include "armadillo_bits/spop_htrans_bones.hpp"
   #include "armadillo_bits/spop_misc_bones.hpp"
@@ -764,6 +764,7 @@ namespace arma
   #include "armadillo_bits/op_rcond_meat.hpp"
   #include "armadillo_bits/op_sp_plus_meat.hpp"
   #include "armadillo_bits/op_sp_minus_meat.hpp"
+  #include "armadillo_bits/op_sp_sum_meat.hpp"
   #include "armadillo_bits/op_powmat_meat.hpp"
   #include "armadillo_bits/op_rank_meat.hpp"
   #include "armadillo_bits/op_row_as_mat_meat.hpp"
@@ -802,7 +803,6 @@ namespace arma
   
   #include "armadillo_bits/spop_max_meat.hpp"
   #include "armadillo_bits/spop_min_meat.hpp"
-  #include "armadillo_bits/spop_sum_meat.hpp"
   #include "armadillo_bits/spop_strans_meat.hpp"
   #include "armadillo_bits/spop_htrans_meat.hpp"
   #include "armadillo_bits/spop_misc_meat.hpp"
