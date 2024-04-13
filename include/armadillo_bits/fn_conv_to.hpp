@@ -29,16 +29,16 @@ class conv_to
   public:
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
-
-  template<typename in_eT, typename T1>
-  inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("INFO: use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  arma_frown("INFO: use as_scalar() instead") inline static out_eT from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   
   template<typename in_eT, typename T1>
-  inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
+  arma_frown("INFO: use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<in_eT>::result* junk = nullptr);
+  
+  template<typename in_eT, typename T1>
+  arma_frown("INFO: use as_scalar() instead") inline static out_eT from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only<in_eT>::result* junk = nullptr);
   };
 
 
@@ -653,7 +653,7 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_no
     const uword X_n_rows = X.n_rows;
     const uword X_n_cols = X.n_cols;
     const uword X_n_elem = X.n_elem;
-  
+    
     const in_eT* X_mem = X.memptr();
     
     uword X_nnz = 0;
@@ -741,7 +741,7 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename arma_cx
     const uword X_n_rows = X.n_rows;
     const uword X_n_cols = X.n_cols;
     const uword X_n_elem = X.n_elem;
-  
+    
     const in_eT* X_mem = X.memptr();
     
     uword X_nnz = 0;
