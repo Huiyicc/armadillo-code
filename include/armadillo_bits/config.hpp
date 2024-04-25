@@ -333,11 +333,6 @@
   #undef ARMA_PRINT_EXCEPTIONS
 #endif
 
-#if !defined(ARMA_DONT_ZERO_INIT)
-  // #define ARMA_DONT_ZERO_INIT
-  //// Uncomment the above line to disable initialising elements to zero during construction of dense matrices and cubes
-#endif
-
 #if defined(ARMA_NO_CRIPPLED_LAPACK)
   #undef ARMA_CRIPPLED_LAPACK
 #endif

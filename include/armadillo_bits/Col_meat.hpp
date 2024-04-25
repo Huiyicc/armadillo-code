@@ -51,11 +51,9 @@ Col<eT>::Col(const uword in_n_elem)
   {
   arma_extra_debug_sigprint();
   
-  if(arma_config::zero_init)
-    {
-    arma_extra_debug_print("Col::constructor: zeroing memory");
-    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
-    }
+  arma_extra_debug_print("Col::constructor: zeroing memory");
+  
+  arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
   }
 
 
@@ -69,11 +67,9 @@ Col<eT>::Col(const uword in_n_rows, const uword in_n_cols)
   
   Mat<eT>::init_warm(in_n_rows, in_n_cols);
   
-  if(arma_config::zero_init)
-    {
-    arma_extra_debug_print("Col::constructor: zeroing memory");
-    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
-    }
+  arma_extra_debug_print("Col::constructor: zeroing memory");
+  
+  arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
   }
 
 
@@ -87,11 +83,9 @@ Col<eT>::Col(const SizeMat& s)
   
   Mat<eT>::init_warm(s.n_rows, s.n_cols);
   
-  if(arma_config::zero_init)
-    {
-    arma_extra_debug_print("Col::constructor: zeroing memory");
-    arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
-    }
+  arma_extra_debug_print("Col::constructor: zeroing memory");
+  
+  arrayops::fill_zeros(Mat<eT>::memptr(), Mat<eT>::n_elem);
   }
 
 
@@ -1279,14 +1273,11 @@ Col<eT>::fixed<fixed_n_elem>::fixed()
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(arma_config::zero_init)
-    {
-    arma_extra_debug_print("Col::fixed::constructor: zeroing memory");
-    
-    eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
-    
-    arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
-    }
+  arma_extra_debug_print("Col::fixed::constructor: zeroing memory");
+  
+  eT* mem_use = (use_extra) ? &(mem_local_extra[0]) : &(Mat<eT>::mem_local[0]);
+  
+  arrayops::inplace_set_fixed<eT,fixed_n_elem>( mem_use, eT(0) );
   }
 
 
