@@ -274,7 +274,7 @@ Cube<eT>::Cube(Cube<eT>&& in_cube)
   , mem_state(0)
   , mem()
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in_cube: %x") % this % &in_cube);
   
   (*this).steal_mem(in_cube, true);
   }
@@ -286,7 +286,7 @@ inline
 Cube<eT>&
 Cube<eT>::operator=(Cube<eT>&& in_cube)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &in_cube);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in_cube: %x") % this % &in_cube);
   
   (*this).steal_mem(in_cube, true);
   
@@ -757,7 +757,7 @@ Cube<eT>::Cube(const Cube<eT>& x)
   , mem()
   {
   arma_extra_debug_sigprint_this(this);
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in_cube: %x") % this % &x);
   
   init_cold();
   
@@ -772,7 +772,7 @@ inline
 Cube<eT>&
 Cube<eT>::operator=(const Cube<eT>& x)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in_cube = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in_cube: %x") % this % &x);
   
   if(this != &x)
     {
@@ -5160,7 +5160,7 @@ Cube<eT>::swap(Cube<eT>& B)
   {
   Cube<eT>& A = (*this);
   
-  arma_extra_debug_sigprint(arma_str::format("A = %x   B = %x") % &A % &B);
+  arma_extra_debug_sigprint(arma_str::format("A: %x; B: %x") % &A % &B);
   
   if( (A.mem_state == 0) && (B.mem_state == 0) && (A.n_elem > Cube_prealloc::mem_n_elem) && (B.n_elem > Cube_prealloc::mem_n_elem) )
     {

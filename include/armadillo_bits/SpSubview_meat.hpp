@@ -74,7 +74,7 @@ SpSubview<eT>::SpSubview(const SpSubview<eT>& in)
   , n_elem   (in.n_elem   )
   , n_nonzero(in.n_nonzero)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   }
 
 
@@ -90,7 +90,7 @@ SpSubview<eT>::SpSubview(SpSubview<eT>&& in)
   , n_elem   (in.n_elem   )
   , n_nonzero(in.n_nonzero)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   
   // for paranoia
   

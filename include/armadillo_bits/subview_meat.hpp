@@ -54,7 +54,7 @@ subview<eT>::subview(const subview<eT>& in)
   , n_cols  (in.n_cols  )
   , n_elem  (in.n_elem  )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   }
 
 
@@ -69,7 +69,7 @@ subview<eT>::subview(subview<eT>&& in)
   , n_cols  (in.n_cols  )
   , n_elem  (in.n_elem  )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   
   // for paranoia
   

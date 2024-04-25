@@ -52,7 +52,7 @@ diagview<eT>::diagview(const diagview<eT>& in)
   , n_rows    (in.n_rows    )
   , n_elem    (in.n_elem    )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   }
 
 
@@ -66,7 +66,7 @@ diagview<eT>::diagview(diagview<eT>&& in)
   , n_rows    (in.n_rows    )
   , n_elem    (in.n_elem    )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   
   // for paranoia
   

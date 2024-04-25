@@ -60,7 +60,7 @@ field<oT>::field(const field& x)
   , n_elem(0)
   , mem(nullptr)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   x = %x") % this % &x);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; x: %x") % this % &x);
   
   init(x);
   }
@@ -413,7 +413,7 @@ field<oT>::field(field<oT>&& X)
   , n_slices(X.n_slices)
   , n_elem  (X.n_elem  )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
   
   if(n_elem > field_prealloc_n_elem::val)
     {
@@ -439,7 +439,7 @@ inline
 field<oT>&
 field<oT>::operator=(field<oT>&& X)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
   
   if(this == &X)  { return *this; }
   

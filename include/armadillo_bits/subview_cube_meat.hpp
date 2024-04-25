@@ -69,7 +69,7 @@ subview_cube<eT>::subview_cube(const subview_cube<eT>& in)
   , n_slices    (in.n_slices    )
   , n_elem      (in.n_elem      )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   }
 
 
@@ -87,7 +87,7 @@ subview_cube<eT>::subview_cube(subview_cube<eT>&& in)
   , n_slices    (in.n_slices    )
   , n_elem      (in.n_elem      )
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   in = %x") % this % &in);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; in: %x") % this % &in);
   
   // for paranoia
   

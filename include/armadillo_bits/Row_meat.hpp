@@ -374,7 +374,7 @@ inline
 Row<eT>::Row(Row<eT>&& X)
   : Mat<eT>(arma_vec_indicator(), 2)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
   
   access::rw(Mat<eT>::n_rows)  = 1;
   access::rw(Mat<eT>::n_cols)  = X.n_cols;
@@ -416,7 +416,7 @@ inline
 Row<eT>&
 Row<eT>::operator=(Row<eT>&& X)
   {
-  arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+  arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
   
   (*this).steal_mem(X, true);
   
@@ -430,7 +430,7 @@ Row<eT>::operator=(Row<eT>&& X)
 // Row<eT>::Row(Mat<eT>&& X)
 //   : Mat<eT>(arma_vec_indicator(), 2)
 //   {
-//   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+//   arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
 //   
 //   if(X.n_rows != 1)  { const Mat<eT>& XX = X; Mat<eT>::operator=(XX); return; }
 //   
@@ -472,7 +472,7 @@ Row<eT>::operator=(Row<eT>&& X)
 // Row<eT>&
 // Row<eT>::operator=(Mat<eT>&& X)
 //   {
-//   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
+//   arma_extra_debug_sigprint(arma_str::format("this: %x; X: %x") % this % &X);
 //   
 //   if(X.n_rows != 1)  { const Mat<eT>& XX = X; Mat<eT>::operator=(XX); return *this; }
 //   
