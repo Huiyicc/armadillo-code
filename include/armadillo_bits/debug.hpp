@@ -1352,6 +1352,9 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_conform_assert_blas_size      arma_assert_blas_size
   #define arma_conform_assert_atlas_size     arma_assert_atlas_size
   
+  // for compatibility with earlier versions of Armadillo
+  #define arma_debug_check                   arma_check
+  
 #else
   
   #define arma_conform_warn                    true ? (void)0 : arma_warn
@@ -1365,6 +1368,8 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_conform_assert_blas_size        true ? (void)0 : arma_assert_blas_size
   #define arma_conform_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
   
+  // for compatibility with earlier versions of Armadillo
+  #define arma_debug_check                    true ? (void)0 : arma_check
 #endif
 
 
@@ -1375,11 +1380,21 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
   #define arma_debug_print          arma_print
   
+  // for compatibility with earlier versions of Armadillo
+  #define arma_extra_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
+  #define arma_extra_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
+  #define arma_extra_debug_print          arma_print
+  
 #else
   
   #define arma_debug_sigprint        true ? (void)0 : arma_bktprint
   #define arma_debug_sigprint_this   true ? (void)0 : arma_thisprint
   #define arma_debug_print           true ? (void)0 : arma_print
+  
+  // for compatibility with earlier versions of Armadillo
+  #define arma_extra_debug_sigprint        true ? (void)0 : arma_bktprint
+  #define arma_extra_debug_sigprint_this   true ? (void)0 : arma_thisprint
+  #define arma_extra_debug_print           true ? (void)0 : arma_print
   
 #endif
 
