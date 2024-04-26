@@ -317,7 +317,7 @@ inline
 void
 arma_thisprint(const void* this_ptr)
   {
-  get_cerr_stream() << " [this = " << this_ptr << ']' << std::endl;
+  get_cerr_stream() << " [this: " << this_ptr << ']' << std::endl;
   }
 
 
@@ -1369,7 +1369,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 
 
-#if defined(ARMA_DEBUG) || defined(ARMA_EXTRA_DEBUG)
+#if defined(ARMA_DEBUG)
   
   #define arma_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
   #define arma_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint

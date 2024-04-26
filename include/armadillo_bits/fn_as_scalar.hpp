@@ -305,7 +305,7 @@ as_scalar(const Glue<T1, T2, glue_times>& X, const typename arma_not_cx<typename
   
   constexpr uword N_mat = 1 + depth_lhs< glue_times, Glue<T1,T2,glue_times> >::num;
   
-  arma_debug_print(arma_str::format("N_mat = %u") % N_mat);
+  arma_debug_print(arma_str::format("N_mat: %u") % N_mat);
   
   return as_scalar_redirect<N_mat>::apply(X);
   }

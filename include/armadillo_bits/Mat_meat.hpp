@@ -294,7 +294,7 @@ inline
 void
 Mat<eT>::init_cold()
   {
-  arma_debug_sigprint( arma_str::format("n_rows = %u, n_cols = %u") % n_rows % n_cols );
+  arma_debug_sigprint( arma_str::format("n_rows: %u; n_cols: %u") % n_rows % n_cols );
   
   // ensure that n_elem can hold the result of (n_rows * n_cols)
   
@@ -337,7 +337,7 @@ inline
 void
 Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
   {
-  arma_debug_sigprint( arma_str::format("in_n_rows = %u, in_n_cols = %u") % in_n_rows % in_n_cols );
+  arma_debug_sigprint( arma_str::format("in_n_rows: %u; in_n_cols: %u") % in_n_rows % in_n_cols );
   
   if( (n_rows == in_n_rows) && (n_cols == in_n_cols) )  { return; }
   
