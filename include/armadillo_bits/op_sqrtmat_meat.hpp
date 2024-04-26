@@ -482,7 +482,7 @@ op_sqrtmat_sympd::apply_direct(Mat<typename T1::elem_type>& out, const Base<type
     
     arma_debug_check( (X.is_square() == false), "sqrtmat_sympd(): given matrix must be square sized" );
     
-    if((arma_config::debug) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
+    if((arma_config::check_conformance) && (is_cx<eT>::yes) && (sym_helper::check_diag_imag(X) == false))
       {
       arma_debug_warn_level(1, "sqrtmat_sympd(): imaginary components on the diagonal are non-zero");
       }

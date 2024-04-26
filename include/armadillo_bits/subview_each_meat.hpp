@@ -70,7 +70,7 @@ inline
 void
 subview_each_common<parent,mode>::check_size(const Mat<eT2>& A) const
   {
-  if(arma_config::debug)
+  if(arma_config::check_conformance)
     {
     if(mode == 0)
       {

@@ -164,6 +164,14 @@
   //// of inv() and inv_sympd() within compound expressions
 #endif
 
+#if !defined(ARMA_CHECK_CONFORMANCE)
+  #define ARMA_CHECK_CONFORMANCE
+  //// Comment out the above line to disable conformance checks for bounds and size.
+  //// This is NOT RECOMMENDED.
+  //// It is strongly recommended that conformance checks are enabled during development,
+  //// as this greatly aids in finding mistakes in your code.
+#endif
+
 #if !defined(ARMA_CHECK_NONFINITE)
   #define ARMA_CHECK_NONFINITE
   //// Comment out the above line to disable checking for nonfinite matrices
@@ -189,18 +197,13 @@
 //// The maximum number of threads to use for OpenMP based parallelisation;
 //// it must be an integer that is at least 1.
 
-// #define ARMA_NO_DEBUG
-//// Uncomment the above line to disable all run-time checks. NOT RECOMMENDED.
-//// It is strongly recommended that run-time checks are enabled during development,
-//// as this greatly aids in finding mistakes in your code.
-
-// #define ARMA_EXTRA_DEBUG
+// #define ARMA_DEBUG
 //// Uncomment the above line to see the function traces of how Armadillo evaluates expressions.
 //// This is mainly useful for debugging of the library.
 
-
-#if defined(ARMA_EXTRA_DEBUG)
-  #undef  ARMA_NO_DEBUG
+#if defined(ARMA_DEBUG) || defined(ARMA_EXTRA_DEBUG)
+  #undef  ARMA_DONT_CHECK_CONFORMANCE
+  #undef  ARMA_DONT_CHECK_NONFINITE
   #undef  ARMA_WARN_LEVEL
   #define ARMA_WARN_LEVEL 3
 #endif
@@ -313,8 +316,17 @@
   #undef ARMA_OPTIMISE_INVEXPR
 #endif
 
+#if defined(ARMA_DONT_CHECK_CONFORMANCE)
+  #undef ARMA_CHECK_CONFORMANCE
+#endif
+
 #if defined(ARMA_DONT_CHECK_NONFINITE)
   #undef ARMA_CHECK_NONFINITE
+#endif
+
+#if defined(ARMA_NO_DEBUG)
+  #undef ARMA_DEBUG
+  #undef ARMA_EXTRA_DEBUG
 #endif
 
 #if defined(ARMA_DONT_PRINT_ERRORS)

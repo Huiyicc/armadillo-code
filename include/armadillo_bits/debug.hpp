@@ -1339,22 +1339,8 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 // #define ARMA_FILELINE  __FILE__ ": " ARMA_STRING2(__LINE__)
 
 
-#if defined(ARMA_NO_DEBUG)
-  
-  #define arma_debug_print                   true ? (void)0 : arma_print
-  #define arma_debug_warn                    true ? (void)0 : arma_warn
-  #define arma_debug_warn_level              true ? (void)0 : arma_warn_level
-  #define arma_debug_check                   true ? (void)0 : arma_check
-  #define arma_debug_check_bounds            true ? (void)0 : arma_check_bounds
-  #define arma_debug_set_error               true ? (void)0 : arma_set_error
-  #define arma_debug_assert_same_size        true ? (void)0 : arma_assert_same_size
-  #define arma_debug_assert_mul_size         true ? (void)0 : arma_assert_mul_size
-  #define arma_debug_assert_trans_mul_size   true ? (void)0 : arma_assert_trans_mul_size
-  #define arma_debug_assert_cube_as_mat      true ? (void)0 : arma_assert_cube_as_mat
-  #define arma_debug_assert_blas_size        true ? (void)0 : arma_assert_blas_size
-  #define arma_debug_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
-  
-#else
+// TODO: rename arma_debug_* to arma_conf_* here and throughout the codebase
+#if defined(ARMA_CHECK_CONFORMANCE)
   
   #define arma_debug_print                 arma_print
   #define arma_debug_warn                  arma_warn
@@ -1369,11 +1355,27 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_debug_assert_blas_size      arma_assert_blas_size
   #define arma_debug_assert_atlas_size     arma_assert_atlas_size
   
+#else
+  
+  #define arma_debug_print                   true ? (void)0 : arma_print
+  #define arma_debug_warn                    true ? (void)0 : arma_warn
+  #define arma_debug_warn_level              true ? (void)0 : arma_warn_level
+  #define arma_debug_check                   true ? (void)0 : arma_check
+  #define arma_debug_check_bounds            true ? (void)0 : arma_check_bounds
+  #define arma_debug_set_error               true ? (void)0 : arma_set_error
+  #define arma_debug_assert_same_size        true ? (void)0 : arma_assert_same_size
+  #define arma_debug_assert_mul_size         true ? (void)0 : arma_assert_mul_size
+  #define arma_debug_assert_trans_mul_size   true ? (void)0 : arma_assert_trans_mul_size
+  #define arma_debug_assert_cube_as_mat      true ? (void)0 : arma_assert_cube_as_mat
+  #define arma_debug_assert_blas_size        true ? (void)0 : arma_assert_blas_size
+  #define arma_debug_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
+  
 #endif
 
 
 
-#if defined(ARMA_EXTRA_DEBUG)
+// TODO: rename arma_extra_debug_* to arma_debug_* here and throughout the codebase
+#if defined(ARMA_DEBUG) || defined(ARMA_EXTRA_DEBUG)
   
   #define arma_extra_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
   #define arma_extra_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
@@ -1390,16 +1392,16 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 
 
-#if defined(ARMA_EXTRA_DEBUG)
+#if defined(ARMA_DEBUG)
 
   namespace junk
     {
-    class arma_first_extra_debug_message
+    class arma_first_debug_message
       {
       public:
       
       inline
-      arma_first_extra_debug_message()
+      arma_first_debug_message()
         {
         const char* nickname = ARMA_VERSION_NAME;
         
@@ -1444,7 +1446,7 @@ arma_assert_atlas_size(const T1& A, const T2& B)
         }
       };
     
-    static arma_first_extra_debug_message arma_first_extra_debug_message_run;
+    static arma_first_debug_message arma_first_debug_message_run;
     }
 
 #endif

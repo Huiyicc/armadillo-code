@@ -95,7 +95,7 @@ eig_sym_helper
   {
   arma_extra_debug_sigprint();
   
-  if((arma_config::debug) && (auxlib::rudimentary_sym_check(X) == false))
+  if((arma_config::check_conformance) && (auxlib::rudimentary_sym_check(X) == false))
     {
     if(is_cx<eT>::no )  { arma_debug_warn_level(1, caller_sig, ": given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, caller_sig, ": given matrix is not hermitian"); }

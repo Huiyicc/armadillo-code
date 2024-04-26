@@ -30,7 +30,7 @@ MapMat<eT>::~MapMat()
   if(map_ptr)  { (*map_ptr).clear();  delete map_ptr; }
   
   // try to expose buggy user code that accesses deleted objects
-  if(arma_config::debug)  { map_ptr = nullptr; }
+  map_ptr = nullptr;
   
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   }

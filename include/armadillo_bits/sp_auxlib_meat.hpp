@@ -67,7 +67,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   
   arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
   
-  if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+  if((arma_config::check_conformance) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
     {
     if(is_cx<eT>::no )  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
@@ -120,7 +120,7 @@ sp_auxlib::eigs_sym(Col<eT>& eigval, Mat<eT>& eigvec, const SpBase<eT, T1>& X, c
   
   arma_debug_check( (U.M.is_square() == false), "eigs_sym(): given matrix must be square sized" );
   
-  if((arma_config::debug) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
+  if((arma_config::check_conformance) && (sp_auxlib::rudimentary_sym_check(U.M) == false))
     {
     if(is_cx<eT>::no )  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not symmetric"); }
     if(is_cx<eT>::yes)  { arma_debug_warn_level(1, "eigs_sym(): given matrix is not hermitian"); }
@@ -1202,7 +1202,7 @@ sp_auxlib::spsolve_simple(Mat<typename T1::elem_type>& X, const SpBase<typename 
       return false;
       }
     
-    if(arma_config::debug)
+    if(arma_config::check_conformance)
       {
       bool overflow = false;
       
@@ -1327,7 +1327,7 @@ sp_auxlib::spsolve_refine(Mat<typename T1::elem_type>& X, typename T1::pod_type&
       return false;
       }
     
-    if(arma_config::debug)
+    if(arma_config::check_conformance)
       {
       bool overflow;
       

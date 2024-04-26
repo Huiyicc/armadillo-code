@@ -31,7 +31,7 @@ field<oT>::~field()
   if(n_elem > field_prealloc_n_elem::val)  { delete [] mem; }
   
   // try to expose buggy user code that accesses deleted objects
-  if(arma_config::debug)  { mem = nullptr; }
+  mem = nullptr;
   }
 
 

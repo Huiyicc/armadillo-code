@@ -33,7 +33,7 @@ Mat<eT>::~Mat()
     }
   
   // try to expose buggy user code that accesses deleted objects
-  if(arma_config::debug)  { access::rw(mem) = nullptr; }
+  access::rw(mem) = nullptr;
   
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   }
@@ -4425,7 +4425,7 @@ Mat<eT>::shed_rows(const Base<uword, T1>& indices)
   const uword* rows_to_shed_mem = rows_to_shed.memptr();
   const uword  N                = rows_to_shed.n_elem;
   
-  if(arma_config::debug)
+  if(arma_config::check_conformance)
     {
     for(uword i=0; i<N; ++i)
       {
@@ -4495,7 +4495,7 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
   const uword* cols_to_shed_mem = cols_to_shed.memptr();
   const uword  N                = cols_to_shed.n_elem;
   
-  if(arma_config::debug)
+  if(arma_config::check_conformance)
     {
     for(uword i=0; i<N; ++i)
       {
