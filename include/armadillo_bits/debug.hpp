@@ -265,7 +265,7 @@ arma_print(const T1& x, const T2& y, const T3& z)
 
 //! print a message to the cerr stream with a preceding @ character.
 //! used for printing the signature of a function
-//! (see the arma_extra_debug_sigprint macro) 
+//! (see the arma_debug_sigprint macro) 
 inline
 void
 arma_sigprint(const char* x)
@@ -323,7 +323,7 @@ arma_thisprint(const void* this_ptr)
 
 
 //
-// arma_warn
+// arma_plain_warn
 
 
 //! print a message to the warn stream
@@ -332,7 +332,7 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& arg1)
+arma_plain_warn(const T1& arg1)
   {
   get_cerr_stream() << "\nwarning: " << arg1 << std::endl;
   }
@@ -343,7 +343,7 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& arg1, const T2& arg2)
+arma_plain_warn(const T1& arg1, const T2& arg2)
   {
   get_cerr_stream() << "\nwarning: " << arg1 << arg2 << std::endl;
   }
@@ -354,7 +354,7 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& arg1, const T2& arg2, const T3& arg3)
+arma_plain_warn(const T1& arg1, const T2& arg2, const T3& arg3)
   {
   get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << std::endl;
   }
@@ -365,7 +365,7 @@ arma_cold
 arma_noinline
 static
 void
-arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
+arma_plain_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
   {
   get_cerr_stream() << "\nwarning: " << arg1 << arg2 << arg3 << arg4 << std::endl;
   }
@@ -373,50 +373,50 @@ arma_warn(const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
 
 
 //
-// arma_warn_level
+// arma_warn
 
 
 template<typename T1>
 inline
 void
-arma_warn_level(const uword level, const T1& arg1)
+arma_warn(const uword level, const T1& arg1)
   {
   constexpr uword config_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : uword(0);
   
-  if((config_level > 0) && (level <= config_level))  { arma_warn(arg1); }
+  if((config_level > 0) && (level <= config_level))  { arma_plain_warn(arg1); }
   }
 
 
 template<typename T1, typename T2>
 inline
 void
-arma_warn_level(const uword level, const T1& arg1, const T2& arg2)
+arma_warn(const uword level, const T1& arg1, const T2& arg2)
   {
   constexpr uword config_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : uword(0);
   
-  if((config_level > 0) && (level <= config_level))  { arma_warn(arg1,arg2); }
+  if((config_level > 0) && (level <= config_level))  { arma_plain_warn(arg1,arg2); }
   }
 
 
 template<typename T1, typename T2, typename T3>
 inline
 void
-arma_warn_level(const uword level, const T1& arg1, const T2& arg2, const T3& arg3)
+arma_warn(const uword level, const T1& arg1, const T2& arg2, const T3& arg3)
   {
   constexpr uword config_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : uword(0);
   
-  if((config_level > 0) && (level <= config_level))  { arma_warn(arg1,arg2,arg3); }
+  if((config_level > 0) && (level <= config_level))  { arma_plain_warn(arg1,arg2,arg3); }
   }
 
 
 template<typename T1, typename T2, typename T3, typename T4>
 inline
 void
-arma_warn_level(const uword level, const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
+arma_warn(const uword level, const T1& arg1, const T2& arg2, const T3& arg3, const T4& arg4)
   {
   constexpr uword config_level = (sword(ARMA_WARN_LEVEL) > 0) ? uword(ARMA_WARN_LEVEL) : uword(0);
   
-  if((config_level > 0) && (level <= config_level))  { arma_warn(arg1,arg2,arg3,arg4); }
+  if((config_level > 0) && (level <= config_level))  { arma_plain_warn(arg1,arg2,arg3,arg4); }
   }
 
 
@@ -1339,53 +1339,47 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 // #define ARMA_FILELINE  __FILE__ ": " ARMA_STRING2(__LINE__)
 
 
-// TODO: rename arma_debug_* to arma_conf_* here and throughout the codebase
 #if defined(ARMA_CHECK_CONFORMANCE)
   
-  #define arma_debug_print                 arma_print
-  #define arma_debug_warn                  arma_warn
-  #define arma_debug_warn_level            arma_warn_level
-  #define arma_debug_check                 arma_check
-  #define arma_debug_check_bounds          arma_check_bounds
-  #define arma_debug_set_error             arma_set_error
-  #define arma_debug_assert_same_size      arma_assert_same_size
-  #define arma_debug_assert_mul_size       arma_assert_mul_size
-  #define arma_debug_assert_trans_mul_size arma_assert_trans_mul_size
-  #define arma_debug_assert_cube_as_mat    arma_assert_cube_as_mat
-  #define arma_debug_assert_blas_size      arma_assert_blas_size
-  #define arma_debug_assert_atlas_size     arma_assert_atlas_size
+  #define arma_conform_warn                  arma_warn
+  #define arma_conform_check                 arma_check
+  #define arma_conform_check_bounds          arma_check_bounds
+  #define arma_conform_set_error             arma_set_error
+  #define arma_conform_assert_same_size      arma_assert_same_size
+  #define arma_conform_assert_mul_size       arma_assert_mul_size
+  #define arma_conform_assert_trans_mul_size arma_assert_trans_mul_size
+  #define arma_conform_assert_cube_as_mat    arma_assert_cube_as_mat
+  #define arma_conform_assert_blas_size      arma_assert_blas_size
+  #define arma_conform_assert_atlas_size     arma_assert_atlas_size
   
 #else
   
-  #define arma_debug_print                   true ? (void)0 : arma_print
-  #define arma_debug_warn                    true ? (void)0 : arma_warn
-  #define arma_debug_warn_level              true ? (void)0 : arma_warn_level
-  #define arma_debug_check                   true ? (void)0 : arma_check
-  #define arma_debug_check_bounds            true ? (void)0 : arma_check_bounds
-  #define arma_debug_set_error               true ? (void)0 : arma_set_error
-  #define arma_debug_assert_same_size        true ? (void)0 : arma_assert_same_size
-  #define arma_debug_assert_mul_size         true ? (void)0 : arma_assert_mul_size
-  #define arma_debug_assert_trans_mul_size   true ? (void)0 : arma_assert_trans_mul_size
-  #define arma_debug_assert_cube_as_mat      true ? (void)0 : arma_assert_cube_as_mat
-  #define arma_debug_assert_blas_size        true ? (void)0 : arma_assert_blas_size
-  #define arma_debug_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
+  #define arma_conform_warn                    true ? (void)0 : arma_warn
+  #define arma_conform_check                   true ? (void)0 : arma_check
+  #define arma_conform_check_bounds            true ? (void)0 : arma_check_bounds
+  #define arma_conform_set_error               true ? (void)0 : arma_set_error
+  #define arma_conform_assert_same_size        true ? (void)0 : arma_assert_same_size
+  #define arma_conform_assert_mul_size         true ? (void)0 : arma_assert_mul_size
+  #define arma_conform_assert_trans_mul_size   true ? (void)0 : arma_assert_trans_mul_size
+  #define arma_conform_assert_cube_as_mat      true ? (void)0 : arma_assert_cube_as_mat
+  #define arma_conform_assert_blas_size        true ? (void)0 : arma_assert_blas_size
+  #define arma_conform_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
   
 #endif
 
 
 
-// TODO: rename arma_extra_debug_* to arma_debug_* here and throughout the codebase
 #if defined(ARMA_DEBUG) || defined(ARMA_EXTRA_DEBUG)
   
-  #define arma_extra_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
-  #define arma_extra_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
-  #define arma_extra_debug_print          arma_print
+  #define arma_debug_sigprint       arma_sigprint(ARMA_FNSIG); arma_bktprint
+  #define arma_debug_sigprint_this  arma_sigprint(ARMA_FNSIG); arma_thisprint
+  #define arma_debug_print          arma_print
   
 #else
   
-  #define arma_extra_debug_sigprint        true ? (void)0 : arma_bktprint
-  #define arma_extra_debug_sigprint_this   true ? (void)0 : arma_thisprint
-  #define arma_extra_debug_print           true ? (void)0 : arma_print
+  #define arma_debug_sigprint        true ? (void)0 : arma_bktprint
+  #define arma_debug_sigprint_this   true ? (void)0 : arma_thisprint
+  #define arma_debug_print           true ? (void)0 : arma_print
   
 #endif
 

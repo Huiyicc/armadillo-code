@@ -45,7 +45,7 @@ class fft_engine_fftw3
   inline
   ~fft_engine_fftw3()
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     if(fftw3_plan != nullptr)  { fftw3::destroy_plan<cx_type>(fftw3_plan); }
     
@@ -57,7 +57,7 @@ class fft_engine_fftw3
     : N         (in_N   )
     , fftw3_plan(nullptr)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     if(N == 0)  { return; }
     
@@ -66,14 +66,14 @@ class fft_engine_fftw3
       arma_stop_runtime_error("integer overflow: FFT size too large for integer type used by FFTW3");
       }
     
-    arma_extra_debug_print("fft_engine_fftw3::constructor: allocating work arrays");
+    arma_debug_print("fft_engine_fftw3::constructor: allocating work arrays");
     X_work.set_size(N);
     Y_work.set_size(N);
     
     const int fftw3_sign  = (inverse) ? fftw3_sign_backward : fftw3_sign_forward;
     const int fftw3_flags = fftw3_flag_destroy | fftw3_flag_estimate;
     
-    arma_extra_debug_print("fft_engine_fftw3::constructor: generating 1D plan");
+    arma_debug_print("fft_engine_fftw3::constructor: generating 1D plan");
     fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
     
     if(fftw3_plan == nullptr)  { arma_stop_runtime_error("fft_engine_fftw3::constructor: failed to create plan"); }
@@ -83,17 +83,17 @@ class fft_engine_fftw3
   void
   run(cx_type* Y, const cx_type* X)
     {
-    arma_extra_debug_sigprint();
+    arma_debug_sigprint();
     
     if(fftw3_plan == nullptr)  { return; }
     
-    arma_extra_debug_print("fft_engine_fftw3::run(): copying input array");
+    arma_debug_print("fft_engine_fftw3::run(): copying input array");
     arrayops::copy(X_work.memptr(), X, N);
     
-    arma_extra_debug_print("fft_engine_fftw3::run(): executing plan");
+    arma_debug_print("fft_engine_fftw3::run(): executing plan");
     fftw3::execute<cx_type>(fftw3_plan);
     
-    arma_extra_debug_print("fft_engine_fftw3::run(): copying output array");
+    arma_debug_print("fft_engine_fftw3::run(): copying output array");
     arrayops::copy(Y, Y_work.memptr(), N);
     }
   };

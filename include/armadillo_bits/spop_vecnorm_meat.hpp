@@ -26,7 +26,7 @@ inline
 void
 spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -34,8 +34,8 @@ spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1:
   const uword k   = expr.aux_uword_a;
   const uword dim = expr.aux_uword_b;
   
-  arma_debug_check( (k   == 0), "vecnorm(): unsupported vector norm type"   );
-  arma_debug_check( (dim >  1), "vecnorm(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (k   == 0), "vecnorm(): unsupported vector norm type"   );
+  arma_conform_check( (dim >  1), "vecnorm(): parameter 'dim' must be 0 or 1" );
   
   const unwrap_spmat<T1> U(expr.m);
   const SpMat<eT>&   X = U.M;
@@ -71,7 +71,7 @@ inline
 void
 spop_vecnorm::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword k)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -116,7 +116,7 @@ inline
 void
 spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm_ext>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -124,8 +124,8 @@ spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename
   const uword method_id = expr.aux_uword_a;
   const uword dim       = expr.aux_uword_b;
   
-  arma_debug_check( (method_id == 0), "vecnorm(): unsupported vector norm type"   );
-  arma_debug_check( (dim       >  1), "vecnorm(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (method_id == 0), "vecnorm(): unsupported vector norm type"   );
+  arma_conform_check( (dim       >  1), "vecnorm(): parameter 'dim' must be 0 or 1" );
   
   const unwrap_spmat<T1> U(expr.m);
   const SpMat<eT>&   X = U.M;
@@ -161,7 +161,7 @@ inline
 void
 spop_vecnorm_ext::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword method_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   

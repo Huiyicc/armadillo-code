@@ -27,7 +27,7 @@ arma_inline
 const Op<T1, op_diagvec>
 diagvec(const Base<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_diagvec>(X.get_ref());
   }
@@ -41,7 +41,7 @@ arma_inline
 const Op<T1, op_diagvec2>
 diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return Op<T1, op_diagvec2>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
   }
@@ -54,7 +54,7 @@ arma_inline
 const SpOp<T1, spop_diagvec>
 diagvec(const SpBase<typename T1::elem_type,T1>& X, const sword diag_id = 0)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   return SpOp<T1, spop_diagvec>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
   }

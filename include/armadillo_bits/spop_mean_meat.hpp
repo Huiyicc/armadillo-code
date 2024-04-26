@@ -26,12 +26,12 @@ inline
 void
 spop_mean::apply(SpMat<typename T1::elem_type>& out, const SpOp<T1, spop_mean>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
-  arma_debug_check( (dim > 1), "mean(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "mean(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
@@ -61,7 +61,7 @@ spop_mean::apply_noalias_fast
   const uword                          dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   typedef typename T1::pod_type   T;
@@ -143,7 +143,7 @@ spop_mean::apply_noalias_slow
   const uword                          dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type eT;
   
@@ -152,7 +152,7 @@ spop_mean::apply_noalias_slow
 
   if(dim == 0)  // find the mean in each column
     {
-    arma_extra_debug_print("spop_mean::apply_noalias(): dim = 0");
+    arma_debug_print("spop_mean::apply_noalias(): dim = 0");
     
     out.set_size((p_n_rows > 0) ? 1 : 0, p_n_cols);
     
@@ -184,7 +184,7 @@ spop_mean::apply_noalias_slow
   else
   if(dim == 1)  // find the mean in each row
     {
-    arma_extra_debug_print("spop_mean::apply_noalias(): dim = 1");
+    arma_debug_print("spop_mean::apply_noalias(): dim = 1");
     
     out.set_size(p_n_rows, (p_n_cols > 0) ? 1 : 0);
     
@@ -215,7 +215,7 @@ spop_mean::direct_mean
   const uword N
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename get_pod_type<eT>::result T;
   
@@ -236,7 +236,7 @@ spop_mean::direct_mean_robust
   const uword N
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename get_pod_type<eT>::result T;
 
@@ -272,7 +272,7 @@ inline
 typename T1::elem_type
 spop_mean::mean_all(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   SpProxy<T1> p(X.get_ref());
   
@@ -296,7 +296,7 @@ inline
 typename T1::elem_type
 spop_mean::mean_all(const SpOp<T1, spop_type>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -322,7 +322,7 @@ inline
 eT
 spop_mean::iterator_mean(T1& it, const T1& end, const uword n_zero, const eT junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename get_pod_type<eT>::result T;
@@ -353,7 +353,7 @@ inline
 eT
 spop_mean::iterator_mean_robust(T1& it, const T1& end, const uword n_zero, const eT junk)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
 
   typedef typename get_pod_type<eT>::result T;

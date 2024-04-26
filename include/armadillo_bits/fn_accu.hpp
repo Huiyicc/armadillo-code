@@ -27,7 +27,7 @@ inline
 typename T1::elem_type
 accu_proxy_linear(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -109,7 +109,7 @@ inline
 typename T1::elem_type
 accu_proxy_at_mp(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -209,7 +209,7 @@ inline
 typename T1::elem_type
 accu_proxy_at(const Proxy<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -256,7 +256,7 @@ inline
 typename enable_if2< is_arma_type<T1>::value, typename T1::elem_type >::result
 accu(const T1& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> P(X);
   
@@ -279,7 +279,7 @@ inline
 typename T1::elem_type
 accu(const eGlue<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlue<T1,T2,eglue_schur> expr_type;
   
@@ -311,7 +311,7 @@ inline
 uword
 accu(const mtOp<uword,T1,op_rel_noteq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -366,7 +366,7 @@ inline
 uword
 accu(const mtOp<uword,T1,op_rel_eq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -421,12 +421,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_noteq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator!=");
+  arma_conform_assert_same_size(PA, PB, "operator!=");
   
   uword n_nonzero = 0;
   
@@ -477,12 +477,12 @@ inline
 uword
 accu(const mtGlue<uword,T1,T2,glue_rel_eq>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const Proxy<T1> PA(X.A);
   const Proxy<T2> PB(X.B);
   
-  arma_debug_assert_same_size(PA, PB, "operator==");
+  arma_conform_assert_same_size(PA, PB, "operator==");
   
   uword n_nonzero = 0;
   
@@ -535,7 +535,7 @@ inline
 eT
 accu(const subview<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   const uword X_n_rows = X.n_rows;
   const uword X_n_cols = X.n_cols;
@@ -583,7 +583,7 @@ inline
 eT
 accu(const subview_col<eT>& X)
   {
-  arma_extra_debug_sigprint();  
+  arma_debug_sigprint();  
   
   return arrayops::accumulate( X.colmem, X.n_rows );
   }
@@ -600,7 +600,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_linear(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -682,7 +682,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at_mp(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -734,7 +734,7 @@ inline
 typename T1::elem_type
 accu_cube_proxy_at(const ProxyCube<T1>& P)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -772,7 +772,7 @@ inline
 typename T1::elem_type
 accu(const BaseCube<typename T1::elem_type,T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const ProxyCube<T1> P(X.get_ref());
   
@@ -795,7 +795,7 @@ inline
 typename T1::elem_type
 accu(const eGlueCube<T1,T2,eglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef eGlueCube<T1,T2,eglue_schur> expr_type;
   
@@ -839,7 +839,7 @@ inline
 typename T1::elem_type
 accu(const SpBase<typename T1::elem_type,T1>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -886,12 +886,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_plus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
   
   return (accu(UA.M) + accu(UB.M));
   }
@@ -905,12 +905,12 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_minus>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const unwrap_spmat<T1> UA(expr.A);
   const unwrap_spmat<T2> UB(expr.B);
   
-  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
+  arma_conform_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
   
   return (accu(UA.M) - accu(UB.M));
   }
@@ -924,7 +924,7 @@ inline
 typename T1::elem_type
 accu(const SpGlue<T1,T2,spglue_schur>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -978,7 +978,7 @@ inline
 typename T1::elem_type
 accu(const SpOp<T1, spop_type>& expr)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   

@@ -26,13 +26,13 @@ inline
 void
 op_sp_sum::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_sum>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "sum(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   

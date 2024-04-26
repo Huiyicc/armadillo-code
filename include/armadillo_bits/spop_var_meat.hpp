@@ -26,7 +26,7 @@ inline
 void
 spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_var>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   //typedef typename T1::elem_type  in_eT;
   typedef typename T1::pod_type  out_eT;
@@ -34,8 +34,8 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
-  arma_debug_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_conform_check( (dim > 1),       "var(): parameter 'dim' must be 0 or 1"       );
   
   const SpProxy<T1> p(in.m);
   
@@ -66,7 +66,7 @@ spop_var::apply_noalias
   const uword                         dim
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type  in_eT;
   //typedef typename T1::pod_type  out_eT;
@@ -78,7 +78,7 @@ spop_var::apply_noalias
   
   if(dim == 0)  // find variance in each column
     {
-    arma_extra_debug_print("spop_var::apply_noalias(): dim = 0");
+    arma_debug_print("spop_var::apply_noalias(): dim = 0");
     
     out.set_size((p_n_rows > 0) ? 1 : 0, p_n_cols);
     
@@ -113,7 +113,7 @@ spop_var::apply_noalias
   else
   if(dim == 1)  // find variance in each row
     {
-    arma_extra_debug_print("spop_var::apply_noalias(): dim = 1");
+    arma_debug_print("spop_var::apply_noalias(): dim = 1");
     
     out.set_size(p_n_rows, (p_n_cols > 0) ? 1 : 0);
     
@@ -144,9 +144,9 @@ spop_var::var_vec
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
-  arma_debug_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
+  arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
   // conditionally unwrap it into a temporary and then directly operate.
   
@@ -168,7 +168,7 @@ spop_var::direct_var
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   if(length >= 2 && N >= 2)
     {
@@ -242,7 +242,7 @@ spop_var::direct_var
   const uword norm_type
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename std::complex<T> eT;
 
@@ -304,7 +304,7 @@ spop_var::iterator_var
   const typename arma_not_cx<eT>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
 
@@ -363,7 +363,7 @@ spop_var::iterator_var
   const typename arma_cx_only<eT>::result* junk2
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk1);
   arma_ignore(junk2);
 

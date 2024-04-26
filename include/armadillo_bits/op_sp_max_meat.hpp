@@ -26,11 +26,11 @@ inline
 void
 op_sp_max::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_max>& in)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   const uword dim = in.aux_uword_a;
   
-  arma_debug_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
+  arma_conform_check( (dim > 1), "max(): parameter 'dim' must be 0 or 1" );
   
   const SpProxy<T1> p(in.m);
   
@@ -61,7 +61,7 @@ op_sp_max::apply_proxy
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -126,7 +126,7 @@ op_sp_max::vector_max
   const typename arma_not_cx<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type eT;
@@ -135,7 +135,7 @@ op_sp_max::vector_max
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -188,7 +188,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -199,7 +199,7 @@ op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -246,7 +246,7 @@ inline
 typename arma_not_cx<typename T1::elem_type>::result
 op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type eT;
   
@@ -256,7 +256,7 @@ op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     index_of_max_val = uword(0);
     
@@ -360,7 +360,7 @@ op_sp_max::apply_proxy
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
@@ -430,7 +430,7 @@ op_sp_max::vector_max
   const typename arma_cx_only<typename T1::elem_type>::result* junk
   )
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   arma_ignore(junk);
   
   typedef typename T1::elem_type            eT;
@@ -440,7 +440,7 @@ op_sp_max::vector_max
   
   if(p.get_n_elem() == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -507,7 +507,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
 
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -519,7 +519,7 @@ op_sp_max::max(const SpBase<typename T1::elem_type, T1>& X)
 
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     return Datum<eT>::nan;
     }
@@ -574,7 +574,7 @@ inline
 typename arma_cx_only<typename T1::elem_type>::result
 op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   {
-  arma_extra_debug_sigprint();
+  arma_debug_sigprint();
   
   typedef typename T1::elem_type            eT;
   typedef typename get_pod_type<eT>::result  T;
@@ -585,7 +585,7 @@ op_sp_max::max_with_index(const SpProxy<T1>& P, uword& index_of_max_val)
   
   if(n_elem == 0)
     {
-    arma_debug_check(true, "max(): object has no elements");
+    arma_conform_check(true, "max(): object has no elements");
     
     index_of_max_val = uword(0);
     
