@@ -1352,9 +1352,6 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_conform_assert_blas_size      arma_assert_blas_size
   #define arma_conform_assert_atlas_size     arma_assert_atlas_size
   
-  // for compatibility with earlier versions of Armadillo
-  #define arma_debug_check                   arma_check
-  
 #else
   
   #define arma_conform_warn                    true ? (void)0 : arma_warn
@@ -1368,8 +1365,6 @@ arma_assert_atlas_size(const T1& A, const T2& B)
   #define arma_conform_assert_blas_size        true ? (void)0 : arma_assert_blas_size
   #define arma_conform_assert_atlas_size       true ? (void)0 : arma_assert_atlas_size
   
-  // for compatibility with earlier versions of Armadillo
-  #define arma_debug_check                    true ? (void)0 : arma_check
 #endif
 
 
@@ -1399,6 +1394,8 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 #endif
 
 
+// for compatibility with earlier versions of Armadillo
+arma_frown("use arma_conform_check() instead") inline void arma_debug_check(...) {}
 
 
 #if defined(ARMA_DEBUG)
