@@ -1395,7 +1395,8 @@ arma_assert_atlas_size(const T1& A, const T2& B)
 
 
 // for compatibility with earlier versions of Armadillo
-arma_frown("use arma_conform_check() instead") inline void arma_debug_check(...) {}
+arma_frown("use arma_conform_check() instead")
+inline void arma_debug_check(bool state, const char* msg)  { arma_conform_check(state, msg); }
 
 
 #if defined(ARMA_DEBUG)
