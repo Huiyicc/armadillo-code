@@ -610,7 +610,7 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
     #pragma omp atomic read
     mat_ptr = mat_ptrs[in_slice];
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     mat_ptr = mat_ptrs[in_slice].load();
     }
@@ -635,7 +635,7 @@ Cube<eT>::get_mat_ptr(const uword in_slice) const
         mat_ptrs[in_slice] = mat_ptr;
         }
       }
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       {
       const std::lock_guard<std::mutex> lock(mat_mutex);
       

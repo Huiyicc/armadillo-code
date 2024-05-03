@@ -181,7 +181,7 @@ struct arma_config
   #endif
   
   
-  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #if defined(ARMA_USE_STD_MUTEX)
     static constexpr bool std_mutex = true;
   #else
     static constexpr bool std_mutex = false;

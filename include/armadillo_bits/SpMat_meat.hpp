@@ -4445,7 +4445,7 @@ SpMat<eT>::reset_cache()
       sync_state = 0;
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(cache_mutex);
     
@@ -5062,7 +5062,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
         init_done = true;
         }
       }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     if(x.sync_state == 1)
       {
       const std::lock_guard<std::mutex> lock(x.cache_mutex);
@@ -6659,7 +6659,7 @@ SpMat<eT>::sync_cache() const
         }
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     if(sync_state == 0)
       {
@@ -6710,7 +6710,7 @@ SpMat<eT>::sync_csc() const
         sync_csc_simple();
         }
       }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     if(sync_state == 1)
       {
       const std::lock_guard<std::mutex> lock(cache_mutex);

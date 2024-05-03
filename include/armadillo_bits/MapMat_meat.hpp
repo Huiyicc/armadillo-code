@@ -1171,7 +1171,7 @@ SpMat_MapMat_val<eT>::operator=(const eT in_val)
       (*this).set(in_val);
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(s_parent.cache_mutex);
     
@@ -1204,7 +1204,7 @@ SpMat_MapMat_val<eT>::operator+=(const eT in_val)
       (*this).add(in_val);
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(s_parent.cache_mutex);
     
@@ -1237,7 +1237,7 @@ SpMat_MapMat_val<eT>::operator-=(const eT in_val)
       (*this).sub(in_val);
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(s_parent.cache_mutex);
     
@@ -1268,7 +1268,7 @@ SpMat_MapMat_val<eT>::operator*=(const eT in_val)
       (*this).mul(in_val);
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(s_parent.cache_mutex);
     
@@ -1299,7 +1299,7 @@ SpMat_MapMat_val<eT>::operator/=(const eT in_val)
       (*this).div(in_val);
       }
     }
-  #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #elif defined(ARMA_USE_STD_MUTEX)
     {
     const std::lock_guard<std::mutex> lock(s_parent.cache_mutex);
     

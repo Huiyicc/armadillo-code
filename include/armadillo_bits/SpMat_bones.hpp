@@ -694,7 +694,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   // 1: CSC needs to be updated from cache (ie. cache has more recent data)
   // 2: no update required                 (ie. CSC and cache contain the same data)
   
-  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+  #if defined(ARMA_USE_STD_MUTEX)
   arma_aligned mutable std::mutex cache_mutex;
   #endif
   

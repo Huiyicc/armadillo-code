@@ -82,7 +82,7 @@ class fft_engine_fftw3
         fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
         }
       }
-    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+    #elif defined(ARMA_USE_STD_MUTEX)
       {
       // NOTE: the static std::mutex approach is a "better-than-nothing" solution;
       // NOTE: the mutex declaration is only common across instances of the same fft_engine_fftw3<cx_type,bool> class type;

@@ -139,6 +139,11 @@
 //// Note that ARMA_USE_OPENMP is automatically enabled when a compiler supporting OpenMP 3.1 is detected.
 #endif
 
+#if !defined(ARMA_USE_STD_MUTEX)
+  #define ARMA_USE_STD_MUTEX
+//// Comment out the above line to disable use of std::mutex
+#endif
+
 #if !defined(ARMA_64BIT_WORD)
 // #define ARMA_64BIT_WORD
 //// Uncomment the above line if you require matrices/vectors capable of holding more than 4 billion elements.
@@ -282,17 +287,15 @@
   #undef ARMA_USE_FORTRAN_HIDDEN_ARGS
 #endif
 
-#if !defined(ARMA_DONT_USE_STD_MUTEX)
-  // #define ARMA_DONT_USE_STD_MUTEX
-  //// Uncomment the above line to disable use of std::mutex
+#if defined(ARMA_DONT_USE_STD_MUTEX)
+  #undef ARMA_USE_STD_MUTEX
 #endif
 
 // for compatibility with earlier versions of Armadillo
 #if defined(ARMA_DONT_USE_CXX11_MUTEX)
   #pragma message ("WARNING: support for ARMA_DONT_USE_CXX11_MUTEX is deprecated and will be removed;")
   #pragma message ("WARNING: use ARMA_DONT_USE_STD_MUTEX instead")
-  #undef  ARMA_DONT_USE_STD_MUTEX
-  #define ARMA_DONT_USE_STD_MUTEX
+  #undef ARMA_USE_STD_MUTEX
 #endif
 
 #if defined(ARMA_DONT_USE_OPENMP)
