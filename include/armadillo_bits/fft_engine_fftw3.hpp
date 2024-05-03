@@ -74,7 +74,31 @@ class fft_engine_fftw3
     const int fftw3_flags = fftw3_flag_destroy | fftw3_flag_estimate;
     
     arma_debug_print("fft_engine_fftw3::constructor: generating 1D plan");
-    fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
+    
+    #if defined(ARMA_USE_OPENMP)
+      {
+      #pragma omp critical (arma_fft_engine_fftw3)
+        {
+        fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
+        }
+      }
+    #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
+      {
+      // NOTE: the static std::mutex approach is a "better-than-nothing" solution;
+      // NOTE: the mutex declaration is only common across instances of the same fft_engine_fftw3<cx_type,bool> class type;
+      // NOTE: varying the template args will result in separate std::mutex declarations
+      
+      static std::mutex plan_mutex;
+      
+      const std::lock_guard<std::mutex> lock(plan_mutex);
+      
+      fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
+      }
+    #else
+      {
+      fftw3_plan = fftw3::plan_dft_1d<cx_type>(N, X_work.memptr(), Y_work.memptr(), fftw3_sign, fftw3_flags);
+      }
+    #endif
     
     if(fftw3_plan == nullptr)  { arma_stop_runtime_error("fft_engine_fftw3::constructor: failed to create plan"); }
     }
