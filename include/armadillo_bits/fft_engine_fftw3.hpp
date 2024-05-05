@@ -75,6 +75,9 @@ class fft_engine_fftw3
     
     arma_extra_debug_print("fft_engine_fftw3::constructor: generating 1D plan");
     
+    // only fftw3::execute() is thread safe, as per FFTW docs:
+    // https://www.fftw.org/fftw3_doc/Thread-safety.html
+    
     #if defined(ARMA_USE_OPENMP)
       {
       #pragma omp critical (arma_fft_engine_fftw3)
@@ -84,9 +87,9 @@ class fft_engine_fftw3
       }
     #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
       {
-      // NOTE: the static std::mutex approach is a "better-than-nothing" solution;
-      // NOTE: the mutex declaration is only common across instances of the same fft_engine_fftw3<cx_type,bool> class type;
-      // NOTE: varying the template args will result in separate std::mutex declarations
+      // NOTE: this is a "better-than-nothing" solution;
+      // NOTE: the static std::mutex variable is only common across instances of the same fft_engine_fftw3<cx_type,bool> class type;
+      // NOTE: varying the template args will result in separate std::mutex variables
       
       static std::mutex plan_mutex;
       
