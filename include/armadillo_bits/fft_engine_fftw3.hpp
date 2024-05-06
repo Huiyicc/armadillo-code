@@ -23,6 +23,13 @@
 
 #if defined(ARMA_USE_FFTW3)
 
+struct fft_engine_fftw3_aux
+  {
+  #if (!defined(ARMA_DONT_USE_STD_MUTEX))
+  static inline std::mutex& get_plan_mutex() { static std::mutex plan_mutex; return plan_mutex; }
+  #endif
+  };
+
 template<typename cx_type, bool inverse>
 class fft_engine_fftw3
   {
@@ -87,11 +94,7 @@ class fft_engine_fftw3
       }
     #elif (!defined(ARMA_DONT_USE_STD_MUTEX))
       {
-      // NOTE: this is a "better-than-nothing" solution;
-      // NOTE: the static std::mutex variable is only common across instances of the same fft_engine_fftw3<cx_type,bool> class type;
-      // NOTE: varying the template args will result in separate std::mutex variables
-      
-      static std::mutex plan_mutex;
+      std::mutex& plan_mutex = fft_engine_fftw3_aux::get_plan_mutex();
       
       const std::lock_guard<std::mutex> lock(plan_mutex);
       
