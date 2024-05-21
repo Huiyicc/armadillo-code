@@ -216,7 +216,7 @@ op_all::all_vec_helper
   
   uword count = 0;
   
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {

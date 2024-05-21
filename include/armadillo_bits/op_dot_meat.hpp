@@ -207,9 +207,9 @@ op_dot::apply(const T1& X, const T2& Y)
   {
   arma_debug_sigprint();
   
-  const bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
   
-  const bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
+  constexpr bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
   
   if(use_at || have_direct_mem)
     {

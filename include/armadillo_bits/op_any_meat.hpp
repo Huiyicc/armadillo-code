@@ -206,7 +206,7 @@ op_any::any_vec_helper
   
   arma_conform_assert_same_size(A, B, "relational operator");
   
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {

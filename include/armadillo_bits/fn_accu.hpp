@@ -286,8 +286,8 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
   typedef typename expr_type::proxy1_type::stored_type P1_stored_type;
   typedef typename expr_type::proxy2_type::stored_type P2_stored_type;
   
-  const bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
-  const bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
+  constexpr bool have_direct_mem_1 = (is_Mat<P1_stored_type>::value) || (is_subview_col<P1_stored_type>::value);
+  constexpr bool have_direct_mem_2 = (is_Mat<P2_stored_type>::value) || (is_subview_col<P2_stored_type>::value);
   
   if(have_direct_mem_1 && have_direct_mem_2)
     {
@@ -982,15 +982,12 @@ accu(const SpOp<T1, spop_type>& expr)
   
   typedef typename T1::elem_type eT;
   
-  const bool is_vectorise = \
+  constexpr bool is_vectorise = \
        (is_same_type<spop_type, spop_vectorise_row>::yes)
     || (is_same_type<spop_type, spop_vectorise_col>::yes)
     || (is_same_type<spop_type, spop_vectorise_all>::yes);
   
-  if(is_vectorise)
-    {
-    return accu(expr.m);
-    }
+  if(is_vectorise)  { return accu(expr.m); }
   
   const SpMat<eT> tmp = expr;
   

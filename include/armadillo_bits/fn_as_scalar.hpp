@@ -76,11 +76,11 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
   
-  const bool has_all_mat = (is_Mat<T1>::value || is_Mat_trans<T1>::value) && (is_Mat<T2>::value || is_Mat_trans<T2>::value);
+  constexpr bool has_all_mat = (is_Mat<T1>::value || is_Mat_trans<T1>::value) && (is_Mat<T2>::value || is_Mat_trans<T2>::value);
   
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
-  const bool do_partial_unwrap = (has_all_mat || use_at);
+  constexpr bool do_partial_unwrap = (has_all_mat || use_at);
   
   if(do_partial_unwrap)
     {
@@ -140,8 +140,8 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
   const strip_inv    <T2>            strip1(X.A.B);
   const strip_diagmat<T2_stripped_1> strip2(strip1.M);
   
-  const bool tmp2_do_inv_gen = strip1.do_inv_gen && arma_config::optimise_invexpr;
-  const bool tmp2_do_diagmat = strip2.do_diagmat;
+  constexpr bool tmp2_do_inv_gen = strip1.do_inv_gen && arma_config::optimise_invexpr;
+  constexpr bool tmp2_do_diagmat = strip2.do_diagmat;
   
   if(tmp2_do_diagmat == false)
     {
