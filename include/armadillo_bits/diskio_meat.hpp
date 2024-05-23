@@ -1570,7 +1570,7 @@ diskio::load_raw_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
   try { x.set_size(N / uword(sizeof(eT)), 1); } catch(...) { err_msg = "not enough memory"; return false; }
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
+  f.read( reinterpret_cast<char*>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
   
   return f.good();
   }
@@ -2435,7 +2435,7 @@ diskio::load_arma_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
     
     try { x.set_size(f_n_rows,f_n_cols); } catch(...) { err_msg = "not enough memory"; return false; }
     
-    f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
+    f.read( reinterpret_cast<char*>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
     }
@@ -2580,7 +2580,7 @@ diskio::load_pgm_binary(Mat<eT>& x, std::istream& f, std::string& err_msg)
         const uword n_elem = f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(n_elem*2) );
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(n_elem*2) );
         
         uword i = 0;
         
@@ -4208,7 +4208,7 @@ diskio::load_raw_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
   try { x.set_size(N / uword(sizeof(eT)), 1, 1); } catch(...) { err_msg = "not enough memory"; return false; }
   
   f.clear();
-  f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
+  f.read( reinterpret_cast<char*>(x.memptr()), std::streamsize(x.n_elem * uword(sizeof(eT))) );
   
   return f.good();
   }
@@ -4373,7 +4373,7 @@ diskio::load_arma_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
     
     try { x.set_size(f_n_rows, f_n_cols, f_n_slices); } catch(...) { err_msg = "not enough memory"; return false; }
     
-    f.read( reinterpret_cast<char *>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
+    f.read( reinterpret_cast<char*>(x.memptr()), std::streamsize(x.n_elem*sizeof(eT)) );
     
     load_okay = f.good();
     }
@@ -5111,7 +5111,7 @@ diskio::load_ppm_binary(Cube<eT>& x, std::istream& f, std::string& err_msg)
         const uword n_elem = 3*f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(2*n_elem) );
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(2*n_elem) );
         
         uword i = 0;
         
@@ -5311,7 +5311,7 @@ diskio::load_ppm_binary(field<T1>& x, std::istream& f, std::string& err_msg)
         const uword n_elem = 3*f_n_cols*f_n_rows;
         podarray<u16> tmp(n_elem);
         
-        f.read( reinterpret_cast<char *>(tmp.memptr()), std::streamsize(2*n_elem) );
+        f.read( reinterpret_cast<char*>(tmp.memptr()), std::streamsize(2*n_elem) );
         
         uword i = 0;
         
