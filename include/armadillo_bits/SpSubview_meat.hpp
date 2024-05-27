@@ -47,9 +47,9 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   // count the number of non-zeros in the subview
   uword count = 0;
   
-  if( (n_cols == 1) && (n_rows == m.n_rows) )
+  if(n_rows == m.n_rows)
     {
-    count = m.col_ptrs[aux_col1 + 1] - m.col_ptrs[aux_col1];
+    count = m.col_ptrs[aux_col1 + n_cols] - m.col_ptrs[aux_col1];
     }
   else
     {
