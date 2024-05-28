@@ -29,7 +29,7 @@
 ## NOTE: More details: https://arma.sourceforge.net/faq.html
 
 
-cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12...3.5 FATAL_ERROR)
 
 if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
   if(POLICY CMP0025)
