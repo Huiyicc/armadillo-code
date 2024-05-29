@@ -2920,7 +2920,7 @@ Mat<eT>::operator+=(const SpSubview<eT>& X)
     typename SpSubview<eT>::const_iterator it     = X.begin();
     typename SpSubview<eT>::const_iterator it_end = X.end();
     
-    for(; it != it_end; ++it)  { at(it.row(), it.col()) = (*it); }
+    for(; it != it_end; ++it)  { at(it.row(), it.col()) += (*it); }
     }
   
   return *this;
