@@ -178,6 +178,9 @@ class Mat : public Base< eT, Mat<eT> >
   
   inline explicit    Mat(const SpSubview<eT>& X);
   inline Mat& operator= (const SpSubview<eT>& X);
+  inline Mat& operator+=(const SpSubview<eT>& m);
+//inline Mat& operator-=(const SpSubview<eT>& m); // TODO
+//inline Mat& operator%=(const SpSubview<eT>& m); // TODO
   
   inline explicit    Mat(const spdiagview<eT>& X);
   inline Mat& operator= (const spdiagview<eT>& X);
