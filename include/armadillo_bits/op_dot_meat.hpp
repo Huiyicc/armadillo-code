@@ -248,11 +248,8 @@ op_dot::apply(const T1& X, const T2& Y)
     const partial_unwrap<T1> UA(X);
     const partial_unwrap<T2> UB(Y);
     
-    typedef typename partial_unwrap<T1>::stored_type TA;
-    typedef typename partial_unwrap<T2>::stored_type TB;
-    
-    const TA& A = UA.M;
-    const TB& B = UB.M;
+    const typename partial_unwrap<T1>::stored_type& A = UA.M;
+    const typename partial_unwrap<T2>::stored_type& B = UB.M;
     
     arma_conform_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
     
