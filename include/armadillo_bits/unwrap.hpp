@@ -1209,6 +1209,7 @@ struct partial_unwrap_default
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;
   
   const Mat<eT> M;
   };
@@ -1234,6 +1235,7 @@ struct partial_unwrap_fixed
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const T1& M;
   };
@@ -1280,6 +1282,7 @@ struct partial_unwrap< Mat<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& M;
   };
@@ -1305,6 +1308,7 @@ struct partial_unwrap< Row<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Row<eT>& M;
   };
@@ -1330,6 +1334,7 @@ struct partial_unwrap< Col<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Col<eT>& M;
   };
@@ -1356,6 +1361,7 @@ struct partial_unwrap< subview<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1383,6 +1389,7 @@ struct partial_unwrap< subview_col<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const Col<eT>  M;
@@ -1410,6 +1417,7 @@ struct partial_unwrap< subview_cols<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const Mat<eT>  M;
@@ -1436,6 +1444,7 @@ struct partial_unwrap< subview_row<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;
   
   const Row<eT> M;
   };
@@ -1462,6 +1471,7 @@ struct partial_unwrap_htrans_default
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;
   
   const Mat<eT> M;
   };
@@ -1487,6 +1497,7 @@ struct partial_unwrap_htrans_fixed
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const T1& M;
   };
@@ -1532,6 +1543,7 @@ struct partial_unwrap< Op< Mat<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& M;
   };
@@ -1557,6 +1569,7 @@ struct partial_unwrap< Op< Row<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Row<eT>& M;
   };
@@ -1582,6 +1595,7 @@ struct partial_unwrap< Op< Col<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Col<eT>& M;
   };
@@ -1608,6 +1622,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1635,6 +1650,7 @@ struct partial_unwrap< Op< subview_cols<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const Mat<eT>  M;
@@ -1662,6 +1678,7 @@ struct partial_unwrap< Op< subview_col<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const Col<eT>  M;
@@ -1688,6 +1705,7 @@ struct partial_unwrap< Op< subview_row<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
+  static constexpr bool is_fast  = false;
   
   const Row<eT> M;
   };
@@ -1715,6 +1733,7 @@ struct partial_unwrap_htrans2_default
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const eT      val;
   const Mat<eT> M;
@@ -1742,6 +1761,7 @@ struct partial_unwrap_htrans2_fixed
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT  val;
   const T1& M;
@@ -1789,6 +1809,7 @@ struct partial_unwrap< Op< Mat<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Mat<eT>& M;
@@ -1816,6 +1837,7 @@ struct partial_unwrap< Op< Row<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Row<eT>& M;
@@ -1843,6 +1865,7 @@ struct partial_unwrap< Op< Col<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Col<eT>& M;
@@ -1871,6 +1894,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
   
   const subview<eT>& sv;
   const eT           val;
@@ -1900,6 +1924,7 @@ struct partial_unwrap< Op< subview_cols<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const eT       val;
@@ -1929,6 +1954,7 @@ struct partial_unwrap< Op< subview_col<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   
@@ -1958,6 +1984,7 @@ struct partial_unwrap< Op< subview_row<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const eT      val;
   const Row<eT> M;
@@ -1986,6 +2013,7 @@ struct partial_unwrap_scalar_times_default
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const eT      val;
   const Mat<eT> M;
@@ -2014,6 +2042,7 @@ struct partial_unwrap_scalar_times_fixed
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT  val;
   const T1& M;
@@ -2065,6 +2094,7 @@ struct partial_unwrap< eOp<Mat<eT>, eop_scalar_times> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Mat<eT>& M;
@@ -2092,6 +2122,7 @@ struct partial_unwrap< eOp<Row<eT>, eop_scalar_times> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Row<eT>& M;
@@ -2119,6 +2150,7 @@ struct partial_unwrap< eOp<Col<eT>, eop_scalar_times> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const eT       val;
   const Col<eT>& M;
@@ -2147,6 +2179,7 @@ struct partial_unwrap< eOp<subview_col<eT>, eop_scalar_times> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   
@@ -2176,6 +2209,7 @@ struct partial_unwrap< eOp<subview_row<eT>, eop_scalar_times> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const eT      val;
   const Row<eT> M;
@@ -2203,6 +2237,7 @@ struct partial_unwrap_neg_default
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const Mat<eT> M;
   };
@@ -2229,6 +2264,7 @@ struct partial_unwrap_neg_fixed
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const T1& M;
   };
@@ -2278,6 +2314,7 @@ struct partial_unwrap< eOp<Mat<eT>, eop_neg> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& M;
   };
@@ -2303,6 +2340,7 @@ struct partial_unwrap< eOp<Row<eT>, eop_neg> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Row<eT>& M;
   };
@@ -2328,6 +2366,7 @@ struct partial_unwrap< eOp<Col<eT>, eop_neg> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Col<eT>& M;
   };
@@ -2354,6 +2393,7 @@ struct partial_unwrap< eOp<subview_col<eT>, eop_neg> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = true;
   
   const Mat<eT>& orig;
   const Col<eT>  M;
@@ -2380,6 +2420,7 @@ struct partial_unwrap< eOp<subview_row<eT>, eop_neg> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = true;
+  static constexpr bool is_fast  = false;
   
   const Row<eT> M;
   };
