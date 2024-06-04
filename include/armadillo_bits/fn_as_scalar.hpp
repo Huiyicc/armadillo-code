@@ -76,7 +76,13 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
   
-  if( (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast) || (Proxy<T1>::use_at || Proxy<T2>::use_at) )
+  constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
+  
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  
+  constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
+  
+  if(proxy_is_mat || use_at || fast_unwrap)
     {
     const partial_unwrap<T1> tmp1(X.A);
     const partial_unwrap<T2> tmp2(X.B);
