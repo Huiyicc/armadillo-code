@@ -285,12 +285,22 @@ accu(const Glue<T1,T2,glue_times>& expr)
   
   if(is_cx<eT>::no && resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value)
     {
-    const quasi_unwrap<T1> tmp1(expr.A);
-    const quasi_unwrap<T2> tmp2(expr.B);
+    arma_debug_print("accu(): dot product optimisation");
     
-    arma_conform_assert_mul_size(tmp1.M, tmp2.M, "matrix multiplication");
+    const partial_unwrap<T1> UA(expr.A);
+    const partial_unwrap<T2> UB(expr.B);
     
-    return op_dot::direct_dot(tmp1.M.n_elem, tmp1.M.memptr(), tmp2.M.memptr());
+    typedef typename partial_unwrap<T1>::stored_type TA;
+    typedef typename partial_unwrap<T2>::stored_type TB;
+    
+    const TA& A = UA.M;
+    const TB& B = UB.M;
+    
+    arma_conform_assert_mul_size(A, B, UA.do_trans, UB.do_trans, "matrix multiplication");
+    
+    const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+    
+    return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
     }
   
   const Mat<eT> tmp(expr);
