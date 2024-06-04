@@ -272,6 +272,34 @@ accu(const T1& X)
 
 
 
+//! explicit handling of dot product expressed as matrix multiplication
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+accu(const Glue<T1,T2,glue_times>& expr)
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  if(is_cx<eT>::no && resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value)
+    {
+    const quasi_unwrap<T1> tmp1(expr.A);
+    const quasi_unwrap<T2> tmp2(expr.B);
+    
+    arma_conform_assert_mul_size(tmp1.M, tmp2.M, "matrix multiplication");
+    
+    return op_dot::direct_dot(tmp1.M.n_elem, tmp1.M.memptr(), tmp2.M.memptr());
+    }
+  
+  const Mat<eT> tmp(expr);
+  
+  return arrayops::accumulate( tmp.memptr(), tmp.n_elem );
+  }
+
+
+
 //! explicit handling of multiply-and-accumulate
 template<typename T1, typename T2>
 arma_warn_unused
