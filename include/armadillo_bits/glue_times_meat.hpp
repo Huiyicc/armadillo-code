@@ -40,6 +40,21 @@ glue_times_redirect2_helper<do_inv_detect>::apply(Mat<typename T1::elem_type>& o
   const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
   const eT       alpha = use_alpha ? (tmp1.get_val() * tmp2.get_val()) : eT(0);
   
+  if( (is_cx<eT>::no) && (resolves_to_rowvector<T1>::value && resolves_to_colvector<T2>::value) )
+    {
+    arma_debug_print("glue_times: dot product optimisation");
+    
+    arma_conform_assert_mul_size(A, B, tmp1.do_trans, tmp2.do_trans, "matrix multiplication");
+    
+    const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
+    
+    out.set_size(1,1);
+    
+    out[0] = (use_alpha) ? (val * alpha) : (val);
+    
+    return;
+    }
+  
   const bool alias = tmp1.is_alias(out) || tmp2.is_alias(out);
   
   if(alias == false)
