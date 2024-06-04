@@ -468,23 +468,6 @@ struct is_op_diagmat< const Op<T1,op_diagmat> >
 
 
 template<typename T>
-struct is_Mat_trans
-  { static constexpr bool value = false; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-template<typename T1>
-struct is_Mat_trans< Op<T1,op_htrans2> >
-  { static constexpr bool value = is_Mat<T1>::value; };
-
-
-//
-//
-
-
-template<typename T>
 struct is_GenCube
   { static constexpr bool value = false; };
  
