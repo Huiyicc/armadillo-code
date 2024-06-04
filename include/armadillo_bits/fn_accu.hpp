@@ -298,11 +298,8 @@ accu(const Glue<T1,T2,glue_times>& expr)
       const partial_unwrap<T1> UA(expr.A);
       const partial_unwrap<T2> UB(expr.B);
       
-      typedef typename partial_unwrap<T1>::stored_type TA;
-      typedef typename partial_unwrap<T2>::stored_type TB;
-      
-      const TA& A = UA.M;
-      const TB& B = UB.M;
+      const typename partial_unwrap<T1>::stored_type& A = UA.M;
+      const typename partial_unwrap<T2>::stored_type& B = UB.M;
       
       arma_conform_assert_mul_size(A, B, UA.do_trans, UB.do_trans, "matrix multiplication");
       
