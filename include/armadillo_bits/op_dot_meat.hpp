@@ -209,22 +209,6 @@ op_dot::apply(const T1& X, const T2& Y)
   
   typedef typename T1::elem_type eT;
   
-  constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
-  
-  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
-  
-  constexpr bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
-  
-  if(proxy_is_mat || use_at || have_direct_mem)
-    {
-    const quasi_unwrap<T1> A(X);
-    const quasi_unwrap<T2> B(Y);
-    
-    arma_conform_check( (A.M.n_elem != B.M.n_elem), "dot(): objects must have the same number of elements" );
-    
-    return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
-    }
-  
   if(is_subview_row<T1>::value && is_subview_row<T2>::value)
     {
     typedef typename T1::elem_type eT;
@@ -256,6 +240,22 @@ op_dot::apply(const T1& X, const T2& Y)
     const eT val = op_dot::direct_dot(A.n_elem, A.memptr(), B.memptr());
     
     return (UA.do_times || UB.do_times) ? (val * UA.get_val() * UB.get_val()) : val;
+    }
+  
+  constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
+  
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  
+  constexpr bool have_direct_mem = (quasi_unwrap<T1>::has_orig_mem) && (quasi_unwrap<T2>::has_orig_mem);
+  
+  if(proxy_is_mat || use_at || have_direct_mem)
+    {
+    const quasi_unwrap<T1> A(X);
+    const quasi_unwrap<T2> B(Y);
+    
+    arma_conform_check( (A.M.n_elem != B.M.n_elem), "dot(): objects must have the same number of elements" );
+    
+    return op_dot::direct_dot(A.M.n_elem, A.M.memptr(), B.M.memptr());
     }
   
   const Proxy<T1> PA(X);
