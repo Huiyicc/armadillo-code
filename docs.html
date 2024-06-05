@@ -19934,8 +19934,7 @@ This can also be enabled by adding <i>#define&nbsp;ARMA_64BIT_WORD</i> before ea
   </tr>
   <tr>
     <td style="vertical-align: top;">
-<a name="config_hpp_arma_no_debug"></a>
-<code>ARMA_NO_DEBUG</code>
+<code>ARMA_DONT_CHECK_CONFORMANCE</code>
     </td>
     <td style="vertical-align: top;">
       &nbsp;
@@ -19944,31 +19943,7 @@ This can also be enabled by adding <i>#define&nbsp;ARMA_64BIT_WORD</i> before ea
 Disable all run-time checks, including size conformance and <a href="#element_access">bounds checks</a>.
 NOT RECOMMENDED.
 DO NOT USE UNLESS YOU KNOW WHAT YOU ARE DOING AND ARE WILLING TO RISK THE DOWNSIDES.
-Keeping run-time checks enabled during development and deployment greatly aids in finding mistakes in your code.
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
-<code>ARMA_EXTRA_DEBUG</code>
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-Print out the trace of internal functions used for evaluating expressions.
-Not recommended for normal use.
-This is mainly useful for debugging the library.
+Keeping the checks enabled during development and deployment greatly aids in finding mistakes in your code.
     </td>
   </tr>
   <tr>
