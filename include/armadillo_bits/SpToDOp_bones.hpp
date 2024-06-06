@@ -29,6 +29,10 @@ class SpToDOp : public Base< typename T1::elem_type, SpToDOp<T1, op_type> >
   typedef typename T1::elem_type                   elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   
+  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
+  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
+  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
+  
   inline explicit SpToDOp(const T1& in_m);
   inline          SpToDOp(const T1& in_m, const elem_type in_aux);
   inline          SpToDOp(const T1& in_m, const uword     in_aux_uword_a, const uword in_aux_uword_b);
@@ -38,10 +42,6 @@ class SpToDOp : public Base< typename T1::elem_type, SpToDOp<T1, op_type> >
   arma_aligned       elem_type aux;          //!< auxiliary data, using the element type as used by T1
   arma_aligned       uword     aux_uword_a;  //!< auxiliary data, uword format
   arma_aligned       uword     aux_uword_b;  //!< auxiliary data, uword format
-  
-  static constexpr bool is_row  = op_type::template traits<T1>::is_row;
-  static constexpr bool is_col  = op_type::template traits<T1>::is_col;
-  static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   };
 
 
