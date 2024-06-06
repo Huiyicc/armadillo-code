@@ -5612,6 +5612,115 @@ Mat<eT>::operator/=(const SpToDOp<T1, op_type>& X)
 
 
 
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>::Mat(const mtSpToDOp<eT, T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_alloc(0)
+  , vec_state(0)
+  , mem_state(0)
+  , mem()
+  {
+  arma_debug_sigprint_this(this);
+
+  op_type::apply(*this, X);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+
+  op_type::apply(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator+=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator+=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator-=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator-=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator*=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  glue_times::apply_inplace(*this, X);
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator%=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator%=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+Mat<eT>&
+Mat<eT>::operator/=(const mtSpToDOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> m(X);
+  
+  return (*this).operator/=(m);
+  }
+
+
+
 //! create a matrix from Glue, ie. run the previously delayed binary operations
 template<typename eT>
 template<typename T1, typename T2, typename glue_type>

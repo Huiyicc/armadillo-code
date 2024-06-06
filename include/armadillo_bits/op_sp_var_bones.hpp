@@ -16,23 +16,20 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_var
+//! \addtogroup op_sp_var
 //! @{
 
 
 
 //! Class for finding variance values of a sparse matrix
-class spop_var
+class op_sp_var
   : public traits_op_xvec
   {
   public:
 
   template<typename T1>
-  inline static void apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_var>& in);
+  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type, T1, op_sp_var>& in);
 
-  template<typename T1>
-  inline static void apply_noalias(SpMat<typename T1::pod_type>& out, const SpProxy<T1>& p, const uword norm_type, const uword dim);
-  
   // Calculate variance of a sparse vector, where we can directly use the memory.
   template<typename T1>
   inline static typename T1::pod_type var_vec(const T1& X, const uword norm_type = 0);

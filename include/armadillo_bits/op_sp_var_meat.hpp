@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_var
+//! \addtogroup op_sp_var
 //! @{
 
 
@@ -24,12 +24,12 @@
 template<typename T1>
 inline
 void
-spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type, T1, spop_var>& in)
+op_sp_var::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type, T1, op_sp_var>& in)
   {
   arma_debug_sigprint();
   
-  //typedef typename T1::elem_type  in_eT;
-  typedef typename T1::pod_type  out_eT;
+  typedef typename T1::elem_type  in_eT;
+  //typedef typename T1::pod_type  out_eT;
   
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
@@ -39,48 +39,14 @@ spop_var::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod
   
   const SpProxy<T1> p(in.m);
   
-  if(p.is_alias(out) == false)
-    {
-    spop_var::apply_noalias(out, p, norm_type, dim);
-    }
-  else
-    {
-    SpMat<out_eT> tmp;
-    
-    spop_var::apply_noalias(tmp, p, norm_type, dim);
-    
-    out.steal_mem(tmp);
-    }
-  }
-
-
-
-template<typename T1>
-inline
-void
-spop_var::apply_noalias
-  (
-        SpMat<typename T1::pod_type>& out,
-  const SpProxy<T1>&                  p,
-  const uword                         norm_type,
-  const uword                         dim
-  )
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type  in_eT;
-  //typedef typename T1::pod_type  out_eT;
-  
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
   
-  // TODO: this is slow; rewrite based on the approach used by sparse mean()
-  
   if(dim == 0)  // find variance in each column
     {
-    arma_debug_print("spop_var::apply_noalias(): dim = 0");
+    arma_debug_print("op_sp_var::apply_noalias(): dim = 0");
     
-    out.set_size((p_n_rows > 0) ? 1 : 0, p_n_cols);
+    out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols);
     
     if( (p_n_rows == 0) || (p.get_n_nonzero() == 0) )  { return; }
     
@@ -95,12 +61,12 @@ spop_var::apply_noalias
         const uword n_zero = p_n_rows - (end.pos() - it.pos());
         
         // in_eT is used just to get the specialization right (complex / noncomplex)
-        out.at(0, col) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+        out.at(0, col) = op_sp_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
         }
       else
         {
         // We can use direct memory access to calculate the variance.
-        out.at(0, col) = spop_var::direct_var
+        out.at(0, col) = op_sp_var::direct_var
           (
           &p.get_values()[p.get_col_ptrs()[col]],
           p.get_col_ptrs()[col + 1] - p.get_col_ptrs()[col],
@@ -113,9 +79,9 @@ spop_var::apply_noalias
   else
   if(dim == 1)  // find variance in each row
     {
-    arma_debug_print("spop_var::apply_noalias(): dim = 1");
+    arma_debug_print("op_sp_var::apply_noalias(): dim = 1");
     
-    out.set_size(p_n_rows, (p_n_cols > 0) ? 1 : 0);
+    out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0);
     
     if( (p_n_cols == 0) || (p.get_n_nonzero() == 0) )  { return; }
     
@@ -128,7 +94,7 @@ spop_var::apply_noalias
       
       const uword n_zero = p_n_cols - (end.pos() - it.pos());
       
-      out.at(row, 0) = spop_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
+      out.at(row, 0) = op_sp_var::iterator_var(it, end, n_zero, norm_type, in_eT(0));
       }
     }
   }
@@ -138,7 +104,7 @@ spop_var::apply_noalias
 template<typename T1>
 inline
 typename T1::pod_type
-spop_var::var_vec
+op_sp_var::var_vec
   (
   const T1& X,
   const uword norm_type
@@ -160,7 +126,7 @@ spop_var::var_vec
 template<typename eT>
 inline
 eT
-spop_var::direct_var
+op_sp_var::direct_var
   (
   const eT* const X,
   const uword length,
@@ -234,7 +200,7 @@ spop_var::direct_var
 template<typename T>
 inline
 T
-spop_var::direct_var
+op_sp_var::direct_var
   (
   const std::complex<T>* const X,
   const uword length,
@@ -294,7 +260,7 @@ spop_var::direct_var
 template<typename T1, typename eT>
 inline
 eT
-spop_var::iterator_var
+op_sp_var::iterator_var
   (
   T1& it,
   const T1& end,
@@ -353,7 +319,7 @@ spop_var::iterator_var
 template<typename T1, typename eT>
 inline
 typename get_pod_type<eT>::result
-spop_var::iterator_var
+op_sp_var::iterator_var
   (
   T1& it,
   const T1& end,

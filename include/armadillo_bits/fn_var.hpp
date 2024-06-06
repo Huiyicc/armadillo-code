@@ -99,7 +99,7 @@ var(const T1& X, const uword norm_type = 0)
   {
   arma_debug_sigprint();
   
-  return spop_var::var_vec(X, norm_type);
+  return op_sp_var::var_vec(X, norm_type);
   }
 
 
@@ -111,13 +111,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no, 
-  const mtSpOp<typename T1::pod_type, T1, spop_var>
+  const mtSpToDOp<typename T1::pod_type, T1, op_sp_var>
   >::result
 var(const T1& X, const uword norm_type = 0)
   {
   arma_debug_sigprint();
   
-  return mtSpOp<typename T1::pod_type, T1, spop_var>(X, norm_type, 0);
+  return mtSpToDOp<typename T1::pod_type, T1, op_sp_var>(X, norm_type, 0);
   }
 
 
@@ -129,13 +129,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const mtSpOp<typename T1::pod_type, T1, spop_var>
+  const mtSpToDOp<typename T1::pod_type, T1, op_sp_var>
   >::result
 var(const T1& X, const uword norm_type, const uword dim)
   {
   arma_debug_sigprint();
   
-  return mtSpOp<typename T1::pod_type, T1, spop_var>(X, norm_type, dim);
+  return mtSpToDOp<typename T1::pod_type, T1, op_sp_var>(X, norm_type, dim);
   }
 
 
