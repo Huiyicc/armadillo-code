@@ -86,4 +86,58 @@ stddev(const T&)
 
 
 
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::yes,
+  typename T1::pod_type
+  >::result
+stddev(const T1& X, const uword norm_type = 0)
+  {
+  arma_debug_sigprint();
+
+  return op_sp_stddev::stddev_vec(X, norm_type);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no, 
+  const mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>
+  >::result
+stddev(const T1& X, const uword norm_type = 0)
+  {
+  arma_debug_sigprint();
+  
+  return mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>(X, norm_type, 0);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value,
+  const mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>
+  >::result
+stddev(const T1& X, const uword norm_type, const uword dim)
+  {
+  arma_debug_sigprint();
+  
+  return mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>(X, norm_type, dim);
+  }
+
+
+
 //! @}
