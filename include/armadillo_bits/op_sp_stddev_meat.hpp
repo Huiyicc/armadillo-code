@@ -147,7 +147,7 @@ op_sp_stddev::stddev_vec
   
   const unwrap_spmat<T1> tmp(X);
   
-  if(X.n_elem == 0)
+  if(tmp.M.n_elem == 0)
     {
     arma_conform_check(true, "stddev(): object has no elements");
     
