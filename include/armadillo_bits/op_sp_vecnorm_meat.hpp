@@ -16,7 +16,7 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup spop_vecnorm
+//! \addtogroup op_sp_vecnorm
 //! @{
 
 
@@ -24,7 +24,7 @@
 template<typename T1>
 inline
 void
-spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm>& expr)
+op_sp_vecnorm::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type,T1,op_sp_vecnorm>& expr)
   {
   arma_debug_sigprint();
   
@@ -44,11 +44,7 @@ spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1:
   
   if(dim == 0)
     {
-    Mat<T> tmp;
-    
-    spop_vecnorm::apply_direct(tmp, X, k);
-    
-    out = tmp;
+    op_sp_vecnorm::apply_direct(out, X, k);
     }
   else
   if(dim == 1)
@@ -58,7 +54,7 @@ spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1:
     
     spop_strans::apply_noalias(Xt, X);
     
-    spop_vecnorm::apply_direct(tmp, Xt, k);
+    op_sp_vecnorm::apply_direct(tmp, Xt, k);
     
     out = tmp.t();
     }
@@ -69,7 +65,7 @@ spop_vecnorm::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1:
 template<typename eT>
 inline
 void
-spop_vecnorm::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword k)
+op_sp_vecnorm::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword k)
   {
   arma_debug_sigprint();
   
@@ -114,7 +110,7 @@ spop_vecnorm::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const 
 template<typename T1>
 inline
 void
-spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename T1::pod_type,T1,spop_vecnorm_ext>& expr)
+op_sp_vecnorm_ext::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type,T1,op_sp_vecnorm_ext>& expr)
   {
   arma_debug_sigprint();
   
@@ -134,11 +130,7 @@ spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename
   
   if(dim == 0)
     {
-    Mat<T> tmp;
-    
-    spop_vecnorm_ext::apply_direct(tmp, X, method_id);
-    
-    out = tmp;
+    op_sp_vecnorm_ext::apply_direct(out, X, method_id);
     }
   else
   if(dim == 1)
@@ -148,7 +140,7 @@ spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename
     
     spop_strans::apply_noalias(Xt, X);
     
-    spop_vecnorm_ext::apply_direct(tmp, Xt, method_id);
+    op_sp_vecnorm_ext::apply_direct(tmp, Xt, method_id);
     
     out = tmp.t();
     }
@@ -159,7 +151,7 @@ spop_vecnorm_ext::apply(SpMat<typename T1::pod_type>& out, const mtSpOp<typename
 template<typename eT>
 inline
 void
-spop_vecnorm_ext::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword method_id)
+op_sp_vecnorm_ext::apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword method_id)
   {
   arma_debug_sigprint();
   
