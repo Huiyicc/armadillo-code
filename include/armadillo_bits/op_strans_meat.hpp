@@ -238,9 +238,9 @@ op_strans::apply_mat_inplace(Mat<eT>& out)
   const uword n_rows = out.n_rows;
   const uword n_cols = out.n_cols;
   
-  if(n_rows == n_cols)
+  if( (n_rows == n_cols) && (out.n_elem > 1) )
     {
-    arma_debug_print("op_strans::apply(): doing in-place transpose of a square matrix");
+    arma_debug_print("op_strans::apply_mat_inplace(): square matrix");
     
     const uword N = n_rows;
     
@@ -268,11 +268,24 @@ op_strans::apply_mat_inplace(Mat<eT>& out)
     }
   else
     {
-    Mat<eT> tmp;
-    
-    op_strans::apply_mat_noalias(tmp, out);
-    
-    out.steal_mem(tmp);
+    if( ((out.n_rows == 1) || (out.n_cols == 1)) && (out.vec_state == 0) && (out.mem_state == 0) )
+      {
+      arma_debug_print("op_strans::apply_mat_inplace(): swapping n_rows and n_cols");
+      
+      const uword orig_n_rows = out.n_rows;
+      const uword orig_n_cols = out.n_cols;
+      
+      access::rw(out.n_rows) = orig_n_cols;
+      access::rw(out.n_cols) = orig_n_rows;
+      }
+    else
+      {
+      Mat<eT> tmp;
+      
+      op_strans::apply_mat_noalias(tmp, out);
+      
+      out.steal_mem(tmp);
+      }
     }
   }
 
