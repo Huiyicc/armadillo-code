@@ -30,6 +30,9 @@ class op_sp_stddev
   inline static void apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1::pod_type, T1, op_sp_stddev>& in);
   
   template<typename T1>
+  inline static void apply_slow(Mat<typename T1::elem_type>& out, const SpProxy<T1>& p, const uword norm_type, const uword dim);
+  
+  template<typename T1>
   inline static typename T1::pod_type stddev_vec(const T1& X, const uword norm_type = 0);
   };
 

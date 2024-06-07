@@ -28,9 +28,6 @@ op_sp_stddev::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type  in_eT;
-  //typedef typename T1::pod_type  out_eT;
-  
   const uword norm_type = in.aux_uword_a;
   const uword dim       = in.aux_uword_b;
   
@@ -42,13 +39,43 @@ op_sp_stddev::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1
   const uword p_n_rows = p.get_n_rows();
   const uword p_n_cols = p.get_n_cols();
   
+  if( (p_n_rows == 0) || (p_n_cols == 0) || (p.get_n_nonzero() == 0) )
+    {
+    if(dim == 0)  { out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols); }
+    if(dim == 1)  { out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0); }
+    
+    return;
+    }
+  
+  op_sp_stddev::apply_slow(out, p, norm_type, dim);
+  }
+
+
+
+template<typename T1>
+inline
+void
+op_sp_stddev::apply_slow
+  (
+        Mat<typename T1::elem_type>& out,
+  const SpProxy<T1>&                 p,
+  const uword                        norm_type,
+  const uword                        dim
+  )
+  {
+  arma_debug_sigprint();
+  
+  typedef typename T1::elem_type  in_eT;
+  //typedef typename T1::pod_type  out_eT;
+  
+  const uword p_n_rows = p.get_n_rows();
+  const uword p_n_cols = p.get_n_cols();
+  
   if(dim == 0)  // find variance in each column
     {
-    arma_debug_print("op_sp_stddev::apply_noalias(): dim = 0");
+    arma_debug_print("op_sp_stddev::apply_slow(): dim = 0");
     
-    out.zeros((p_n_rows > 0) ? 1 : 0, p_n_cols);
-    
-    if( (p_n_rows == 0) || (p.get_n_nonzero() == 0) )  { return; }
+    out.zeros(1, p_n_cols);
     
     for(uword col = 0; col < p_n_cols; ++col)
       {
@@ -81,11 +108,9 @@ op_sp_stddev::apply(Mat<typename T1::pod_type>& out, const mtSpToDOp<typename T1
   else
   if(dim == 1)  // find variance in each row
     {
-    arma_debug_print("op_sp_stddev::apply_noalias(): dim = 1");
+    arma_debug_print("op_sp_stddev::apply_slow(): dim = 1");
     
-    out.zeros(p_n_rows, (p_n_cols > 0) ? 1 : 0);
-    
-    if( (p_n_cols == 0) || (p.get_n_nonzero() == 0) )  { return; }
+    out.zeros(p_n_rows, 1);
     
     for(uword row = 0; row < p_n_rows; ++row)
       {
