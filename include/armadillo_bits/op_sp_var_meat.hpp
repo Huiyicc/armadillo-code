@@ -137,11 +137,20 @@ op_sp_var::var_vec
   {
   arma_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
   // conditionally unwrap it into a temporary and then directly operate.
   
   const unwrap_spmat<T1> tmp(X);
+  
+  if(tmp.M.n_elem== 0)
+    {
+    arma_conform_check(true, "var(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   return direct_var(tmp.M.values, tmp.M.n_nonzero, tmp.M.n_elem, norm_type);
   }

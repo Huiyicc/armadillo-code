@@ -260,7 +260,16 @@ op_sp_mean::mean_all(const SpBase<typename T1::elem_type, T1>& X)
   {
   arma_debug_sigprint();
   
+  typedef typename T1::elem_type eT;
+  
   SpProxy<T1> p(X.get_ref());
+  
+  if(p.get_n_elem() == 0)
+    {
+    arma_conform_check(true, "mean(): object has no elements");
+    
+    return Datum<eT>::nan;
+    }
   
   if(SpProxy<T1>::use_iterator)
     {
@@ -286,7 +295,7 @@ op_sp_mean::mean_all(const SpOp<T1, spop_type>& expr)
   
   typedef typename T1::elem_type eT;
   
-  const bool is_vectorise = \
+  constexpr bool is_vectorise = \
        (is_same_type<spop_type, spop_vectorise_row>::yes)
     || (is_same_type<spop_type, spop_vectorise_col>::yes)
     || (is_same_type<spop_type, spop_vectorise_all>::yes);
