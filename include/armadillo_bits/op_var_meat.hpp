@@ -121,7 +121,7 @@ op_var::var_vec(const Base<typename T1::elem_type, T1>& X, const uword norm_type
   
   const quasi_unwrap<T1> U(X.get_ref());
   
-  if(U.M.n_elem== 0)
+  if(U.M.n_elem == 0)
     {
     arma_conform_check(true, "var(): object has no elements");
     
@@ -144,7 +144,7 @@ op_var::var_vec(const subview_col<eT>& X, const uword norm_type)
   
   arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
-  if(X.n_elem== 0)
+  if(X.n_elem == 0)
     {
     arma_conform_check(true, "var(): object has no elements");
     
@@ -168,7 +168,7 @@ op_var::var_vec(const subview_row<eT>& X, const uword norm_type)
   
   arma_conform_check( (norm_type > 1), "var(): parameter 'norm_type' must be 0 or 1" );
   
-  if(X.n_elem== 0)
+  if(X.n_elem == 0)
     {
     arma_conform_check(true, "var(): object has no elements");
     

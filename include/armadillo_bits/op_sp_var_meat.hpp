@@ -145,7 +145,7 @@ op_sp_var::var_vec
   
   const unwrap_spmat<T1> tmp(X);
   
-  if(tmp.M.n_elem== 0)
+  if(tmp.M.n_elem == 0)
     {
     arma_conform_check(true, "var(): object has no elements");
     
