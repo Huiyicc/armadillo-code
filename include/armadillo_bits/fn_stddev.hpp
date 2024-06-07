@@ -34,7 +34,7 @@ stddev(const T1& X, const uword norm_type = 0)
   {
   arma_debug_sigprint();
   
-  return std::sqrt( op_var::var_vec(X, norm_type) );
+  return op_stddev::stddev_vec(X, norm_type);
   }
 
 
