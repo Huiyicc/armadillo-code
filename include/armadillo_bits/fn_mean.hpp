@@ -101,7 +101,7 @@ mean(const T1& x)
   {
   arma_debug_sigprint();
   
-  return spop_mean::mean_all(x);
+  return op_sp_mean::mean_all(x);
   }
 
 
@@ -113,13 +113,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
-  const SpOp<T1,spop_mean>
+  const SpToDOp<T1,op_sp_mean>
   >::result
 mean(const T1& x)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1,spop_mean>(x, 0, 0);
+  return SpToDOp<T1,op_sp_mean>(x, 0, 0);
   }
 
 
@@ -131,13 +131,13 @@ typename
 enable_if2
   <
   is_arma_sparse_type<T1>::value,
-  const SpOp<T1,spop_mean>
+  const SpToDOp<T1,op_sp_mean>
   >::result
 mean(const T1& x, const uword dim)
   {
   arma_debug_sigprint();
   
-  return SpOp<T1,spop_mean>(x, dim, 0);
+  return SpToDOp<T1,op_sp_mean>(x, dim, 0);
   }
 
 

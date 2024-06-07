@@ -138,7 +138,7 @@ op_sp_var::direct_var
 
   if(length >= 2 && N >= 2)
     {
-    const eT acc1 = spop_mean::direct_mean(X, length, N);
+    const eT acc1 = op_sp_mean::direct_mean(X, length, N);
 
     eT acc2 = eT(0);
     eT acc3 = eT(0);
@@ -214,7 +214,7 @@ op_sp_var::direct_var
 
   if(length >= 2 && N >= 2)
     {
-    const eT acc1 = spop_mean::direct_mean(X, length, N);
+    const eT acc1 = op_sp_mean::direct_mean(X, length, N);
 
      T acc2 =  T(0);
     eT acc3 = eT(0);
@@ -276,7 +276,7 @@ op_sp_var::iterator_var
 
   T1 new_it(it); // for mean
   // T1 backup_it(it); // in case we have to call robust iterator_var
-  eT mean = spop_mean::iterator_mean(new_it, end, n_zero, eT(0));
+  eT mean = op_sp_mean::iterator_mean(new_it, end, n_zero, eT(0));
 
   eT acc2 = eT(0);
   eT acc3 = eT(0);
@@ -337,7 +337,7 @@ op_sp_var::iterator_var
 
   T1 new_it(it); // for mean
   // T1 backup_it(it); // in case we have to call robust iterator_var
-  eT mean = spop_mean::iterator_mean(new_it, end, n_zero, eT(0));
+  eT mean = op_sp_mean::iterator_mean(new_it, end, n_zero, eT(0));
 
    T acc2 =  T(0);
   eT acc3 = eT(0);
