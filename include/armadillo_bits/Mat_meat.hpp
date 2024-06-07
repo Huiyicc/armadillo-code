@@ -362,8 +362,8 @@ Mat<eT>::init_warm(uword in_n_rows, uword in_n_cols)
       }
     else
       {
-      if(t_vec_state == 1)  { arma_conform_set_error( err_state, err_msg, (in_n_cols != 1), error_message_2 ); }
-      if(t_vec_state == 2)  { arma_conform_set_error( err_state, err_msg, (in_n_rows != 1), error_message_3 ); }
+      if(t_vec_state == 1)  { arma_conform_set_error( err_state, err_msg, (in_n_cols != 1), error_message_2 ); }  // TODO: (in_n_cols > 1) ?
+      if(t_vec_state == 2)  { arma_conform_set_error( err_state, err_msg, (in_n_rows != 1), error_message_3 ); }  // TODO: (in_n_rows > 1) ?
       }
     }
   
