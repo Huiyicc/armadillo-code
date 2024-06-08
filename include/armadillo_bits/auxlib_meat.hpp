@@ -4918,8 +4918,7 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     
     podarray<eT> S( static_cast<uword>(min_mn) );
     
-    // NOTE: with LAPACK 3.8, can use the workspace query to also obtain liwork,
-    // NOTE: which makes the call to lapack::laenv() redundant
+    // NOTE: assuming LAPACK 3.8+, where the workspace query also obtains liwork in addition to lwork
     
     blas_int ispec = blas_int(9);
     
@@ -4939,27 +4938,29 @@ auxlib::solve_approx_svd(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_t
     blas_int smlsiz    = (std::max)( blas_int(25), laenv_result );
     blas_int smlsiz_p1 = blas_int(1) + smlsiz;
     
-    blas_int nlvl   = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log2( double(min_mn)/double(smlsiz_p1) ) ) );
-    blas_int liwork = (std::max)( blas_int(1), (blas_int(3)*min_mn*nlvl + blas_int(11)*min_mn) );
+    blas_int nlvl = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log2( double(min_mn)/double(smlsiz_p1) ) ) );
     
-    podarray<blas_int> iwork( static_cast<uword>(liwork) );
-    
-    blas_int lwork_min = blas_int(12)*min_mn + blas_int(2)*min_mn*smlsiz + blas_int(8)*min_mn*nlvl + min_mn*nrhs + smlsiz_p1*smlsiz_p1;
+    blas_int  lwork_min = blas_int(12)*min_mn + blas_int(2)*min_mn*smlsiz + blas_int(8)*min_mn*nlvl + min_mn*nrhs + smlsiz_p1*smlsiz_p1;
+    blas_int liwork_min = (std::max)( blas_int(1), (blas_int(3)*min_mn*nlvl + blas_int(11)*min_mn) );
     
     eT        work_query[2] = {};
-    blas_int lwork_query    = blas_int(-1);
+    blas_int iwork_query[2] = {};
+    
+    blas_int lwork_query = blas_int(-1);
     
     arma_debug_print("lapack::gelsd()");
-    lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, &work_query[0], &lwork_query, iwork.memptr(), &info);
+    lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, &work_query[0], &lwork_query, &iwork_query[0], &info);
     
     if(info != 0)  { return false; }
     
-    // NOTE: in LAPACK 3.8, iwork[0] returns the minimum liwork
+    blas_int  lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int liwork_proposed = iwork_query[0];
     
-    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
-    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
+    blas_int  lwork_final = (std::max)( lwork_proposed,  lwork_min);
+    blas_int liwork_final = (std::max)(liwork_proposed, liwork_min);
     
-    podarray<eT> work( static_cast<uword>(lwork_final) );
+    podarray<eT>        work( static_cast<uword>( lwork_final) );
+    podarray<blas_int> iwork( static_cast<uword>(liwork_final) );
     
     arma_debug_print("lapack::gelsd()");
     lapack::gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork_final, iwork.memptr(), &info);
@@ -5039,6 +5040,8 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     podarray<T> S( static_cast<uword>(min_mn) );
     
+    // NOTE: assuming LAPACK 3.8+, where the workspace query also obtains lrwork and liwork in addition to lwork
+    
     blas_int ispec = blas_int(9);
     
     const char* const_name = (is_float<T>::value) ? "CGELSD" : "ZGELSD";
@@ -5059,29 +5062,36 @@ auxlib::solve_approx_svd(Mat< std::complex<typename T1::pod_type> >& out, Mat< s
     
     blas_int nlvl = (std::max)( blas_int(0), blas_int(1) + blas_int( std::log2( double(min_mn)/double(smlsiz_p1) ) ) );
     
-    blas_int lrwork = (m >= n)
+    blas_int  lwork_min = 2*min_mn + min_mn*nrhs;
+    
+    blas_int lrwork_min = (m >= n)
       ? blas_int(10)*n + blas_int(2)*n*smlsiz + blas_int(8)*n*nlvl + blas_int(3)*smlsiz*nrhs + (std::max)( (smlsiz_p1)*(smlsiz_p1), n*(blas_int(1)+nrhs) + blas_int(2)*nrhs )
       : blas_int(10)*m + blas_int(2)*m*smlsiz + blas_int(8)*m*nlvl + blas_int(3)*smlsiz*nrhs + (std::max)( (smlsiz_p1)*(smlsiz_p1), n*(blas_int(1)+nrhs) + blas_int(2)*nrhs );
     
-    blas_int liwork = (std::max)( blas_int(1), (blas_int(3)*blas_int(min_mn)*nlvl + blas_int(11)*blas_int(min_mn)) );
-    
-    podarray<T>        rwork( static_cast<uword>(lrwork) );
-    podarray<blas_int> iwork( static_cast<uword>(liwork) );
-    
-    blas_int lwork_min = 2*min_mn + min_mn*nrhs;
+    blas_int liwork_min = (std::max)( blas_int(1), (blas_int(3)*blas_int(min_mn)*nlvl + blas_int(11)*blas_int(min_mn)) );
     
     eT        work_query[2] = {};
-    blas_int lwork_query    = blas_int(-1);
+    T        rwork_query[2] = {};
+    blas_int iwork_query[2] = {};
+    
+    blas_int lwork_query = blas_int(-1);
     
     arma_debug_print("lapack::cx_gelsd()");
-    lapack::cx_gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, &work_query[0], &lwork_query, rwork.memptr(), iwork.memptr(), &info);
+    lapack::cx_gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, &work_query[0], &lwork_query, &rwork_query[0], &iwork_query[0], &info);
     
     if(info != 0)  { return false; }
     
-    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real( work_query[0]) );
-    blas_int lwork_final    = (std::max)(lwork_proposed, lwork_min);
+    blas_int  lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    blas_int lrwork_proposed = static_cast<blas_int>( rwork_query[0] );
+    blas_int liwork_proposed = iwork_query[0];
     
-    podarray<eT> work( static_cast<uword>(lwork_final) );
+    blas_int  lwork_final = (std::max)( lwork_proposed,  lwork_min);
+    blas_int lrwork_final = (std::max)(lrwork_proposed, lrwork_min);
+    blas_int liwork_final = (std::max)(liwork_proposed, liwork_min);
+    
+    podarray<eT>        work( static_cast<uword>( lwork_final) );
+    podarray<T>        rwork( static_cast<uword>(lrwork_final) );
+    podarray<blas_int> iwork( static_cast<uword>(liwork_final) );
     
     arma_debug_print("lapack::cx_gelsd()");
     lapack::cx_gelsd(&m, &n, &nrhs, A.memptr(), &lda, tmp.memptr(), &ldb, S.memptr(), &rcond, &rank, work.memptr(), &lwork_final, rwork.memptr(), iwork.memptr(), &info);
