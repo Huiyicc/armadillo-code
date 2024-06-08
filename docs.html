@@ -20198,7 +20198,19 @@ List of additions and changes for each version:
 <ul>
 <li>C++14 is now the minimum required C++ standard</li>
 <li>faster handling of compound expressions by <a href="#as_scalar">as_scalar()</a>, <a href="#accu">accu()</a>, <a href="#dot">dot()</a></li>
+<li>faster interactions between sparse submatrix views and dense matrices</li>
 <li>expanded <a href="#stats_fns">stddev()</a> to handle sparse matrices</li>
+<li>
+sparse matrix versions of
+<a href="#min_and_max">min()</a>,
+<a href="#min_and_max">max()</a>,
+<a href="#sum">sum()</a>,
+<a href="#stats_fns">mean()</a>,
+<a href="#stats_fns">var()</a>,
+<a href="#diagvec">diagvec()</a>,
+<a href="#vecnorm">vecnorm()</a>
+now return dense vectors
+</li>
 <li>TODO: ...</li>
 </ul>
 </li>
