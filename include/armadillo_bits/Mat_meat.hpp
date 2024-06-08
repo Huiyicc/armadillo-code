@@ -2757,6 +2757,8 @@ Mat<eT>::operator%=(const SpBase<eT, T1>& m)
   
   arma_conform_assert_same_size(n_rows, n_cols, p.get_n_rows(), p.get_n_cols(), "element-wise multiplication");
   
+  if(p.get_n_nonzero() == 0)  { return (*this).zeros(); }
+  
   typename SpProxy<T1>::const_iterator_type it     = p.begin();
   typename SpProxy<T1>::const_iterator_type it_end = p.end();
   
