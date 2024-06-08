@@ -2930,6 +2930,57 @@ Mat<eT>::operator+=(const SpSubview<eT>& X)
 
 template<typename eT>
 inline
+Mat<eT>&
+Mat<eT>::operator-=(const SpSubview<eT>& X)
+  {
+  arma_debug_sigprint();
+  
+  arma_conform_assert_same_size(n_rows, n_cols, X.n_rows, X.n_cols, "subtraction");
+  
+  if(X.n_nonzero == 0)  { return *this; }
+  
+  if(X.n_rows == X.m.n_rows)
+    {
+    X.m.sync();
+    
+    const uword sv_col_start = X.aux_col1;
+    const uword sv_col_end   = X.aux_col1 + X.n_cols - 1;
+    
+    const    eT* m_values      = X.m.values;
+    const uword* m_row_indices = X.m.row_indices;
+    const uword* m_col_ptrs    = X.m.col_ptrs;
+    
+    for(uword m_col = sv_col_start; m_col <= sv_col_end; ++m_col)
+      {
+      const uword m_col_adjusted = m_col - sv_col_start;
+      
+      const uword start = m_col_ptrs[m_col    ];
+      const uword end   = m_col_ptrs[m_col + 1];
+      
+      for(uword ii = start; ii < end; ++ii)
+        {
+        const uword m_row = m_row_indices[ii];
+        const eT    m_val = m_values[ii];
+        
+        at(m_row, m_col_adjusted) -= m_val;
+        }
+      }
+    }
+  else
+    {
+    typename SpSubview<eT>::const_iterator it     = X.begin();
+    typename SpSubview<eT>::const_iterator it_end = X.end();
+    
+    for(; it != it_end; ++it)  { at(it.row(), it.col()) -= (*it); }
+    }
+  
+  return *this;
+  }
+
+
+
+template<typename eT>
+inline
 Mat<eT>::Mat(const spdiagview<eT>& X)
   : n_rows(X.n_rows)
   , n_cols(X.n_cols)
