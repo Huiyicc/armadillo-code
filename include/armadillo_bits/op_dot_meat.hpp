@@ -211,8 +211,6 @@ op_dot::apply(const T1& X, const T2& Y)
   
   if(is_subview_row<T1>::value && is_subview_row<T2>::value)
     {
-    typedef typename T1::elem_type eT;
-    
     const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
     const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
     
