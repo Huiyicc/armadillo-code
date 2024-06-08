@@ -16,47 +16,45 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_diagvec
+//! \addtogroup op_sp_diagvec
 //! @{
 
 
-//! extract main diagonal from matrix
+
 template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_diagvec>
-diagvec(const Base<typename T1::elem_type,T1>& X)
+inline
+void
+op_sp_diagvec::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_diagvec>& in)
   {
   arma_debug_sigprint();
   
-  return Op<T1, op_diagvec>(X.get_ref());
-  }
-
-
-
-//! extract arbitrary diagonal from matrix
-template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_diagvec2>
-diagvec(const Base<typename T1::elem_type,T1>& X, const sword diag_id)
-  {
-  arma_debug_sigprint();
+  typedef typename T1::elem_type eT;
   
-  return Op<T1, op_diagvec2>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const SpToDOp<T1, op_sp_diagvec>
-diagvec(const SpBase<typename T1::elem_type,T1>& X, const sword diag_id = 0)
-  {
-  arma_debug_sigprint();
+  const unwrap_spmat<T1> U(in.m);
+  const SpMat<eT>& X =   U.M;
   
-  return SpToDOp<T1, op_sp_diagvec>(X.get_ref(), ((diag_id < 0) ? -diag_id : diag_id), ((diag_id < 0) ? 1 : 0) );
+  const uword a = in.aux_uword_a;
+  const uword b = in.aux_uword_b;
+  
+  const uword row_offset = (b >  0) ? a : 0;
+  const uword col_offset = (b == 0) ? a : 0;
+  
+  arma_conform_check_bounds
+    (
+    ((row_offset > 0) && (row_offset >= X.n_rows)) || ((col_offset > 0) && (col_offset >= X.n_cols)),
+    "diagvec(): requested diagonal out of bounds"
+    );
+  
+  const uword len = (std::min)(X.n_rows - row_offset, X.n_cols - col_offset);
+  
+  out.set_size(len, 1);
+  
+  eT* out_mem = out.memptr();
+  
+  for(uword i=0; i < len; ++i)
+    {
+    out_mem[i] = X.at(i + row_offset, i + col_offset);
+    }
   }
 
 
