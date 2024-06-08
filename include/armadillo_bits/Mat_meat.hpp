@@ -2973,9 +2973,7 @@ Mat<eT>::operator+=(const spdiagview<eT>& X)
   
   const Mat<eT> tmp(X);
   
-  (*this).operator+=(tmp);
-  
-  return *this;
+  return (*this).operator+=(tmp);
   }
 
 
@@ -2989,9 +2987,7 @@ Mat<eT>::operator-=(const spdiagview<eT>& X)
   
   const Mat<eT> tmp(X);
   
-  (*this).operator-=(tmp);
-  
-  return *this;
+  return (*this).operator-=(tmp);
   }
 
 
@@ -3005,9 +3001,7 @@ Mat<eT>::operator*=(const spdiagview<eT>& X)
   
   const Mat<eT> tmp(X);
   
-  (*this).operator*=(tmp);
-  
-  return *this;
+  return (*this).operator*=(tmp);
   }
 
 
@@ -3021,9 +3015,7 @@ Mat<eT>::operator%=(const spdiagview<eT>& X)
   
   const Mat<eT> tmp(X);
   
-  (*this).operator%=(tmp);
-  
-  return *this;
+  return (*this).operator%=(tmp);
   }
 
 
@@ -3037,9 +3029,7 @@ Mat<eT>::operator/=(const spdiagview<eT>& X)
   
   const Mat<eT> tmp(X);
   
-  (*this).operator/=(tmp);
-  
-  return *this;
+  return (*this).operator/=(tmp);
   }
 
 
