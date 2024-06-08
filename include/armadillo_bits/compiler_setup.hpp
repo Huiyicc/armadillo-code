@@ -472,3 +472,16 @@
 // https://sourceware.org/bugzilla/show_bug.cgi?id=19239
 #undef minor
 #undef major
+
+
+// optionally allow disabling of compile-time deprecation messages (not recommended)
+// NOTE: option 'ARMA_IGNORE_DEPRECATED_MARKER' will be removed
+// NOTE: disabling deprecation messages is counter-productive
+
+#if defined(ARMA_IGNORE_DEPRECATED_MARKER) && (!defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)) && (!defined(ARMA_DEBUG))
+  #undef  arma_deprecated
+  #define arma_deprecated
+
+  #undef  arma_frown
+  #define arma_frown(msg)
+#endif
