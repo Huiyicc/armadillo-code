@@ -27,24 +27,24 @@ int
 main(int argc, char** argv)
   {
   Catch::Session session;
+  
   const int returnCode = session.applyCommandLine(argc, argv);
-  // Check for a command line error.
-  if (returnCode != 0)
-    {
-    return returnCode;
-    }
-
+  
+  if(returnCode != 0)  { return returnCode; }
+  
   std::cout << "Armadillo version: " << arma::arma_version::as_string() << '\n';
-
+  
   // Use Catch2 command-line to set the random seed.
   // -rng-seed <'time'|number>
-  // If a number is provided this is used directly as the seed. Alternatively
-  // if the keyword 'time' is provided then the result of calling std::time(0)
-  // is used.
+  // If a number is provided this is used directly as the seed.
+  // Alternatively if the keyword 'time' is provided
+  // then the result of calling std::time(0) is used.
+  
   const size_t seed = session.config().rngSeed();
+  
   srand((unsigned int) seed);
   arma::arma_rng::set_seed(seed);
-
+  
   return session.run(argc, argv);
   }
 
