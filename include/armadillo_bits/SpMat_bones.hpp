@@ -132,7 +132,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1> inline SpMat& operator/=(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator%=(const Base<eT, T1>& m);
   
-  template<typename T1> inline explicit    SpMat(const Op<T1, op_diagmat>& expr);
+  template<typename T1> inline             SpMat(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator= (const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator+=(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator-=(const Op<T1, op_diagmat>& expr);
