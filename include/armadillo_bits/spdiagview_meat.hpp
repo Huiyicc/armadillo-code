@@ -1043,9 +1043,13 @@ spdiagview<eT>::randu()
   
   const uword local_n_elem = n_elem;
   
+  Col<eT> tmp(local_n_elem, arma_nozeros_indicator());
+  
+  tmp.randu();
+  
   for(uword i=0; i < local_n_elem; ++i)
     {
-    x.at(i+row_offset, i+col_offset) = eT(arma_rng::randu<eT>());
+    x.at(i+row_offset, i+col_offset) = tmp[i];
     }
   }
 
@@ -1062,9 +1066,13 @@ spdiagview<eT>::randn()
   
   const uword local_n_elem = n_elem;
   
+  Col<eT> tmp(local_n_elem, arma_nozeros_indicator());
+  
+  tmp.randn();
+  
   for(uword i=0; i < local_n_elem; ++i)
     {
-    x.at(i+row_offset, i+col_offset) = eT(arma_rng::randn<eT>());
+    x.at(i+row_offset, i+col_offset) = tmp[i];
     }
   }
 
