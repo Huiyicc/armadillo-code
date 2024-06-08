@@ -57,10 +57,10 @@ inline
 void
 op_sp_var::apply_slow
   (
-        Mat<typename T1::elem_type>& out,
-  const SpProxy<T1>&                 p,
-  const uword                        norm_type,
-  const uword                        dim
+        Mat<typename T1::pod_type>& out,
+  const SpProxy<T1>&                p,
+  const uword                       norm_type,
+  const uword                       dim
   )
   {
   arma_debug_sigprint();
