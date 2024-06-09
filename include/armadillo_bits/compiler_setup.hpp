@@ -285,7 +285,7 @@
     #error "*** newer compiler required ***"
   #endif
   
-  #if (__INTEL_COMPILER < 1500)
+  #if (__INTEL_COMPILER < 1600)
     #error "*** newer compiler required ***"
   #endif
   
@@ -356,15 +356,6 @@
   //   
   // #endif
   
-#endif
-
-
-#if defined(__SUNPRO_CC)
-  // http://www.oracle.com/technetwork/server-storage/solarisstudio/training/index-jsp-141991.html
-  // http://www.oracle.com/technetwork/server-storage/solarisstudio/documentation/cplusplus-faq-355066.html
-  #if (__SUNPRO_CC < 0x5140)
-    #error "*** newer compiler required ***"
-  #endif
 #endif
 
 
