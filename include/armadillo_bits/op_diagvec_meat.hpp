@@ -104,8 +104,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
   
@@ -264,8 +264,8 @@ op_diagvec::apply(Mat<typename T1::elem_type>& actual_out, const Op< Glue<T1,T2,
   
   if( (A.n_elem == 0) || (B.n_elem == 0) )  { actual_out.reset(); return; }
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const bool is_alias  = (UA.is_alias(actual_out) || UB.is_alias(actual_out));
   

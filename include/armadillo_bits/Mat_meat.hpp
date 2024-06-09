@@ -1022,7 +1022,7 @@ Mat<eT>::init
   
   eT* out_mem = (*this).memptr();
   
-  const bool use_at = ( Proxy<T1>::use_at || Proxy<T2>::use_at );
+  constexpr bool use_at = ( Proxy<T1>::use_at || Proxy<T2>::use_at );
   
   if(use_at == false)
     {

@@ -47,7 +47,7 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);\
+    constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);\
     \
     if(use_at == false)\
       {\
@@ -113,7 +113,7 @@
     \
     uword* out_mem = out.memptr();\
     \
-    const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);\
+    constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);\
     \
     if(use_at == false)\
       {\

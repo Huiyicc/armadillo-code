@@ -40,8 +40,8 @@ glue_mixed_times::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
   const typename partial_unwrap<T1>::stored_type& A = tmp1.M;
   const typename partial_unwrap<T2>::stored_type& B = tmp2.M;
   
-  const bool   use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const out_eT     alpha = use_alpha ? (upgrade_val<in_eT1,in_eT2>::apply(tmp1.get_val()) * upgrade_val<in_eT1,in_eT2>::apply(tmp2.get_val())) : out_eT(0);
+  constexpr bool   use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     out_eT     alpha = use_alpha ? (upgrade_val<in_eT1,in_eT2>::apply(tmp1.get_val()) * upgrade_val<in_eT1,in_eT2>::apply(tmp2.get_val())) : out_eT(0);
   
   const bool do_trans_A = partial_unwrap<T1>::do_trans;
   const bool do_trans_B = partial_unwrap<T2>::do_trans;
@@ -99,7 +99,7 @@ glue_mixed_plus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<t
         out_eT* out_mem = out.memptr();
   const uword   n_elem  = out.n_elem;
     
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {
@@ -164,7 +164,7 @@ glue_mixed_minus::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
         out_eT* out_mem = out.memptr();
   const uword   n_elem  = out.n_elem;
     
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {
@@ -229,7 +229,7 @@ glue_mixed_div::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<ty
         out_eT* out_mem = out.memptr();
   const uword   n_elem  = out.n_elem;
     
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {
@@ -294,7 +294,7 @@ glue_mixed_schur::apply(Mat<typename eT_promoter<T1,T2>::eT>& out, const mtGlue<
         out_eT* out_mem = out.memptr();
   const uword   n_elem  = out.n_elem;
     
-  const bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at || Proxy<T2>::use_at);
   
   if(use_at == false)
     {
@@ -366,7 +366,7 @@ glue_mixed_plus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueC
         out_eT* out_mem = out.memptr();
   const uword    n_elem = out.n_elem;
   
-  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
+  constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
   if(use_at == false)
     {
@@ -421,7 +421,7 @@ glue_mixed_minus::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
         out_eT* out_mem = out.memptr();
   const uword    n_elem = out.n_elem;
   
-  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
+  constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
   if(use_at == false)
     {
@@ -476,7 +476,7 @@ glue_mixed_div::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlueCu
         out_eT* out_mem = out.memptr();
   const uword    n_elem = out.n_elem;
   
-  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
+  constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
   if(use_at == false)
     {
@@ -531,7 +531,7 @@ glue_mixed_schur::apply(Cube<typename eT_promoter<T1,T2>::eT>& out, const mtGlue
         out_eT* out_mem = out.memptr();
   const uword    n_elem = out.n_elem;
   
-  const bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
+  constexpr bool use_at = (ProxyCube<T1>::use_at || ProxyCube<T2>::use_at);
   
   if(use_at == false)
     {

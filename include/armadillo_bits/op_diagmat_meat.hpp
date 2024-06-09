@@ -183,8 +183,8 @@ op_diagmat::apply_times(Mat<typename T1::elem_type>& actual_out, const T1& X, co
   
   arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;
@@ -409,8 +409,8 @@ op_diagmat::apply_times(Mat<typename T1::elem_type>& actual_out, const T1& X, co
   
   arma_conform_assert_trans_mul_size< partial_unwrap<T1>::do_trans, partial_unwrap<T2>::do_trans >(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "matrix multiplication");
   
-  const bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
-  const eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
+  constexpr bool use_alpha = partial_unwrap<T1>::do_times || partial_unwrap<T2>::do_times;
+  const     eT       alpha = use_alpha ? (UA.get_val() * UB.get_val()) : eT(0);
   
   const uword A_n_rows = A.n_rows;
   const uword A_n_cols = A.n_cols;

@@ -511,7 +511,7 @@ op_cdot::apply_proxy(const T1& X, const T2& Y)
   typedef typename Proxy<T1>::ea_type ea_type1;
   typedef typename Proxy<T2>::ea_type ea_type2;
   
-  const bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
+  constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
   
   if(use_at == false)
     {
