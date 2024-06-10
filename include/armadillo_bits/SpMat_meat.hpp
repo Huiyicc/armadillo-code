@@ -802,10 +802,7 @@ SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
   {
   arma_debug_sigprint_this(this);
   
-  typedef typename T1::elem_type T1_eT;
-  
-  // Make sure the type is compatible.
-  arma_type_check(( is_same_type< eT, T1_eT >::no ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   (*this) = Mat<eT>(expr);
   }
@@ -1144,7 +1141,11 @@ SpMat<eT>::SpMat(const Op<T1, op_diagmat>& expr)
   , col_ptrs(nullptr)
   {
   arma_debug_sigprint_this(this);
-
+  
+  typedef typename T1::elem_type T1_eT;
+  
+  arma_type_check(( is_same_type< eT, T1_eT >::no ));
+  
   (*this).operator=(expr);
   }
 
@@ -1157,6 +1158,10 @@ SpMat<eT>&
 SpMat<eT>::operator=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
+  
+  typedef typename T1::elem_type T1_eT;
+  
+  arma_type_check(( is_same_type< eT, T1_eT >::no ));
   
   const diagmat_proxy<T1> P(expr.m);
   
@@ -1204,6 +1209,8 @@ SpMat<eT>::operator+=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
   
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
   const SpMat<eT> tmp(expr);
   
   return (*this).operator+=(tmp);
@@ -1218,6 +1225,8 @@ SpMat<eT>&
 SpMat<eT>::operator-=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
@@ -1234,6 +1243,8 @@ SpMat<eT>::operator*=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
   
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
   const SpMat<eT> tmp(expr);
   
   return (*this).operator*=(tmp);
@@ -1249,6 +1260,8 @@ SpMat<eT>::operator/=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
   
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+  
   const SpMat<eT> tmp(expr);
   
   return (*this).operator/=(tmp);
@@ -1263,6 +1276,8 @@ SpMat<eT>&
 SpMat<eT>::operator%=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
+  
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const SpMat<eT> tmp(expr);
   
