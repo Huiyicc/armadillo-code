@@ -787,45 +787,45 @@ SpMat<eT>::operator/=(const SpMat<eT>& x)
 
 
 
-template<typename eT>
-template<typename T1, typename op_type>
-inline
-SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(nullptr)
-  , row_indices(nullptr)
-  , col_ptrs(nullptr)
-  {
-  arma_debug_sigprint_this(this);
-  
-  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
-  
-  (*this) = Mat<eT>(expr);
-  }
+// template<typename eT>
+// template<typename T1, typename op_type>
+// inline
+// SpMat<eT>::SpMat(const SpToDOp<T1, op_type>& expr)
+//   : n_rows(0)
+//   , n_cols(0)
+//   , n_elem(0)
+//   , n_nonzero(0)
+//   , vec_state(0)
+//   , values(nullptr)
+//   , row_indices(nullptr)
+//   , col_ptrs(nullptr)
+//   {
+//   arma_debug_sigprint_this(this);
+//   
+//   arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
+//   
+//   (*this) = Mat<eT>(expr);
+//   }
 
 
 
-template<typename eT>
-template<typename T1, typename op_type>
-inline
-SpMat<eT>::SpMat(const mtSpToDOp<eT, T1, op_type>& expr)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(nullptr)
-  , row_indices(nullptr)
-  , col_ptrs(nullptr)
-  {
-  arma_debug_sigprint_this(this);
-  
-  (*this) = Mat<eT>(expr);
-  }
+// template<typename eT>
+// template<typename T1, typename op_type>
+// inline
+// SpMat<eT>::SpMat(const mtSpToDOp<eT, T1, op_type>& expr)
+//   : n_rows(0)
+//   , n_cols(0)
+//   , n_elem(0)
+//   , n_nonzero(0)
+//   , vec_state(0)
+//   , values(nullptr)
+//   , row_indices(nullptr)
+//   , col_ptrs(nullptr)
+//   {
+//   arma_debug_sigprint_this(this);
+//   
+//   (*this) = Mat<eT>(expr);
+//   }
 
 
 
