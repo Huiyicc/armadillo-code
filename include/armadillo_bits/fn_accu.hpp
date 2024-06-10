@@ -292,7 +292,7 @@ accu(const Glue<T1,T2,glue_times>& expr)
     constexpr bool use_at = (Proxy<T1>::use_at) || (Proxy<T2>::use_at);
     
     constexpr bool fast_unwrap = (partial_unwrap<T1>::is_fast && partial_unwrap<T2>::is_fast);
-
+    
     if(proxy_is_mat || use_at || fast_unwrap)
       {
       const partial_unwrap<T1> UA(expr.A);

@@ -75,6 +75,7 @@ as_scalar_redirect<2>::apply(const Glue<T1, T2, glue_times>& X)
   
   // T1 must result in a matrix with one row
   // T2 must result in a matrix with one column
+  // element type must non-complex
   
   constexpr bool proxy_is_mat = (is_Mat<typename Proxy<T1>::stored_type>::value && is_Mat<typename Proxy<T2>::stored_type>::value);
   
@@ -133,6 +134,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
   
   // T1 * T2 must result in a matrix with one row
   // T3 must result in a matrix with one column
+  // element type must non-complex
   
   typedef typename strip_inv    <T2           >::stored_type T2_stripped_1;
   typedef typename strip_diagmat<T2_stripped_1>::stored_type T2_stripped_2;
