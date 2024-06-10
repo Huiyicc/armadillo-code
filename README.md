@@ -314,9 +314,10 @@ The compilation was done by a third party.  USE AT YOUR OWN RISK.
 **Caveat:** 
 for any high performance scientific/engineering workloads,
 we strongly recommend using a Linux-based operating system, such as:
-  * Fedora  https://fedoraproject.org/
-  * Ubuntu  https://www.ubuntu.com/
-  * CentOS  https://centos.org/
+  * Fedora       https://fedoraproject.org/
+  * Ubuntu       https://www.ubuntu.com/
+  * Alma Linux   https://almalinux.org/
+  * Rocky Linux  https://rockylinux.org/
 
 ---
 
