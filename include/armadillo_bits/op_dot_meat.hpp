@@ -225,6 +225,8 @@ op_dot::apply(const T1& X, const T2& Y)
       }
     }
   
+  // if possible, bypass transposes of non-complex vectors
+  
   if( (is_cx<eT>::no) && (resolves_to_vector<T1>::value) && (resolves_to_vector<T2>::value) && (partial_unwrap<T1>::is_fast) && (partial_unwrap<T2>::is_fast) )
     {
     const partial_unwrap<T1> UA(X);
