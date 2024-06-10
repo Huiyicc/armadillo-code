@@ -211,6 +211,8 @@ op_dot::apply(const T1& X, const T2& Y)
   
   if(is_subview_row<T1>::value && is_subview_row<T2>::value)
     {
+    arma_debug_print("op_dot::apply(): subview_row optimisation");
+    
     const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
     const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
     
@@ -229,6 +231,8 @@ op_dot::apply(const T1& X, const T2& Y)
   
   if( (is_cx<eT>::no) && (resolves_to_vector<T1>::value) && (resolves_to_vector<T2>::value) && (partial_unwrap<T1>::is_fast) && (partial_unwrap<T2>::is_fast) )
     {
+    arma_debug_print("op_dot::apply(): vector optimisation");
+    
     const partial_unwrap<T1> UA(X);
     const partial_unwrap<T2> UB(Y);
     
@@ -250,6 +254,8 @@ op_dot::apply(const T1& X, const T2& Y)
   
   if(proxy_is_mat || use_at || have_direct_mem)
     {
+    arma_debug_print("op_dot::apply(): direct_mem optimisation");
+    
     const quasi_unwrap<T1> A(X);
     const quasi_unwrap<T2> B(Y);
     
