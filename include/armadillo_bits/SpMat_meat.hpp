@@ -1142,9 +1142,7 @@ SpMat<eT>::SpMat(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint_this(this);
   
-  typedef typename T1::elem_type T1_eT;
-  
-  arma_type_check(( is_same_type< eT, T1_eT >::no ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   (*this).operator=(expr);
   }
@@ -1159,9 +1157,7 @@ SpMat<eT>::operator=(const Op<T1, op_diagmat>& expr)
   {
   arma_debug_sigprint();
   
-  typedef typename T1::elem_type T1_eT;
-  
-  arma_type_check(( is_same_type< eT, T1_eT >::no ));
+  arma_type_check(( is_same_type< eT, typename T1::elem_type >::no ));
   
   const diagmat_proxy<T1> P(expr.m);
   
