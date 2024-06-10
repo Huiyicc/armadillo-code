@@ -225,7 +225,7 @@ op_dot::apply(const T1& X, const T2& Y)
       }
     }
   
-  if( (is_cx<eT>::no) && (resolves_to_vector<T1>::value) && (resolves_to_vector<T1>::value) && (partial_unwrap<T1>::is_fast) && (partial_unwrap<T2>::is_fast) )
+  if( (is_cx<eT>::no) && (resolves_to_vector<T1>::value) && (resolves_to_vector<T2>::value) && (partial_unwrap<T1>::is_fast) && (partial_unwrap<T2>::is_fast) )
     {
     const partial_unwrap<T1> UA(X);
     const partial_unwrap<T2> UB(Y);
