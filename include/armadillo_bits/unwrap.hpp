@@ -1361,7 +1361,7 @@ struct partial_unwrap< subview<eT> >
   
   static constexpr bool do_trans = false;
   static constexpr bool do_times = false;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1622,7 +1622,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = false;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const Mat<eT>      M;
@@ -1894,7 +1894,7 @@ struct partial_unwrap< Op< subview<eT>, op_htrans2> >
   
   static constexpr bool do_trans = true;
   static constexpr bool do_times = true;
-  static constexpr bool is_fast  = false;  // can't guarantee that memory is reused
+  static constexpr bool is_fast  = false;  // can't determine at compile time that memory is reused
   
   const subview<eT>& sv;
   const eT           val;
