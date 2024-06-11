@@ -211,19 +211,54 @@ op_dot::apply(const T1& X, const T2& Y)
   
   if(is_subview_row<T1>::value && is_subview_row<T2>::value)
     {
-    arma_debug_print("op_dot::apply(): subview_row optimisation");
-    
     const subview_row<eT>& A = reinterpret_cast< const subview_row<eT>& >(X);
     const subview_row<eT>& B = reinterpret_cast< const subview_row<eT>& >(Y);
     
     if( (A.m.n_rows == 1) && (B.m.n_rows == 1) )
       {
+      arma_debug_print("op_dot::apply(): subview_row optimisation");
+      
       arma_conform_check( (A.n_elem != B.n_elem), "dot(): objects must have the same number of elements" );
       
       const eT* A_mem = A.m.memptr();
       const eT* B_mem = B.m.memptr();
       
       return op_dot::direct_dot(A.n_elem, &A_mem[A.aux_col1], &B_mem[B.aux_col1]);
+      }
+    }
+  
+  if(is_subview<T1>::value || is_subview<T2>::value)
+    {
+    arma_debug_print("op_dot::apply(): subview optimisation");
+    
+    const sv_keep_unwrap<T1>& UA(X);
+    const sv_keep_unwrap<T2>& UB(Y);
+    
+    typedef typename sv_keep_unwrap<T1>::stored_type UA_M_type;
+    typedef typename sv_keep_unwrap<T2>::stored_type UB_M_type;
+    
+    const UA_M_type& A = UA.M;
+    const UB_M_type& B = UB.M;
+    
+    const uword A_n_rows = A.n_rows;
+    const uword A_n_cols = A.n_cols;
+    
+    if( (A_n_rows == B.n_rows) && (A_n_cols == B.n_cols) )
+      {
+      eT acc = eT(0);
+      
+      for(uword c=0; c < A_n_cols; ++c)  { acc += op_dot::direct_dot(A_n_rows, A.colptr(c), B.colptr(c)); }
+      
+      return acc;
+      }
+    else
+      {
+      const quasi_unwrap<UA_M_type> UUA(A);
+      const quasi_unwrap<UB_M_type> UUB(B);
+      
+      arma_conform_check( (UUA.M.n_elem != UUB.M.n_elem), "dot(): objects must have the same number of elements" );
+      
+      return op_dot::direct_dot(UUA.M.n_elem, UUA.M.memptr(), UUB.M.memptr());
       }
     }
   
