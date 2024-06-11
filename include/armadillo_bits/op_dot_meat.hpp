@@ -304,7 +304,7 @@ op_dot::apply(const T1& X, const T2& Y)
   
   arma_conform_check( (PA.get_n_elem() != PB.get_n_elem()), "dot(): objects must have the same number of elements" );
   
-  return op_dot::apply_proxy(PA,PB);
+  return op_dot::apply_proxy_linear(PA,PB);
   }
 
 
@@ -312,7 +312,7 @@ op_dot::apply(const T1& X, const T2& Y)
 template<typename T1, typename T2>
 inline
 typename arma_not_cx<typename T1::elem_type>::result
-op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
+op_dot::apply_proxy_linear(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
   arma_debug_sigprint();
   
@@ -349,7 +349,7 @@ op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
 template<typename T1, typename T2>
 inline
 typename arma_cx_only<typename T1::elem_type>::result
-op_dot::apply_proxy(const Proxy<T1>& PA, const Proxy<T2>& PB)
+op_dot::apply_proxy_linear(const Proxy<T1>& PA, const Proxy<T2>& PB)
   {
   arma_debug_sigprint();
   

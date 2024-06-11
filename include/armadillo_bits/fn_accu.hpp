@@ -314,7 +314,7 @@ accu(const Glue<T1,T2,glue_times>& expr)
       
       arma_conform_assert_mul_size(PA.get_n_rows(), PA.get_n_cols(), PB.get_n_rows(), PB.get_n_cols(), "matrix multiplication");
       
-      return op_dot::apply_proxy(PA,PB);
+      return op_dot::apply_proxy_linear(PA,PB);
       }
     }
   
