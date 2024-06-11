@@ -485,9 +485,3 @@
   #undef  arma_frown
   #define arma_frown(msg)
 #endif
-
-#if (!defined(ARMA_IGNORE_DEPRECATED_MARKER)) || defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER) || defined(ARMA_DEBUG)
-  #if (!defined(ARMA_HAVE_CXX14))
-    #pragma message ("INFO: support for C++11 is deprecated")
-  #endif
-#endif
