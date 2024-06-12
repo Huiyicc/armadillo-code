@@ -62,7 +62,7 @@ as_scalar_redirect<N>::apply(const T1& X)
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
     const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
     arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
     }
@@ -361,7 +361,7 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
     const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_rows();
+    const uword n_cols = P.get_n_cols();
     
     arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
     }
@@ -383,7 +383,7 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
     const uword n_r = P.get_n_rows();
-    const uword n_c = P.get_n_rows();
+    const uword n_c = P.get_n_cols();
     const uword n_s = P.get_n_slices();
     
     arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1x1 cube; got %zux%zux%zu") % std::size_t(n_r) % std::size_t(n_c) % std::size_t(n_s)) );
