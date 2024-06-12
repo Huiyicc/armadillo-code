@@ -16,14 +16,25 @@
 # ------------------------------------------------------------------------
 
 
-## NOTE: If you prefer to link your programs _directly_ with OpenBLAS, BLAS or LAPACK,
-## NOTE: do not use this installer.
-## 
-## NOTE: To use Armadillo without installation, compile your programs along these lines:
-## NOTE: g++ prog.cpp -o prog -O2 -I /home/user/armadillo-12.2.0/include -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
+## NOTE: This installation script by default generates a runtime wrapper library,
+## NOTE: which links with OpenBLAS, LAPACK, etc.
+## NOTE: 
+## NOTE: If you prefer to link your programs directly with OpenBLAS, LAPACK, etc
+## NOTE: there are two options:
+## NOTE: (1) use the HEADER_ONLY option when running this installation script,
+## NOTE: or
+## NOTE: (2) do not use this installation script, and instead compile your programs
+## NOTE: using the include folder directly obtained from the armadillo archive.
+## NOTE: 
+## NOTE: To forcefully disable use of the runtime wrapper library,
+## NOTE: compile your programs with ARMA_DONT_USE_WRAPPER enabled.
+## NOTE: For example:
+## NOTE: g++ prog.cpp -o prog -O2 -I /home/user/armadillo-14.0.0/include -DARMA_DONT_USE_WRAPPER -lopenblas -llapack
+## NOTE: 
 ## NOTE: The above command line assumes that you have unpacked the armadillo archive into /home/user/  
-## NOTE: You will need to adjust this for newer versions of Armadillo (ie. "12.2.0" needs to be changed),
-## NOTE: and/or if you have unpacked the armadillo archive into a different directory.
+## NOTE: This needs to be adjusted for newer versions of Armadillo (ie. change "14.0.0"),
+## NOTE: and/or if the armadillo archive has been unpacked into a different folder.
+## NOTE: 
 ## NOTE: Replace -lopenblas with -lblas if you don't have OpenBLAS.
 ## NOTE: On macOS, replace -lblas -llapack with -framework Accelerate
 ## NOTE: More details: https://arma.sourceforge.net/faq.html
