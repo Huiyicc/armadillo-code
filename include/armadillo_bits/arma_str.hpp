@@ -26,7 +26,7 @@ namespace arma_str
     {
     public:
     
-    static constexpr uword n_chars_prealloc = 1024;
+    static constexpr uword n_chars_prealloc = 256;
     
     char* mem     = nullptr;
     uword n_chars = 0;
