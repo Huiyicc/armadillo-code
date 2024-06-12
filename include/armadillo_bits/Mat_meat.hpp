@@ -4519,7 +4519,7 @@ Mat<eT>::shed_rows(const Base<uword, T1>& indices)
   const uword* rows_to_shed_mem = rows_to_shed.memptr();
   const uword  N                = rows_to_shed.n_elem;
   
-  if(arma_config::check_conformance)
+  if(arma_config::check_conform)
     {
     for(uword i=0; i<N; ++i)
       {
@@ -4589,7 +4589,7 @@ Mat<eT>::shed_cols(const Base<uword, T1>& indices)
   const uword* cols_to_shed_mem = cols_to_shed.memptr();
   const uword  N                = cols_to_shed.n_elem;
   
-  if(arma_config::check_conformance)
+  if(arma_config::check_conform)
     {
     for(uword i=0; i<N; ++i)
       {
