@@ -57,7 +57,7 @@ include(CheckLibraryExists)
 
 # the settings below will be automatically configured by the rest of this script
 
-set(ARMA_USE_WRAPPER true)
+set(ARMA_USE_WRAPPER false)
 set(ARMA_USE_LAPACK  false)
 set(ARMA_USE_BLAS    false)
 set(ARMA_USE_ATLAS   false)
@@ -132,6 +132,7 @@ endif()
 
 if(NOT APPLE)
   if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    message(STATUS "")
     message(STATUS "*** CMAKE_INSTALL_PREFIX was initalised by cmake to the default value of ${CMAKE_INSTALL_PREFIX}")
     message(STATUS "*** CMAKE_INSTALL_PREFIX changed to /usr")
     set(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Standard install prefix" FORCE)
@@ -171,11 +172,18 @@ if(INSTALL_BIN_DIR)
 endif()
 
 
+
+option(HEADER_ONLY "Do not generate the wrapper library" OFF)
+## Example use on the command line:
+## cmake -D HEADER_ONLY=true .
+
 if(MSVC)
-  option(BUILD_SHARED_LIBS "build shared library" OFF)
+  option(STATIC_LIB "Generate static library instead of shared library" ON)
 else()
-  option(BUILD_SHARED_LIBS "build shared library" ON)
+  option(STATIC_LIB "Generate static library instead of shared library" OFF)
 endif()
+## Example use on the command line:
+## cmake -D HEADER_ONLY=true .
 
 option(OPENBLAS_PROVIDES_LAPACK "Assume that OpenBLAS provides LAPACK functions" OFF)
 ## Example use on the command line:
@@ -207,18 +215,30 @@ option(BUILD_SMOKE_TEST "Build the smoke test" ON)
 
 
 if(MSVC)
-  if(BUILD_SHARED_LIBS)
+  if(NOT SHARED_LIB)
     message(STATUS "")
     message(STATUS "*** WARNING: building shared library with MSVC is not supported." )
-    message(STATUS "*** WARNING: suggest to use manual installation instead;")
-    message(STATUS "*** WARNING: see README for details")
+    message(STATUS "*** WARNING: use manual installation instead; see README for details")
     message(STATUS "")
-  else()
-    set(ARMA_USE_WRAPPER false)
+    
+    set(SHARED_LIB OFF)
   endif()
 endif()
 
+if(HEADER_ONLY)
+  set(BUILD_WRAPPER false)
+else()
+  set(BUILD_WRAPPER true)
+endif()
 
+if(BUILD_WRAPPER)
+  set(ARMA_USE_WRAPPER true)
+else()
+  set(ARMA_USE_WRAPPER false)
+endif()
+
+
+message(STATUS "")
 message(STATUS "CMAKE_SYSTEM_NAME          = ${CMAKE_SYSTEM_NAME}"         )
 message(STATUS "CMAKE_CXX_COMPILER_ID      = ${CMAKE_CXX_COMPILER_ID}"     )
 message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
@@ -226,7 +246,7 @@ message(STATUS "CMAKE_COMPILER_IS_GNUCXX   = ${CMAKE_COMPILER_IS_GNUCXX}"  )
 
 message(STATUS "")
 message(STATUS "*** Options:"                                           )
-message(STATUS "BUILD_SHARED_LIBS         = ${BUILD_SHARED_LIBS}"       )
+message(STATUS "HEADER_ONLY               = ${HEADER_ONLY}"             )
 message(STATUS "OPENBLAS_PROVIDES_LAPACK  = ${OPENBLAS_PROVIDES_LAPACK}")
 message(STATUS "ALLOW_FLEXIBLAS_LINUX     = ${ALLOW_FLEXIBLAS_LINUX}"   )
 message(STATUS "ALLOW_OPENBLAS_MACOS      = ${ALLOW_OPENBLAS_MACOS}"    )
@@ -474,16 +494,24 @@ message(STATUS "*** ARMA_USE_BLAS    = ${ARMA_USE_BLAS}")
 message(STATUS "*** ARMA_USE_ATLAS   = ${ARMA_USE_ATLAS}")
 message(STATUS "*** ARMA_USE_ARPACK  = ${ARMA_USE_ARPACK}")
 message(STATUS "*** ARMA_USE_SUPERLU = ${ARMA_USE_SUPERLU}")
-message(STATUS "")
-message(STATUS "*** Armadillo wrapper library will use the following libraries:")
-message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
-message(STATUS "")
 
 
+if(BUILD_WRAPPER)
+  message(STATUS "")
+  message(STATUS "*** Armadillo shared (wrapper) library links with these libraries:")
+  message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
+else()
+  message(STATUS "")
+  message(STATUS "*** Armadillo programs must be manually linked with:")
+  message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
+endif()
+
+
+message(STATUS "")
 message(STATUS "Copying ${PROJECT_SOURCE_DIR}/include/ to ${PROJECT_BINARY_DIR}/tmp/include/")
 file(COPY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${PROJECT_BINARY_DIR}/tmp/include/)
 
-message(STATUS "Generating ${PROJECT_BINARY_DIR}/tmp/include/config.hpp")
+message(STATUS "Generating ${PROJECT_BINARY_DIR}/tmp/include/armadillo_bits/config.hpp")
 configure_file(${PROJECT_BINARY_DIR}/tmp/include/armadillo_bits/config.hpp.cmake ${PROJECT_BINARY_DIR}/tmp/include/armadillo_bits/config.hpp)
 
 
@@ -523,13 +551,25 @@ else()
 endif()
 
 
+message(STATUS "")
 message(STATUS "CMAKE_CXX_FLAGS           = ${CMAKE_CXX_FLAGS}"          )
 message(STATUS "CMAKE_SHARED_LINKER_FLAGS = ${CMAKE_SHARED_LINKER_FLAGS}")
 message(STATUS "CMAKE_REQUIRED_INCLUDES   = ${CMAKE_REQUIRED_INCLUDES}"  )
 
 
-add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper1.cpp ${PROJECT_SOURCE_DIR}/src/wrapper2.cpp )
-target_link_libraries( armadillo ${ARMA_LIBS} )
+if(BUILD_WRAPPER)
+  if(STATIC_LIB)
+    set(BUILD_SHARED_LIBS OFF)
+  else()
+    set(BUILD_SHARED_LIBS ON)
+  endif()
+  
+  add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper1.cpp ${PROJECT_SOURCE_DIR}/src/wrapper2.cpp )
+  target_link_libraries( armadillo ${ARMA_LIBS} )
+else()
+  add_library( armadillo INTERFACE)
+endif()
+
 # target_include_directories(armadillo INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 target_include_directories(armadillo INTERFACE $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/tmp/include> $<INSTALL_INTERFACE:include>)
 set_target_properties(armadillo PROPERTIES VERSION ${ARMA_VERSION_MAJOR}.${ARMA_VERSION_MINOR_ALT}.${ARMA_VERSION_PATCH} SOVERSION ${ARMA_VERSION_MAJOR})
@@ -550,7 +590,7 @@ message(STATUS "CMAKE_INSTALL_BINDIR     = ${CMAKE_INSTALL_BINDIR}"    )
 # Note that the trailing / character in "include/" is critical
 
 install(DIRECTORY ${PROJECT_BINARY_DIR}/tmp/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-PATTERN ".svn" EXCLUDE
+PATTERN ".git" EXCLUDE
 PATTERN "*.cmake" EXCLUDE
 PATTERN "*~" EXCLUDE
 PATTERN "*orig" EXCLUDE
@@ -561,6 +601,42 @@ install(TARGETS armadillo EXPORT ArmadilloLibraryDepends
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
   
+## smoke test
+
+if(BUILD_SMOKE_TEST)
+  if(HEADER_ONLY)
+    ## TODO: update to link smoke_test with ARMA_LIBS when HEADER_ONLY option is enabled
+    message(STATUS "*** building smoke_test not suported when HEADER_ONLY enabled")
+  else()
+    message(STATUS "*** configuring smoke_test")
+    enable_testing()
+    add_subdirectory(tests1)
+  endif()
+endif()
+
+## pkgconfig related
+## TODO: this currently doesn't handle the required SuperLU include dir
+## TODO: update armadillo.pc.in to link with ARMA_LIBS when HEADER_ONLY option is enabled
+
+if(HEADER_ONLY)
+  message(STATUS "*** generating pkgconfig files not suported when HEADER_ONLY enabled")
+else()
+  message(STATUS "*** copying ${PROJECT_SOURCE_DIR}/misc/ to ${PROJECT_BINARY_DIR}/tmp/misc/")
+  file(COPY ${PROJECT_SOURCE_DIR}/misc/ DESTINATION ${PROJECT_BINARY_DIR}/tmp/misc/)
+  
+  message(STATUS "*** generating '${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc'")
+  configure_file(${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc.in "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" @ONLY)
+  install(FILES "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif()
+
+
+if(HEADER_ONLY)
+  message(STATUS "")
+  message(STATUS "*** HEADER_ONLY mode is enabled; skipping rest of configuration script")
+  return()
+endif()
+
+
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
 export(PACKAGE armadillo)
@@ -570,7 +646,6 @@ export(PACKAGE armadillo)
 set(ARMADILLO_INCLUDE_DIRS "${PROJECT_BINARY_DIR}/tmp/include")
 set(ARMADILLO_LIB_DIR      "${PROJECT_BINARY_DIR}")
 set(ARMADILLO_CMAKE_DIR    "${PROJECT_BINARY_DIR}")
-
 
 message(STATUS "Generating '${PROJECT_BINARY_DIR}/ArmadilloConfig.cmake'")
 # copy/change config and configVersion file (modify only the @xyz@ variables)
@@ -609,23 +684,3 @@ install(FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/ArmadilloConfig.cmake"
   "${PROJECT_BINARY_DIR}/InstallFiles/ArmadilloConfigVersion.cmake"
   DESTINATION "${ARMADILLO_CMAKE_DIR}" COMPONENT dev)
-
-
-# pkgconfig related
-
-message(STATUS "Copying ${PROJECT_SOURCE_DIR}/misc/ to ${PROJECT_BINARY_DIR}/tmp/misc/")
-file(COPY ${PROJECT_SOURCE_DIR}/misc/ DESTINATION ${PROJECT_BINARY_DIR}/tmp/misc/)
-
-message(STATUS "Generating '${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc'")
-configure_file(${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc.in "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" @ONLY)
-
-install(FILES "${PROJECT_BINARY_DIR}/tmp/misc/armadillo.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-
-
-# smoke test
-
-if(BUILD_SMOKE_TEST)
-  message(STATUS "*** configuring smoke_test")
-  enable_testing()
-  add_subdirectory(tests1)
-endif()
