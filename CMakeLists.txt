@@ -183,7 +183,7 @@ else()
   option(STATIC_LIB "Generate static library instead of shared library" OFF)
 endif()
 ## Example use on the command line:
-## cmake -D HEADER_ONLY=true .
+## cmake -D STATIC_LIB=true .
 
 option(OPENBLAS_PROVIDES_LAPACK "Assume that OpenBLAS provides LAPACK functions" OFF)
 ## Example use on the command line:
@@ -221,7 +221,7 @@ if(MSVC)
     message(STATUS "*** WARNING: use manual installation instead; see README for details")
     message(STATUS "")
     
-    set(SHARED_LIB OFF)
+    set(SHARED_LIB ON)
   endif()
 endif()
 
@@ -245,8 +245,9 @@ message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "CMAKE_COMPILER_IS_GNUCXX   = ${CMAKE_COMPILER_IS_GNUCXX}"  )
 
 message(STATUS "")
-message(STATUS "*** Options:"                                           )
+message(STATUS "*** options:"                                           )
 message(STATUS "HEADER_ONLY               = ${HEADER_ONLY}"             )
+message(STATUS "STATIC_LIB                = ${STATIC_LIB}"              )
 message(STATUS "OPENBLAS_PROVIDES_LAPACK  = ${OPENBLAS_PROVIDES_LAPACK}")
 message(STATUS "ALLOW_FLEXIBLAS_LINUX     = ${ALLOW_FLEXIBLAS_LINUX}"   )
 message(STATUS "ALLOW_OPENBLAS_MACOS      = ${ALLOW_OPENBLAS_MACOS}"    )
@@ -498,7 +499,7 @@ message(STATUS "*** ARMA_USE_SUPERLU = ${ARMA_USE_SUPERLU}")
 
 if(BUILD_WRAPPER)
   message(STATUS "")
-  message(STATUS "*** Armadillo shared (wrapper) library links with these libraries:")
+  message(STATUS "*** Armadillo wrapper library links with these libraries:")
   message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")
 else()
   message(STATUS "")
@@ -567,7 +568,7 @@ if(BUILD_WRAPPER)
   add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper1.cpp ${PROJECT_SOURCE_DIR}/src/wrapper2.cpp )
   target_link_libraries( armadillo ${ARMA_LIBS} )
 else()
-  add_library( armadillo INTERFACE)
+  add_library( armadillo INTERFACE )
 endif()
 
 # target_include_directories(armadillo INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
