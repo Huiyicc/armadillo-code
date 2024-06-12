@@ -226,13 +226,13 @@ option(BUILD_SMOKE_TEST "Build the smoke test" ON)
 
 
 if(MSVC)
-  if(NOT SHARED_LIB)
+  if(NOT STATIC_LIB)
     message(STATUS "")
     message(STATUS "*** WARNING: building shared library with MSVC is not supported." )
     message(STATUS "*** WARNING: use manual installation instead; see README for details")
     message(STATUS "")
     
-    set(SHARED_LIB ON)
+    set(STATIC_LIB ON)
   endif()
 endif()
 
