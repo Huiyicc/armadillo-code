@@ -21,6 +21,37 @@
 
 
 
+struct as_scalar_errmsg
+  {
+  arma_cold
+  arma_noinline
+  static
+  std::string
+  incompat_size_string(const uword n_rows, const uword n_cols)
+    {
+    std::ostringstream tmp;
+    
+    tmp << "as_scalar(): expected 1x1 matrix; got " << n_rows << 'x' << n_cols;
+    
+    return tmp.str();
+    }
+  
+  arma_cold
+  arma_noinline
+  static
+  std::string
+  incompat_size_string(const uword n_rows, const uword n_cols, const uword n_slices)
+    {
+    std::ostringstream tmp;
+    
+    tmp << "as_scalar(): expected 1x1x1 cube; got " << n_rows << 'x' << n_cols << 'x' << n_slices;
+    
+    return tmp.str();
+    }
+  };
+
+
+
 template<uword N>
 struct as_scalar_redirect
   {
@@ -61,10 +92,7 @@ as_scalar_redirect<N>::apply(const T1& X)
   
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols()) );
     }
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
@@ -145,11 +173,7 @@ as_scalar_redirect<2>::check_size(const uword A_n_rows, const uword A_n_cols, co
   {
   arma_conform_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
   
-  arma_conform_check_bounds
-    (
-    ((A_n_rows != 1) || (B_n_cols != 1)),
-    (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(A_n_rows) % std::size_t(B_n_cols))
-    );
+  arma_conform_check_bounds( ((A_n_rows != 1) || (B_n_cols != 1)),  as_scalar_errmsg::incompat_size_string(A_n_rows, B_n_cols) );
   }
 
 
@@ -182,7 +206,7 @@ as_scalar_redirect<3>::apply(const Glue< Glue<T1, T2, glue_times>, T3, glue_time
     
     if( (arma_config::check_conform) && (tmp.n_elem != 1) )
       {
-      arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(tmp.n_rows) % std::size_t(tmp.n_cols)) );
+      arma_conform_check_bounds(true,  as_scalar_errmsg::incompat_size_string(tmp.n_rows, tmp.n_cols) );
       }
     
     return tmp[0];
@@ -360,10 +384,7 @@ as_scalar(const Base<typename T1::elem_type,T1>& X)
   
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols()) );
     }
   
   return (Proxy<T1>::use_at) ? P.at(0,0) : P[0];
@@ -382,11 +403,7 @@ as_scalar(const BaseCube<typename T1::elem_type,T1>& X)
   
   if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
     {
-    const uword n_r = P.get_n_rows();
-    const uword n_c = P.get_n_cols();
-    const uword n_s = P.get_n_slices();
-    
-    arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1x1 cube; got %zux%zux%zu") % std::size_t(n_r) % std::size_t(n_c) % std::size_t(n_s)) );
+    arma_conform_check_bounds( true, as_scalar_errmsg::incompat_size_string(P.get_n_rows(), P.get_n_cols(), P.get_n_slices()) );
     }
   
   return (ProxyCube<T1>::use_at) ? P.at(0,0,0) : P[0];
@@ -420,7 +437,7 @@ as_scalar(const SpBase<typename T1::elem_type, T1>& X)
   
   if( (arma_config::check_conform) && (A.n_elem != 1) )
     {
-    arma_conform_check_bounds(true, (arma_str::format("as_scalar(): expected 1x1 matrix; got %zux%zu") % std::size_t(A.n_rows) % std::size_t(A.n_cols)) );
+    arma_conform_check_bounds(true, as_scalar_errmsg::incompat_size_string(A.n_rows, A.n_cols) );
     }
   
   return A.at(0,0);
