@@ -173,7 +173,7 @@ as_scalar_redirect<2>::check_size(const uword A_n_rows, const uword A_n_cols, co
   {
   arma_conform_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
   
-  arma_conform_check_bounds( ((A_n_rows != 1) || (B_n_cols != 1)),  as_scalar_errmsg::incompat_size_string(A_n_rows, B_n_cols) );
+  arma_conform_check_bounds( ((A_n_rows != 1) || (B_n_cols != 1)), as_scalar_errmsg::incompat_size_string(A_n_rows, B_n_cols) );
   }
 
 
