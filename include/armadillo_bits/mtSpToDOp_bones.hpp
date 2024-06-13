@@ -34,6 +34,7 @@ class mtSpToDOp : public Base< out_eT, mtSpToDOp<out_eT, T1, op_type> >
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_spop = true;
   
   inline explicit mtSpToDOp(const T1& in_m);
   inline          mtSpToDOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);

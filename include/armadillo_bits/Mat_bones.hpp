@@ -56,6 +56,7 @@ class Mat : public Base< eT, Mat<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_row  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   
   inline ~Mat();
   inline  Mat();
@@ -838,6 +839,7 @@ class Mat<eT>::fixed : public Mat<eT>
   static constexpr bool is_col  = (fixed_n_cols == 1);
   static constexpr bool is_row  = (fixed_n_rows == 1);
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition

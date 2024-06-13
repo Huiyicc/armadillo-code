@@ -31,6 +31,7 @@ struct Glue_traits<T1, T2, glue_type, true>
   static constexpr bool is_row  = glue_type::template traits<T1,T2>::is_row;
   static constexpr bool is_col  = glue_type::template traits<T1,T2>::is_col;
   static constexpr bool is_xvec = glue_type::template traits<T1,T2>::is_xvec;
+  static constexpr bool is_spop = false;
   };
 
 template<typename T1, typename T2, typename glue_type>
@@ -39,6 +40,7 @@ struct Glue_traits<T1, T2, glue_type, false>
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   };
 
 

@@ -925,10 +925,11 @@ SpMat<eT>::SpMat
 
 
 
+// marked as explicit
 template<typename eT>
 template<typename T1>
 inline
-SpMat<eT>::SpMat(const Base<eT, T1>& x)
+SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_spop == false >::result* junk)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -939,6 +940,29 @@ SpMat<eT>::SpMat(const Base<eT, T1>& x)
   , col_ptrs(nullptr)
   {
   arma_debug_sigprint_this(this);
+  arma_ignore(junk);
+  
+  (*this).operator=(x);
+  }
+
+
+
+// not marked as explicit
+template<typename eT>
+template<typename T1>
+inline
+SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_spop == true >::result* junk)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_debug_sigprint_this(this);
+  arma_ignore(junk);
   
   (*this).operator=(x);
   }

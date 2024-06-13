@@ -39,6 +39,7 @@ class CubeToMatOp : public Base< typename T1::elem_type, CubeToMatOp<T1, op_type
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
+  static constexpr bool is_spop = false;
   };
 
 

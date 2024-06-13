@@ -32,6 +32,7 @@ class Col : public Mat<eT>
   static constexpr bool is_col  = true;
   static constexpr bool is_row  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   
   inline Col();
   inline Col(const Col<eT>& X);
@@ -202,6 +203,7 @@ class Col<eT>::fixed : public Col<eT>
   static constexpr bool is_col  = true;
   static constexpr bool is_row  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition

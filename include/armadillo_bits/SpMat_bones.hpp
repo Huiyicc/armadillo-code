@@ -124,7 +124,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline SpMat& operator%=(const SpMat& m);
   inline SpMat& operator/=(const SpMat& m);
   
-  template<typename T1> inline             SpMat(const Base<eT, T1>& m);
+  template<typename T1> inline explicit    SpMat(const Base<eT, T1>& m, typename enable_if< T1::is_spop == false >::result* junk = nullptr);
+  template<typename T1> inline             SpMat(const Base<eT, T1>& m, typename enable_if< T1::is_spop == true  >::result* junk = nullptr);  // for backwards compatibility
   template<typename T1> inline SpMat& operator= (const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator+=(const Base<eT, T1>& m);
   template<typename T1> inline SpMat& operator-=(const Base<eT, T1>& m);

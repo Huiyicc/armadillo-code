@@ -37,6 +37,7 @@ class eGlue : public Base< typename T1::elem_type, eGlue<T1, T2, eglue_type> >
   static constexpr bool is_col  = (Proxy<T1>::is_col  || Proxy<T2>::is_col );
   static constexpr bool is_row  = (Proxy<T1>::is_row  || Proxy<T2>::is_row );
   static constexpr bool is_xvec = (Proxy<T1>::is_xvec || Proxy<T2>::is_xvec);
+  static constexpr bool is_spop = (Proxy<T1>::is_spop || Proxy<T2>::is_spop);
   
   arma_aligned const Proxy<T1> P1;
   arma_aligned const Proxy<T2> P2;

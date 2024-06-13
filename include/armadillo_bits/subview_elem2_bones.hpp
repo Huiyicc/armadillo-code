@@ -32,6 +32,7 @@ class subview_elem2 : public Base< eT, subview_elem2<eT,T1,T2> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_spop = false;
   
   arma_aligned const Mat<eT>& m;
   
