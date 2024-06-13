@@ -173,6 +173,18 @@ SpCol<eT>::SpCol(const Base<eT,T1>& X, typename enable_if< T1::is_spop == true >
 
 
 template<typename eT>
+inline
+SpCol<eT>::SpCol(const Col<eT>& X)
+  : SpMat<eT>(arma_vec_indicator(), 1)
+  {
+  arma_debug_sigprint();
+  
+  SpMat<eT>::operator=(X);
+  }
+
+
+
+template<typename eT>
 template<typename T1>
 inline
 SpCol<eT>&

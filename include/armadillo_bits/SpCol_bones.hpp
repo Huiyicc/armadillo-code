@@ -47,6 +47,8 @@ class SpCol : public SpMat<eT>
   
   inline SpCol& operator=(const eT val);
   
+  inline SpCol(const Col<eT>& X);  // for backwards compatibility
+  
   // template<typename T1> inline            SpCol(const Base<eT,T1>& X);
   template<typename T1> inline explicit   SpCol(const Base<eT,T1>& X, typename enable_if< T1::is_spop == false >::result* junk = nullptr);
   template<typename T1> inline            SpCol(const Base<eT,T1>& X, typename enable_if< T1::is_spop == true  >::result* junk = nullptr);  // for backwards compatibility

@@ -174,6 +174,19 @@ SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == true >
 
 
 template<typename eT>
+inline
+SpRow<eT>::SpRow(const Row<eT>& X)
+  : SpMat<eT>(arma_vec_indicator(), 2)
+  {
+  arma_debug_sigprint();
+  
+  SpMat<eT>::operator=(X);
+  }
+
+
+
+
+template<typename eT>
 template<typename T1>
 inline
 SpRow<eT>&
