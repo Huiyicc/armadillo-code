@@ -22,9 +22,17 @@
 
 //! Class for finding mean values of a sparse matrix
 class op_sp_mean
-  : public traits_op_xvec
   {
   public:
+  
+  template<typename T1>
+  struct traits
+    {
+    static constexpr bool is_row  = false;
+    static constexpr bool is_col  = false;
+    static constexpr bool is_xvec = true;
+    static constexpr bool is_d2sp = true;
+    };
   
   // Apply mean into an output sparse matrix (or vector).
   template<typename T1>

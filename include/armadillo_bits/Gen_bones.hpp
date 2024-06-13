@@ -36,7 +36,7 @@ class Gen
   static constexpr bool is_row  = T1::is_row;
   static constexpr bool is_col  = T1::is_col;
   static constexpr bool is_xvec = T1::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const uword n_rows;
   arma_aligned const uword n_cols;

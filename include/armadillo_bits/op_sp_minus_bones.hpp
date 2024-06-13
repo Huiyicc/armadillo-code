@@ -23,10 +23,18 @@
 
 // Subtract a sparse object from a scalar; the output will be a dense object.
 class op_sp_minus_pre
-  : public traits_op_passthru
   {
   public:
 
+  template<typename T1>
+  struct traits
+    {
+    static constexpr bool is_row  = T1::is_row;
+    static constexpr bool is_col  = T1::is_col;
+    static constexpr bool is_xvec = T1::is_xvec;
+    static constexpr bool is_d2sp = false;
+    };
+  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_pre>& in);
 
@@ -47,10 +55,18 @@ class op_sp_minus_pre
 
 // Subtract a scalar from a sparse object; the output will be a dense object.
 class op_sp_minus_post
-  : public traits_op_passthru
   {
   public:
 
+  template<typename T1>
+  struct traits
+    {
+    static constexpr bool is_row  = T1::is_row;
+    static constexpr bool is_col  = T1::is_col;
+    static constexpr bool is_xvec = T1::is_xvec;
+    static constexpr bool is_d2sp = false;
+    };
+  
   template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_minus_post>& in);
 

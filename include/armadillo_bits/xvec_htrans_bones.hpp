@@ -31,7 +31,7 @@ class xvec_htrans : public Base< eT, xvec_htrans<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = true;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const eT* const mem;
   

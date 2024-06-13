@@ -37,7 +37,7 @@ class eOp : public Base< typename T1::elem_type, eOp<T1, eop_type> >
   static constexpr bool is_row  = Proxy<T1>::is_row;
   static constexpr bool is_col  = Proxy<T1>::is_col;
   static constexpr bool is_xvec = Proxy<T1>::is_xvec;
-  static constexpr bool is_spop = Proxy<T1>::is_spop;
+  static constexpr bool is_d2sp = Proxy<T1>::is_d2sp;
   
   arma_aligned const Proxy<T1> P;
   

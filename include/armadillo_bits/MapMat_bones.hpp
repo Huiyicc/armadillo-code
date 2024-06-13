@@ -33,6 +33,7 @@ class MapMat
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   const uword n_rows;    //!< number of rows     (read-only)
   const uword n_cols;    //!< number of columns  (read-only)

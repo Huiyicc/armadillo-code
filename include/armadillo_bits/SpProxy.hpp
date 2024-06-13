@@ -81,6 +81,7 @@ struct SpProxy< SpMat<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
 
   arma_aligned const SpMat<eT>& Q;
 
@@ -133,6 +134,7 @@ struct SpProxy< SpCol<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpCol<eT>& Q;
   
@@ -185,6 +187,7 @@ struct SpProxy< SpRow<eT> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpRow<eT>& Q;
   
@@ -237,6 +240,7 @@ struct SpProxy< SpSubview<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
 
   arma_aligned const SpSubview<eT>& Q;
 
@@ -289,6 +293,7 @@ struct SpProxy< SpSubview_col<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpSubview_col<eT>& Q;
   
@@ -341,6 +346,7 @@ struct SpProxy< SpSubview_col_list<eT,T1> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -392,6 +398,7 @@ struct SpProxy< SpSubview_row<eT> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpSubview_row<eT>& Q;
   
@@ -444,6 +451,7 @@ struct SpProxy< spdiagview<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -496,6 +504,7 @@ struct SpProxy< SpOp<T1, spop_type> >
   static constexpr bool is_row  = SpOp<T1, spop_type>::is_row;
   static constexpr bool is_col  = SpOp<T1, spop_type>::is_col;
   static constexpr bool is_xvec = SpOp<T1, spop_type>::is_xvec;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -548,6 +557,7 @@ struct SpProxy< SpGlue<T1, T2, spglue_type> >
   static constexpr bool is_row  = SpGlue<T1, T2, spglue_type>::is_row;
   static constexpr bool is_col  = SpGlue<T1, T2, spglue_type>::is_col;
   static constexpr bool is_xvec = SpGlue<T1, T2, spglue_type>::is_xvec;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<eT> Q;
   
@@ -599,6 +609,7 @@ struct SpProxy< mtSpOp<out_eT, T1, spop_type> >
   static constexpr bool is_row  = mtSpOp<out_eT, T1, spop_type>::is_row;
   static constexpr bool is_col  = mtSpOp<out_eT, T1, spop_type>::is_col;
   static constexpr bool is_xvec = mtSpOp<out_eT, T1, spop_type>::is_xvec;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<out_eT> Q;
   
@@ -650,6 +661,7 @@ struct SpProxy< mtSpGlue<out_eT, T1, T2, spglue_type> >
   static constexpr bool is_row  = mtSpGlue<out_eT, T1, T2, spglue_type>::is_row;
   static constexpr bool is_col  = mtSpGlue<out_eT, T1, T2, spglue_type>::is_col;
   static constexpr bool is_xvec = mtSpGlue<out_eT, T1, T2, spglue_type>::is_xvec;
+  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<out_eT> Q;
   

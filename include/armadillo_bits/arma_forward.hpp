@@ -156,6 +156,7 @@ struct traits_op_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -168,6 +169,7 @@ struct traits_op_xvec
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = true;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -180,6 +182,7 @@ struct traits_op_col
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = true;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -192,6 +195,7 @@ struct traits_op_row
     static constexpr bool is_row  = true;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -204,6 +208,7 @@ struct traits_op_passthru
     static constexpr bool is_row  = T1::is_row;
     static constexpr bool is_col  = T1::is_col;
     static constexpr bool is_xvec = T1::is_xvec;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -216,6 +221,7 @@ struct traits_glue_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -228,6 +234,7 @@ struct traits_glue_or
     static constexpr bool is_row  = (T1::is_row  || T2::is_row );
     static constexpr bool is_col  = (T1::is_col  || T2::is_col );
     static constexpr bool is_xvec = (T1::is_xvec || T2::is_xvec);
+    static constexpr bool is_d2sp = false;
     };
   };
 

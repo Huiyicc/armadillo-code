@@ -147,7 +147,7 @@ SpRow<eT>::operator=(const eT val)
 template<typename eT>
 template<typename T1>
 inline
-SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == false >::result* junk)
+SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == false >::result* junk)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_debug_sigprint();
@@ -162,7 +162,7 @@ SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == false 
 template<typename eT>
 template<typename T1>
 inline
-SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == true >::result* junk)
+SpRow<eT>::SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == true >::result* junk)
   : SpMat<eT>(arma_vec_indicator(), 2)
   {
   arma_debug_sigprint();

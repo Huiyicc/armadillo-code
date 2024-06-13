@@ -929,7 +929,7 @@ SpMat<eT>::SpMat
 template<typename eT>
 template<typename T1>
 inline
-SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_spop == false >::result* junk)
+SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_d2sp == false >::result* junk)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -951,7 +951,7 @@ SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_spop == false
 template<typename eT>
 template<typename T1>
 inline
-SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_spop == true >::result* junk)
+SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_d2sp == true >::result* junk)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)

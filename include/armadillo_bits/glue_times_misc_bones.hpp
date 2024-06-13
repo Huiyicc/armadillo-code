@@ -44,6 +44,7 @@ class glue_times_dense_sparse
     static constexpr bool is_row  = T1::is_row;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2>
@@ -68,6 +69,7 @@ class glue_times_sparse_dense
     static constexpr bool is_row  = T1::is_row;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2>

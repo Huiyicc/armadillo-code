@@ -30,6 +30,7 @@ class glue_mvnrnd_vec
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = true;
     static constexpr bool is_xvec = false;
+    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2>
