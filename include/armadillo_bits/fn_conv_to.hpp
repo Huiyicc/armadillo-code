@@ -57,13 +57,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_not_cx<in_e
   
   const Proxy<T1> P(in.get_ref());
   
-  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    arma_conform_check_bounds(true, (arma_str::format("conv_to(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
-    }
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   return out_eT(Proxy<T1>::use_at ? P.at(0,0) : P[0]);
   }
@@ -84,13 +78,7 @@ conv_to<out_eT>::from(const Base<in_eT, T1>& in, const typename arma_cx_only<in_
   
   const Proxy<T1> P(in.get_ref());
   
-  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
-    {
-    const uword n_rows = P.get_n_rows();
-    const uword n_cols = P.get_n_cols();
-    
-    arma_conform_check_bounds(true, (arma_str::format("conv_to(): expected 1x1 matrix; got %zux%zu") % std::size_t(n_rows) % std::size_t(n_cols)) );
-    }
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1 matrix" );
   
   out_eT out;
   
@@ -115,14 +103,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_not_cx<
   
   const ProxyCube<T1> P(in.get_ref());
   
-  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
-    {
-    const uword n_r = P.get_n_rows();
-    const uword n_c = P.get_n_cols();
-    const uword n_s = P.get_n_slices();
-    
-    arma_conform_check_bounds(true, (arma_str::format("conv_to(): expected 1x1x1 cube; got %zux%zux%zu") % std::size_t(n_r) % std::size_t(n_c) % std::size_t(n_s)) );
-    }
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   return out_eT(ProxyCube<T1>::use_at ? P.at(0,0,0) : P[0]);
   }
@@ -143,14 +124,7 @@ conv_to<out_eT>::from(const BaseCube<in_eT, T1>& in, const typename arma_cx_only
   
   const ProxyCube<T1> P(in.get_ref());
   
-  if( (arma_config::check_conform) && (P.get_n_elem() != 1) )
-    {
-    const uword n_r = P.get_n_rows();
-    const uword n_c = P.get_n_cols();
-    const uword n_s = P.get_n_slices();
-    
-    arma_conform_check_bounds(true, (arma_str::format("conv_to(): expected 1x1x1 cube; got %zux%zux%zu") % std::size_t(n_r) % std::size_t(n_c) % std::size_t(n_s)) );
-    }
+  arma_conform_check( (P.get_n_elem() != 1), "conv_to(): expected 1x1x1 cube" );
   
   out_eT out;
   
