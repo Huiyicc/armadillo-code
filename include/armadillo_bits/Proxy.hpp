@@ -897,10 +897,10 @@ struct Proxy< SpToDOp<T1, op_type> >
 
 
 
-template<typename T1>
-struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
+template<typename eT>
+struct Proxy< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   {
-  typedef typename T1::elem_type                   elem_type;
+  typedef eT                                       elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
   typedef Mat<elem_type>                           stored_type;
   typedef const elem_type*                         ea_type;
@@ -915,12 +915,12 @@ struct Proxy< SpToDOp<T1, op_nonzeros_spmat> >
   static constexpr bool is_xvec = false;
   static constexpr bool is_d2sp = false;
   
-  arma_aligned const unwrap_spmat<T1> U;
-  arma_aligned const Mat<elem_type>   Q;
+  arma_aligned const SpMat<elem_type>& R;
+  arma_aligned const Mat<elem_type>    Q;
   
-  inline explicit Proxy(const SpToDOp<T1, op_nonzeros_spmat>& A)
-    : U(A.m)
-    , Q(const_cast<elem_type*>(U.M.values), U.M.n_nonzero, 1, false, true)
+  inline explicit Proxy(const SpToDOp<SpMat<eT>, op_sp_nonzeros>& A)
+    : R(A.m)
+    , Q(const_cast<elem_type*>(R.values), R.n_nonzero, 1, false, true)
     {
     arma_debug_sigprint();
     }

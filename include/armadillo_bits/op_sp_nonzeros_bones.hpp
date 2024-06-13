@@ -16,33 +16,20 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup fn_nonzeros
+
+//! \addtogroup op_sp_nonzeros
 //! @{
 
 
-template<typename T1>
-arma_warn_unused
-inline
-const Op<T1,op_nonzeros>
-nonzeros(const Base<typename T1::elem_type,T1>& X)
+
+class op_sp_nonzeros
+  : public traits_op_col
   {
-  arma_debug_sigprint();
+  public:
   
-  return Op<T1,op_nonzeros>(X.get_ref());
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-const SpToDOp<T1, op_sp_nonzeros>
-nonzeros(const SpBase<typename T1::elem_type,T1>& X)
-  {
-  arma_debug_sigprint();
-  
-  return SpToDOp<T1, op_sp_nonzeros>(X.get_ref());
-  }
+  template<typename T1>
+  static inline void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_nonzeros>& X);
+  };
 
 
 
