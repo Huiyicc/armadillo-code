@@ -457,7 +457,7 @@ struct Proxy< Op<T1, op_type> >
   static constexpr bool is_row  = Op<T1, op_type>::is_row;
   static constexpr bool is_col  = Op<T1, op_type>::is_col;
   static constexpr bool is_xvec = Op<T1, op_type>::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = Op<T1, op_type>::is_spop;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -501,11 +501,11 @@ struct Proxy< Glue<T1, T2, glue_type> >
   static constexpr bool use_at      = false;
   static constexpr bool use_mp      = false;
   static constexpr bool has_subview = false;
-  static constexpr bool is_spop = false;
   
   static constexpr bool is_row  = Glue<T1, T2, glue_type>::is_row;
   static constexpr bool is_col  = Glue<T1, T2, glue_type>::is_col;
   static constexpr bool is_xvec = Glue<T1, T2, glue_type>::is_xvec;
+  static constexpr bool is_spop = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -1599,7 +1599,7 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = T1::is_spop;
   
   const unwrap<T1>                 U;
   const xtrans_mat<elem_type,true> Q;
@@ -1641,7 +1641,7 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = T1::is_spop;
   
   const unwrap<T1>                  U;
   const xtrans_mat<elem_type,false> Q;
@@ -1692,7 +1692,7 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
   static constexpr bool is_row  = Op<T1, op_htrans>::is_row;
   static constexpr bool is_col  = Op<T1, op_htrans>::is_col;
   static constexpr bool is_xvec = Op<T1, op_htrans>::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = Op<T1, op_htrans>::is_spop;
   
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
   arma_aligned const Mat<elem_type>   Q;
@@ -1735,7 +1735,7 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
   static constexpr bool is_row  = Op<T1, op_strans>::is_row;
   static constexpr bool is_col  = Op<T1, op_strans>::is_col;
   static constexpr bool is_xvec = Op<T1, op_strans>::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = Op<T1, op_strans>::is_spop;
   
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
   arma_aligned const Mat<elem_type>   Q;
@@ -1803,7 +1803,7 @@ struct Proxy< Op<T1, op_htrans> >
   static constexpr bool is_row  = Proxy_xtrans::is_row;
   static constexpr bool is_col  = Proxy_xtrans::is_col;
   static constexpr bool is_xvec = Proxy_xtrans::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = Proxy_xtrans::is_spop;
   
   using Proxy_xtrans::Q;
   
@@ -1866,7 +1866,7 @@ struct Proxy< Op<T1, op_strans> >
   static constexpr bool is_row  = Proxy_xtrans::is_row;
   static constexpr bool is_col  = Proxy_xtrans::is_col;
   static constexpr bool is_xvec = Proxy_xtrans::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = Proxy_xtrans::is_spop;
   
   using Proxy_xtrans::Q;
   
@@ -2263,7 +2263,7 @@ struct Proxy< Op<T1, op_htrans2> >
   static constexpr bool is_row  = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_row;
   static constexpr bool is_col  = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_col;
   static constexpr bool is_xvec = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_xvec;
-  static constexpr bool is_spop = false;
+  static constexpr bool is_spop = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_spop;
   
   arma_aligned const      Op<T1, op_htrans>                     R;
   arma_aligned const eOp< Op<T1, op_htrans>, eop_scalar_times > Q;
