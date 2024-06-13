@@ -47,7 +47,9 @@ class SpRow : public SpMat<eT>
   
   inline SpRow& operator=(const eT val);
   
-  template<typename T1> inline            SpRow(const Base<eT,T1>& X);
+  // template<typename T1> inline            SpRow(const Base<eT,T1>& X);
+  template<typename T1> inline explicit   SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == false >::result* junk = nullptr);
+  template<typename T1> inline            SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_spop == true  >::result* junk = nullptr);
   template<typename T1> inline SpRow& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpRow(const SpBase<eT,T1>& X);
