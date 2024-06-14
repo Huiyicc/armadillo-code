@@ -32,7 +32,6 @@ class SpToDGlue : public Base< typename T1::elem_type, SpToDGlue<T1, T2, glue_ty
   static constexpr bool is_row  = glue_type::template traits<T1,T2>::is_row;
   static constexpr bool is_col  = glue_type::template traits<T1,T2>::is_col;
   static constexpr bool is_xvec = glue_type::template traits<T1,T2>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   inline explicit SpToDGlue(const T1& in_A, const T2& in_B);
   inline         ~SpToDGlue();

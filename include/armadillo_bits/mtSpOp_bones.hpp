@@ -34,7 +34,6 @@ class mtSpOp : public SpBase< out_eT, mtSpOp<out_eT, T1, spop_type> >
   static constexpr bool is_row  = spop_type::template traits<T1>::is_row;
   static constexpr bool is_col  = spop_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = spop_type::template traits<T1>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   inline explicit  mtSpOp(const T1& in_m);
   inline           mtSpOp(const T1& in_m, const uword aux_uword_a, const uword aux_uword_b);

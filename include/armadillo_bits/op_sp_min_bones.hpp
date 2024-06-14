@@ -29,11 +29,10 @@ class op_sp_min
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = true;
-    static constexpr bool is_d2sp = true;
     };
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1, op_sp_min>& in);
+  inline static void apply(Mat<typename T1::elem_type>& out, const mtSpReductionOp<typename T1::elem_type, T1, op_sp_min>& in);
   
   //
   

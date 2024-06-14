@@ -883,11 +883,10 @@ SpMat<eT>::SpMat
 
 
 
-// marked as explicit
 template<typename eT>
 template<typename T1>
 inline
-SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_d2sp == false >::result* junk)
+SpMat<eT>::SpMat(const Base<eT, T1>& x)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -898,29 +897,6 @@ SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_d2sp == false
   , col_ptrs(nullptr)
   {
   arma_debug_sigprint_this(this);
-  arma_ignore(junk);
-  
-  (*this).operator=(x);
-  }
-
-
-
-// not marked as explicit
-template<typename eT>
-template<typename T1>
-inline
-SpMat<eT>::SpMat(const Base<eT, T1>& x, typename enable_if< T1::is_d2sp == true >::result* junk)
-  : n_rows(0)
-  , n_cols(0)
-  , n_elem(0)
-  , n_nonzero(0)
-  , vec_state(0)
-  , values(nullptr)
-  , row_indices(nullptr)
-  , col_ptrs(nullptr)
-  {
-  arma_debug_sigprint_this(this);
-  arma_ignore(junk);
   
   (*this).operator=(x);
   }
@@ -2208,6 +2184,118 @@ SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
   const SpMat<eT> m(X);
   
   return (*this).operator/=(m);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>::SpMat(const mtSpReductionOp<eT, T1, op_type>& X)
+  : n_rows(0)
+  , n_cols(0)
+  , n_elem(0)
+  , n_nonzero(0)
+  , vec_state(0)
+  , values(nullptr)
+  , row_indices(nullptr)
+  , col_ptrs(nullptr)
+  {
+  arma_debug_sigprint_this(this);
+  
+  const Mat<eT> tmp(X);
+  
+  (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator+=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator+=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator-=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator-=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator*=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator*=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator%=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator%=(tmp);
+  }
+
+
+
+template<typename eT>
+template<typename T1, typename op_type>
+inline
+SpMat<eT>&
+SpMat<eT>::operator/=(const mtSpReductionOp<eT, T1, op_type>& X)
+  {
+  arma_debug_sigprint();
+  
+  const Mat<eT> tmp(X);
+  
+  return (*this).operator/=(tmp);
   }
 
 

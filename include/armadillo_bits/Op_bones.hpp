@@ -31,7 +31,6 @@ struct Op_traits<T1, op_type, true>
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
-  static constexpr bool is_d2sp = op_type::template traits<T1>::is_d2sp;
   };
 
 template<typename T1, typename op_type>
@@ -40,7 +39,6 @@ struct Op_traits<T1, op_type, false>
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   };
 
 

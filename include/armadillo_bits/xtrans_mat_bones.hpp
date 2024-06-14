@@ -31,7 +31,6 @@ class xtrans_mat : public Base< eT, xtrans_mat<eT, do_conj> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   static constexpr bool really_do_conj = (do_conj && is_cx<eT>::yes);
   

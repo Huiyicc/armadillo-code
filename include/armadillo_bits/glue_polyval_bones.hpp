@@ -32,7 +32,6 @@ class glue_polyval
     static constexpr bool is_row  = T2::is_row;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = T2::is_xvec;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename eT> inline static void apply_noalias(Mat<eT>& out, const Mat<eT>& P, const Mat<eT>& X);

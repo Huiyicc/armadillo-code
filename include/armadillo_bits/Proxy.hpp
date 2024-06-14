@@ -35,7 +35,6 @@
 // is_row           = boolean to indicate Q object can be treated a row vector
 // is_col           = boolean to indicate Q object can be treated a column vector
 // is_xvec          = boolean to indicate Q object is a vector with unknown orientation
-// is_d2sp          = boolean to indicate Q object can be implicitly converted from dense to sparse (for backwards compatibility)
 // 
 // Q                = object that can be unwrapped via the unwrap family of classes (ie. Q must be convertible to Mat)
 // 
@@ -83,7 +82,6 @@ struct Proxy_fixed
   static constexpr bool is_row  = T1::is_row;
   static constexpr bool is_col  = T1::is_col;
   static constexpr bool is_xvec = T1::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const T1& Q;
   
@@ -169,7 +167,6 @@ struct Proxy< Mat<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<eT>& Q;
   
@@ -217,7 +214,6 @@ struct Proxy< Col<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Col<eT>& Q;
   
@@ -265,7 +261,6 @@ struct Proxy< Row<eT> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Row<eT>& Q;
   
@@ -313,7 +308,6 @@ struct Proxy< Gen<T1, gen_type> >
   static constexpr bool is_row  = Gen<T1, gen_type>::is_row;
   static constexpr bool is_col  = Gen<T1, gen_type>::is_col;
   static constexpr bool is_xvec = Gen<T1, gen_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Gen<T1, gen_type>& Q;
   
@@ -361,7 +355,6 @@ struct Proxy< eOp<T1, eop_type> >
   static constexpr bool is_row  = eOp<T1, eop_type>::is_row;
   static constexpr bool is_col  = eOp<T1, eop_type>::is_col;
   static constexpr bool is_xvec = eOp<T1, eop_type>::is_xvec;
-  static constexpr bool is_d2sp = eOp<T1, eop_type>::is_d2sp;
   
   arma_aligned const eOp<T1, eop_type>& Q;
   
@@ -409,7 +402,6 @@ struct Proxy< eGlue<T1, T2, eglue_type> >
   static constexpr bool is_row  = eGlue<T1, T2, eglue_type>::is_row;
   static constexpr bool is_col  = eGlue<T1, T2, eglue_type>::is_col;
   static constexpr bool is_xvec = eGlue<T1, T2, eglue_type>::is_xvec;
-  static constexpr bool is_d2sp = eGlue<T1, T2, eglue_type>::is_d2sp;
   
   arma_aligned const eGlue<T1, T2, eglue_type>& Q;
   
@@ -457,7 +449,6 @@ struct Proxy< Op<T1, op_type> >
   static constexpr bool is_row  = Op<T1, op_type>::is_row;
   static constexpr bool is_col  = Op<T1, op_type>::is_col;
   static constexpr bool is_xvec = Op<T1, op_type>::is_xvec;
-  static constexpr bool is_d2sp = Op<T1, op_type>::is_d2sp;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -505,7 +496,6 @@ struct Proxy< Glue<T1, T2, glue_type> >
   static constexpr bool is_row  = Glue<T1, T2, glue_type>::is_row;
   static constexpr bool is_col  = Glue<T1, T2, glue_type>::is_col;
   static constexpr bool is_xvec = Glue<T1, T2, glue_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -556,7 +546,6 @@ struct Proxy< Glue<T1, T2, glue_min> >
   static constexpr bool is_row  = this_Glue_type::is_row;
   static constexpr bool is_col  = this_Glue_type::is_col;
   static constexpr bool is_xvec = this_Glue_type::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const this_Glue_type& Q;
   arma_aligned const Proxy<T1>       P1;
@@ -615,7 +604,6 @@ struct Proxy< Glue<T1, T2, glue_max> >
   static constexpr bool is_row  = this_Glue_type::is_row;
   static constexpr bool is_col  = this_Glue_type::is_col;
   static constexpr bool is_xvec = this_Glue_type::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const this_Glue_type& Q;
   arma_aligned const Proxy<T1>       P1;
@@ -671,7 +659,6 @@ struct Proxy< mtOp<out_eT, T1, op_type> >
   static constexpr bool is_row  = mtOp<out_eT, T1, op_type>::is_row;
   static constexpr bool is_col  = mtOp<out_eT, T1, op_type>::is_col;
   static constexpr bool is_xvec = mtOp<out_eT, T1, op_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<out_eT> Q;
   
@@ -719,7 +706,6 @@ struct Proxy< mtGlue<out_eT, T1, T2, glue_type> >
   static constexpr bool is_row  = mtGlue<out_eT, T1, T2, glue_type>::is_row;
   static constexpr bool is_col  = mtGlue<out_eT, T1, T2, glue_type>::is_col;
   static constexpr bool is_xvec = mtGlue<out_eT, T1, T2, glue_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<out_eT> Q;
   
@@ -767,7 +753,6 @@ struct Proxy< CubeToMatOp<T1, op_type> >
   static constexpr bool is_row  = CubeToMatOp<T1, op_type>::is_row;
   static constexpr bool is_col  = CubeToMatOp<T1, op_type>::is_col;
   static constexpr bool is_xvec = CubeToMatOp<T1, op_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -815,7 +800,6 @@ struct Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const unwrap_cube<T1> U;
   arma_aligned const Mat<elem_type>  Q;
@@ -865,7 +849,6 @@ struct Proxy< SpToDOp<T1, op_type> >
   static constexpr bool is_row  = SpToDOp<T1, op_type>::is_row;
   static constexpr bool is_col  = SpToDOp<T1, op_type>::is_col;
   static constexpr bool is_xvec = SpToDOp<T1, op_type>::is_xvec;
-  static constexpr bool is_d2sp = SpToDOp<T1, op_type>::is_d2sp;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -913,7 +896,6 @@ struct Proxy< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const SpMat<elem_type>& R;
   arma_aligned const Mat<elem_type>    Q;
@@ -947,54 +929,6 @@ struct Proxy< SpToDOp<SpMat<eT>, op_sp_nonzeros> >
 
 
 
-template<typename out_eT, typename T1, typename op_type>
-struct Proxy< mtSpToDOp<out_eT, T1, op_type> >
-  {
-  typedef          out_eT                       elem_type;
-  typedef typename get_pod_type<out_eT>::result pod_type;
-  typedef          Mat<out_eT>                  stored_type;
-  typedef          const elem_type*             ea_type;
-  typedef          const Mat<out_eT>&           aligned_ea_type;
-  
-  static constexpr bool use_at      = false;
-  static constexpr bool use_mp      = false;
-  static constexpr bool has_subview = false;
-  
-  static constexpr bool is_row  = mtSpToDOp<out_eT, T1, op_type>::is_row;
-  static constexpr bool is_col  = mtSpToDOp<out_eT, T1, op_type>::is_col;
-  static constexpr bool is_xvec = mtSpToDOp<out_eT, T1, op_type>::is_xvec;
-  static constexpr bool is_d2sp = mtSpToDOp<out_eT, T1, op_type>::is_d2sp;
-  
-  arma_aligned const Mat<out_eT> Q;
-  
-  inline explicit Proxy(const mtSpToDOp<out_eT, T1, op_type>& A)
-    : Q(A)
-    {
-    arma_debug_sigprint();
-    }
-  
-  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
-  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
-  arma_inline uword get_n_elem() const { return Q.n_elem;              }
-  
-  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
-  arma_inline elem_type at         (const uword r, const uword c) const { return Q.at(r, c);  }
-  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
-  
-  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
-  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
-  
-  template<typename eT2>
-  constexpr bool is_alias(const Mat<eT2>&) const { return false; }
-  
-  template<typename eT2>
-  constexpr bool has_overlap(const subview<eT2>&) const { return false; }
-  
-  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
-  };
-
-
-
 template<typename T1, typename T2, typename glue_type>
 struct Proxy< SpToDGlue<T1, T2, glue_type> >
   {
@@ -1011,7 +945,6 @@ struct Proxy< SpToDGlue<T1, T2, glue_type> >
   static constexpr bool is_row  = SpToDGlue<T1, T2, glue_type>::is_row;
   static constexpr bool is_col  = SpToDGlue<T1, T2, glue_type>::is_col;
   static constexpr bool is_xvec = SpToDGlue<T1, T2, glue_type>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -1059,7 +992,6 @@ struct Proxy< subview<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview<eT>& Q;
   
@@ -1107,7 +1039,6 @@ struct Proxy< subview_col<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_col<eT>& Q;
   
@@ -1155,7 +1086,6 @@ struct Proxy< subview_cols<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_cols<eT>& sv;
   arma_aligned const Mat<eT>           Q;
@@ -1205,7 +1135,6 @@ struct Proxy< subview_row<eT> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row<eT>& Q;
   
@@ -1253,7 +1182,6 @@ struct Proxy< subview_elem1<eT,T1> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_elem1<eT,T1>& Q;
   arma_aligned const Proxy<T1>             R;
@@ -1308,7 +1236,6 @@ struct Proxy< subview_elem2<eT,T1,T2> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<eT> Q;
   
@@ -1356,7 +1283,6 @@ struct Proxy< diagview<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const diagview<eT>& Q;
   
@@ -1412,7 +1338,6 @@ struct Proxy_diagvec_mat< Op<T1, op_diagvec> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type>&     R;
   arma_aligned const diagview<elem_type> Q;
@@ -1469,7 +1394,6 @@ struct Proxy_diagvec_expr< Op<T1, op_diagvec> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -1543,7 +1467,6 @@ struct Proxy< Op<T1, op_diagvec2> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<elem_type> Q;
   
@@ -1599,7 +1522,6 @@ struct Proxy_xtrans_default< Op<T1, op_htrans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = T1::is_d2sp;
   
   const unwrap<T1>                 U;
   const xtrans_mat<elem_type,true> Q;
@@ -1641,7 +1563,6 @@ struct Proxy_xtrans_default< Op<T1, op_strans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = T1::is_d2sp;
   
   const unwrap<T1>                  U;
   const xtrans_mat<elem_type,false> Q;
@@ -1692,7 +1613,6 @@ struct Proxy_xtrans_vector< Op<T1, op_htrans> >
   static constexpr bool is_row  = Op<T1, op_htrans>::is_row;
   static constexpr bool is_col  = Op<T1, op_htrans>::is_col;
   static constexpr bool is_xvec = Op<T1, op_htrans>::is_xvec;
-  static constexpr bool is_d2sp = Op<T1, op_htrans>::is_d2sp;
   
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
   arma_aligned const Mat<elem_type>   Q;
@@ -1735,7 +1655,6 @@ struct Proxy_xtrans_vector< Op<T1, op_strans> >
   static constexpr bool is_row  = Op<T1, op_strans>::is_row;
   static constexpr bool is_col  = Op<T1, op_strans>::is_col;
   static constexpr bool is_xvec = Op<T1, op_strans>::is_xvec;
-  static constexpr bool is_d2sp = Op<T1, op_strans>::is_d2sp;
   
   arma_aligned const quasi_unwrap<T1> U; // avoid copy if T1 is a Row, Col or subview_col
   arma_aligned const Mat<elem_type>   Q;
@@ -1803,7 +1722,6 @@ struct Proxy< Op<T1, op_htrans> >
   static constexpr bool is_row  = Proxy_xtrans::is_row;
   static constexpr bool is_col  = Proxy_xtrans::is_col;
   static constexpr bool is_xvec = Proxy_xtrans::is_xvec;
-  static constexpr bool is_d2sp = Proxy_xtrans::is_d2sp;
   
   using Proxy_xtrans::Q;
   
@@ -1866,7 +1784,6 @@ struct Proxy< Op<T1, op_strans> >
   static constexpr bool is_row  = Proxy_xtrans::is_row;
   static constexpr bool is_col  = Proxy_xtrans::is_col;
   static constexpr bool is_xvec = Proxy_xtrans::is_xvec;
-  static constexpr bool is_d2sp = Proxy_xtrans::is_d2sp;
   
   using Proxy_xtrans::Q;
   
@@ -1914,7 +1831,6 @@ struct Proxy_subview_row_htrans_cx
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row_htrans<eT> Q;
   
@@ -1949,7 +1865,6 @@ struct Proxy_subview_row_htrans_non_cx
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row_strans<eT> Q;
   
@@ -2010,7 +1925,6 @@ struct Proxy< Op<subview_row<eT>, op_htrans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   using Proxy_sv_row_ht::Q;
   
@@ -2058,7 +1972,6 @@ struct Proxy< Op<subview_row<eT>, op_strans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row_strans<eT> Q;
   
@@ -2108,7 +2021,6 @@ struct Proxy< Op< Row< std::complex<T> >, op_htrans> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   const xvec_htrans<eT> Q;
   const Row<eT>&        src;
@@ -2160,7 +2072,6 @@ struct Proxy< Op< Col< std::complex<T> >, op_htrans> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   const xvec_htrans<eT> Q;
   const Col<eT>&        src;
@@ -2212,7 +2123,6 @@ struct Proxy< Op< subview_col< std::complex<T> >, op_htrans> >
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   const xvec_htrans<eT>  Q;
   const subview_col<eT>& src;
@@ -2263,7 +2173,6 @@ struct Proxy< Op<T1, op_htrans2> >
   static constexpr bool is_row  = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_row;
   static constexpr bool is_col  = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_col;
   static constexpr bool is_xvec = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_xvec;
-  static constexpr bool is_d2sp = eOp< Op<T1, op_htrans>, eop_scalar_times>::is_d2sp;
   
   arma_aligned const      Op<T1, op_htrans>                     R;
   arma_aligned const eOp< Op<T1, op_htrans>, eop_scalar_times > Q;
@@ -2313,7 +2222,6 @@ struct Proxy< subview_row_strans<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row_strans<eT>& Q;
   
@@ -2361,7 +2269,6 @@ struct Proxy< subview_row_htrans<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const subview_row_htrans<eT>& Q;
   
@@ -2409,7 +2316,6 @@ struct Proxy< xtrans_mat<eT, do_conj> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<eT> Q;
   
@@ -2457,7 +2363,6 @@ struct Proxy< xvec_htrans<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = true;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Mat<eT> Q;
   
@@ -2513,7 +2418,6 @@ struct Proxy_vectorise_col_mat< Op<T1, op_vectorise_col> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const unwrap<T1>     U;
   arma_aligned const Mat<elem_type> Q;
@@ -2571,7 +2475,6 @@ struct Proxy_vectorise_col_expr< Op<T1, op_vectorise_col> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   arma_aligned const Op<T1, op_vectorise_col>& Q;
   arma_aligned const Proxy<T1>                 R;

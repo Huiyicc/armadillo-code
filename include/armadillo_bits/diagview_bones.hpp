@@ -34,7 +34,6 @@ class diagview : public Base< eT, diagview<eT> >
   static constexpr bool is_row  = false;
   static constexpr bool is_col  = true;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   const uword row_offset;
   const uword col_offset;

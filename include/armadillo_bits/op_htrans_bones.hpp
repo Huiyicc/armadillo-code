@@ -32,7 +32,6 @@ class op_htrans
     static constexpr bool is_row  = T1::is_col;  // deliberately swapped
     static constexpr bool is_col  = T1::is_row;
     static constexpr bool is_xvec = T1::is_xvec;
-    static constexpr bool is_d2sp = T1::is_d2sp;
     };
   
   template<typename eT>
@@ -94,7 +93,6 @@ class op_htrans2
     static constexpr bool is_row  = T1::is_col;  // deliberately swapped
     static constexpr bool is_col  = T1::is_row;
     static constexpr bool is_xvec = T1::is_xvec;
-    static constexpr bool is_d2sp = T1::is_d2sp;
     };
   
   template<typename T1>

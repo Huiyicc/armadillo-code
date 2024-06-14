@@ -32,7 +32,6 @@ class glue_solve_gen_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen_default>& X);
@@ -52,7 +51,6 @@ class glue_solve_gen_full
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_gen_full>& X);
@@ -72,7 +70,6 @@ class glue_solve_tri_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri_default>& X);
@@ -92,7 +89,6 @@ class glue_solve_tri_full
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = T2::is_col;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1, typename T2> inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_solve_tri_full>& X);

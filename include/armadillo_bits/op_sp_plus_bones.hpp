@@ -32,7 +32,6 @@ class op_sp_plus
     static constexpr bool is_row  = T1::is_row;
     static constexpr bool is_col  = T1::is_col;
     static constexpr bool is_xvec = T1::is_xvec;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename T1>

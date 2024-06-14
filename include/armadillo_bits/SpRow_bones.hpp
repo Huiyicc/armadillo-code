@@ -25,14 +25,13 @@ template<typename eT>
 class SpRow : public SpMat<eT>
   {
   public:
-
+  
   typedef eT                                elem_type;
   typedef typename get_pod_type<eT>::result pod_type;
   
   static constexpr bool is_row  = true;
   static constexpr bool is_col  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   
   inline          SpRow();
@@ -50,9 +49,7 @@ class SpRow : public SpMat<eT>
   
   inline SpRow(const Row<eT>& X);  // for backwards compatibility
   
-  // template<typename T1> inline            SpRow(const Base<eT,T1>& X);
-  template<typename T1> inline explicit   SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == false >::result* junk = nullptr);
-  template<typename T1> inline            SpRow(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == true  >::result* junk = nullptr);  // for backwards compatibility
+  template<typename T1> inline            SpRow(const Base<eT,T1>& X);
   template<typename T1> inline SpRow& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpRow(const SpBase<eT,T1>& X);

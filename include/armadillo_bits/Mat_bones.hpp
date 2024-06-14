@@ -56,7 +56,6 @@ class Mat : public Base< eT, Mat<eT> >
   static constexpr bool is_col  = false;
   static constexpr bool is_row  = false;
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   inline ~Mat();
   inline  Mat();
@@ -369,13 +368,13 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator%=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const SpToDOp<T1, op_type>& X);
   
-  template<typename T1, typename op_type> inline             Mat(const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator= (const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator+=(const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator-=(const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator*=(const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator%=(const mtSpToDOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator/=(const mtSpToDOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline explicit    Mat(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator= (const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator+=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator-=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator*=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator%=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator/=(const mtSpReductionOp<eT, T1, op_type>& X);
   
   template<typename T1, typename T2, typename glue_type> inline             Mat(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline Mat& operator= (const Glue<T1, T2, glue_type>& X);
@@ -839,7 +838,6 @@ class Mat<eT>::fixed : public Mat<eT>
   static constexpr bool is_col  = (fixed_n_cols == 1);
   static constexpr bool is_row  = (fixed_n_rows == 1);
   static constexpr bool is_xvec = false;
-  static constexpr bool is_d2sp = false;
   
   static const uword n_rows;  // value provided below the class definition
   static const uword n_cols;  // value provided below the class definition

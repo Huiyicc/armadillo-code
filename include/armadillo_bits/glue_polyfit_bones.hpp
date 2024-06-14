@@ -32,7 +32,6 @@ class glue_polyfit
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = true;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   
   template<typename eT> inline static bool apply_noalias(Mat<eT>& out, const Col<eT>& X, const Col<eT>& Y, const uword N);

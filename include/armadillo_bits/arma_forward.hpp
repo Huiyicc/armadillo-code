@@ -156,7 +156,6 @@ struct traits_op_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -169,7 +168,6 @@ struct traits_op_xvec
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = true;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -182,7 +180,6 @@ struct traits_op_col
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = true;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -195,7 +192,6 @@ struct traits_op_row
     static constexpr bool is_row  = true;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -208,7 +204,6 @@ struct traits_op_passthru
     static constexpr bool is_row  = T1::is_row;
     static constexpr bool is_col  = T1::is_col;
     static constexpr bool is_xvec = T1::is_xvec;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -221,7 +216,6 @@ struct traits_glue_default
     static constexpr bool is_row  = false;
     static constexpr bool is_col  = false;
     static constexpr bool is_xvec = false;
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -234,7 +228,6 @@ struct traits_glue_or
     static constexpr bool is_row  = (T1::is_row  || T2::is_row );
     static constexpr bool is_col  = (T1::is_col  || T2::is_col );
     static constexpr bool is_xvec = (T1::is_xvec || T2::is_xvec);
-    static constexpr bool is_d2sp = false;
     };
   };
 
@@ -251,7 +244,6 @@ template<                 typename T1, typename eop_type> class         eOp;
 template<                 typename T1, typename  op_type> class     SpToDOp; 
 template<                 typename T1, typename  op_type> class CubeToMatOp;
 template<typename out_eT, typename T1, typename  op_type> class        mtOp;
-template<typename out_eT, typename T1, typename  op_type> class   mtSpToDOp;
 
 template<                 typename T1, typename T2, typename  glue_type> class      Glue;
 template<                 typename T1, typename T2, typename eglue_type> class     eGlue;
@@ -334,9 +326,7 @@ struct state_type
 
 template<                 typename T1, typename spop_type> class   SpOp;
 template<typename out_eT, typename T1, typename spop_type> class mtSpOp;
-
-template<                 typename T1, typename spop_type> class   SpReductionOp;
-template<typename out_eT, typename T1, typename spop_type> class mtSpReductionOp;
+template<typename out_eT, typename T1, typename   op_type> class mtSpReductionOp;
 
 template<                 typename T1, typename T2, typename spglue_type> class   SpGlue;
 template<typename out_eT, typename T1, typename T2, typename spglue_type> class mtSpGlue;

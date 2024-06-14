@@ -343,19 +343,6 @@ struct is_SpToDOp< const SpToDOp<T1,op_type> >
 
 
 template<typename T>
-struct is_mtSpToDOp
-  { static constexpr bool value = false; };
- 
-template<typename eT, typename T1, typename op_type>
-struct is_mtSpToDOp< mtSpToDOp<eT, T1, op_type> >
-  { static constexpr bool value = true; };
- 
-template<typename eT, typename T1, typename op_type>
-struct is_mtSpToDOp< const mtSpToDOp<eT, T1, op_type> >
-  { static constexpr bool value = true; };
-
-
-template<typename T>
 struct is_SpToDGlue
   { static constexpr bool value = false; };
  
@@ -570,7 +557,6 @@ struct is_arma_type2
   || is_CubeToMatOp<T1>::value
   || is_SpToDOp<T1>::value
   || is_SpToDGlue<T1>::value
-  || is_mtSpToDOp<T1>::value
   ;
   };
 
@@ -705,15 +691,6 @@ struct is_SpOp< SpOp<T1,op_type> >
 
 
 template<typename T>
-struct is_SpReductionOp
-  { static constexpr bool value = false; };
- 
-template<typename T1, typename op_type>
-struct is_SpReductionOp< SpReductionOp<T1,op_type> >
-  { static constexpr bool value = true; };
-
-
-template<typename T>
 struct is_SpGlue
   { static constexpr bool value = false; };
  
@@ -732,20 +709,20 @@ struct is_mtSpOp< mtSpOp<eT, T1, spop_type> >
 
 
 template<typename T>
-struct is_mtSpReductionOp
-  { static constexpr bool value = false; };
- 
-template<typename eT, typename T1, typename spop_type>
-struct is_mtSpReductionOp< mtSpReductionOp<eT, T1, spop_type> >
-  { static constexpr bool value = true; };
-
-
-template<typename T>
 struct is_mtSpGlue
   { static constexpr bool value = false; };
  
 template<typename eT, typename T1, typename T2, typename spglue_type>
 struct is_mtSpGlue< mtSpGlue<eT, T1, T2, spglue_type> >
+  { static constexpr bool value = true; };
+
+
+template<typename T>
+struct is_mtSpReductionOp
+  { static constexpr bool value = false; };
+ 
+template<typename eT, typename T1, typename op_type>
+struct is_mtSpReductionOp< mtSpReductionOp<eT, T1, op_type> >
   { static constexpr bool value = true; };
 
 
@@ -761,11 +738,10 @@ struct is_arma_sparse_type
   || is_SpSubview_row<T1>::value
   || is_spdiagview<T1>::value
   || is_SpOp<T1>::value
-  || is_SpReductionOp<T1>::value
   || is_SpGlue<T1>::value
   || is_mtSpOp<T1>::value
-  || is_mtSpReductionOp<T1>::value
   || is_mtSpGlue<T1>::value
+  || is_mtSpReductionOp<T1>::value
   ;
   };
 

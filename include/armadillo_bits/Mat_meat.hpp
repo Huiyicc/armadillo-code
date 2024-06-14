@@ -5658,7 +5658,7 @@ Mat<eT>::operator/=(const SpToDOp<T1, op_type>& X)
 template<typename eT>
 template<typename T1, typename op_type>
 inline
-Mat<eT>::Mat(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::Mat(const mtSpReductionOp<eT, T1, op_type>& X)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -5678,7 +5678,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
 
@@ -5693,7 +5693,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator+=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator+=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -5708,7 +5708,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator-=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator-=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -5723,7 +5723,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator*=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator*=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -5738,7 +5738,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator%=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator%=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -5753,7 +5753,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 Mat<eT>&
-Mat<eT>::operator/=(const mtSpToDOp<eT, T1, op_type>& X)
+Mat<eT>::operator/=(const mtSpReductionOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   

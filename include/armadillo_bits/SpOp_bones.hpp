@@ -32,7 +32,6 @@ class SpOp : public SpBase< typename T1::elem_type, SpOp<T1, op_type> >
   static constexpr bool is_row  = op_type::template traits<T1>::is_row;
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
-  static constexpr bool is_d2sp = false;
   
   inline explicit SpOp(const T1& in_m);
   inline          SpOp(const T1& in_m, const elem_type in_aux);

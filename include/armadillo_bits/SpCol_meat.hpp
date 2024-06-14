@@ -129,43 +129,13 @@ SpCol<eT>::operator=(const eT val)
 
 
 
-// template<typename eT>
-// template<typename T1>
-// inline
-// SpCol<eT>::SpCol(const Base<eT,T1>& X)
-//   : SpMat<eT>(arma_vec_indicator(), 1)
-//   {
-//   arma_debug_sigprint();
-//   
-//   SpMat<eT>::operator=(X.get_ref());
-//   }
-
-
-
-// marked as explicit
 template<typename eT>
 template<typename T1>
 inline
-SpCol<eT>::SpCol(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == false >::result* junk)
+SpCol<eT>::SpCol(const Base<eT,T1>& X)
   : SpMat<eT>(arma_vec_indicator(), 1)
   {
   arma_debug_sigprint();
-  arma_ignore(junk);
-  
-  SpMat<eT>::operator=(X.get_ref());
-  }
-
-
-
-// not marked as explicit
-template<typename eT>
-template<typename T1>
-inline
-SpCol<eT>::SpCol(const Base<eT,T1>& X, typename enable_if< T1::is_d2sp == true >::result* junk)
-  : SpMat<eT>(arma_vec_indicator(), 1)
-  {
-  arma_debug_sigprint();
-  arma_ignore(junk);
   
   SpMat<eT>::operator=(X.get_ref());
   }
