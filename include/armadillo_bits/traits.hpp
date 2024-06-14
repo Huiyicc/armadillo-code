@@ -705,6 +705,15 @@ struct is_SpOp< SpOp<T1,op_type> >
 
 
 template<typename T>
+struct is_SpReductionOp
+  { static constexpr bool value = false; };
+ 
+template<typename T1, typename op_type>
+struct is_SpReductionOp< SpReductionOp<T1,op_type> >
+  { static constexpr bool value = true; };
+
+
+template<typename T>
 struct is_SpGlue
   { static constexpr bool value = false; };
  
@@ -719,6 +728,15 @@ struct is_mtSpOp
  
 template<typename eT, typename T1, typename spop_type>
 struct is_mtSpOp< mtSpOp<eT, T1, spop_type> >
+  { static constexpr bool value = true; };
+
+
+template<typename T>
+struct is_mtSpReductionOp
+  { static constexpr bool value = false; };
+ 
+template<typename eT, typename T1, typename spop_type>
+struct is_mtSpReductionOp< mtSpReductionOp<eT, T1, spop_type> >
   { static constexpr bool value = true; };
 
 
@@ -743,8 +761,10 @@ struct is_arma_sparse_type
   || is_SpSubview_row<T1>::value
   || is_spdiagview<T1>::value
   || is_SpOp<T1>::value
+  || is_SpReductionOp<T1>::value
   || is_SpGlue<T1>::value
   || is_mtSpOp<T1>::value
+  || is_mtSpReductionOp<T1>::value
   || is_mtSpGlue<T1>::value
   ;
   };
