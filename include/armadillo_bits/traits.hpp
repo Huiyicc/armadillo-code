@@ -718,11 +718,11 @@ struct is_mtSpGlue< mtSpGlue<eT, T1, T2, spglue_type> >
 
 
 template<typename T>
-struct is_mtSpReductionOp
+struct is_mtSpReduceOp
   { static constexpr bool value = false; };
  
 template<typename eT, typename T1, typename op_type>
-struct is_mtSpReductionOp< mtSpReductionOp<eT, T1, op_type> >
+struct is_mtSpReduceOp< mtSpReduceOp<eT, T1, op_type> >
   { static constexpr bool value = true; };
 
 
@@ -741,7 +741,7 @@ struct is_arma_sparse_type
   || is_SpGlue<T1>::value
   || is_mtSpOp<T1>::value
   || is_mtSpGlue<T1>::value
-  || is_mtSpReductionOp<T1>::value
+  || is_mtSpReduceOp<T1>::value
   ;
   };
 

@@ -2191,7 +2191,7 @@ SpMat<eT>::operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X)
 template<typename eT>
 template<typename T1, typename op_type>
 inline
-SpMat<eT>::SpMat(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::SpMat(const mtSpReduceOp<eT, T1, op_type>& X)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -2214,7 +2214,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -2229,7 +2229,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator+=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator+=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -2244,7 +2244,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator-=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator-=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -2259,7 +2259,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator*=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator*=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -2274,7 +2274,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator%=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator%=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   
@@ -2289,7 +2289,7 @@ template<typename eT>
 template<typename T1, typename op_type>
 inline
 SpMat<eT>&
-SpMat<eT>::operator/=(const mtSpReductionOp<eT, T1, op_type>& X)
+SpMat<eT>::operator/=(const mtSpReduceOp<eT, T1, op_type>& X)
   {
   arma_debug_sigprint();
   

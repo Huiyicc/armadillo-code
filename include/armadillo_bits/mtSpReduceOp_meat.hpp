@@ -16,14 +16,14 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup mtSpReductionOp
+//! \addtogroup mtSpReduceOp
 //! @{
 
 
 
 template<typename out_eT, typename T1, typename op_type>
 inline
-mtSpReductionOp<out_eT, T1, op_type>::mtSpReductionOp(const T1& in_m)
+mtSpReduceOp<out_eT, T1, op_type>::mtSpReduceOp(const T1& in_m)
   : m(in_m)
   {
   arma_debug_sigprint();
@@ -33,7 +33,7 @@ mtSpReductionOp<out_eT, T1, op_type>::mtSpReductionOp(const T1& in_m)
 
 template<typename out_eT, typename T1, typename op_type>
 inline
-mtSpReductionOp<out_eT, T1, op_type>::mtSpReductionOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b)
+mtSpReduceOp<out_eT, T1, op_type>::mtSpReduceOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b)
   : m(in_m)
   , aux_uword_a(in_aux_uword_a)
   , aux_uword_b(in_aux_uword_b)
@@ -45,7 +45,7 @@ mtSpReductionOp<out_eT, T1, op_type>::mtSpReductionOp(const T1& in_m, const uwor
 
 template<typename out_eT, typename T1, typename op_type>
 inline
-mtSpReductionOp<out_eT, T1, op_type>::~mtSpReductionOp()
+mtSpReduceOp<out_eT, T1, op_type>::~mtSpReduceOp()
   {
   arma_debug_sigprint();
   }

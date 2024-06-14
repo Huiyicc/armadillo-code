@@ -686,7 +686,7 @@ struct SpProxy< mtSpGlue<out_eT, T1, T2, spglue_type> >
 
 
 template<typename out_eT, typename T1, typename op_type>
-struct SpProxy< mtSpReductionOp<out_eT, T1, op_type> >
+struct SpProxy< mtSpReduceOp<out_eT, T1, op_type> >
   {
   typedef          out_eT                          elem_type;
   typedef typename get_pod_type<elem_type>::result pod_type;
@@ -698,13 +698,13 @@ struct SpProxy< mtSpReductionOp<out_eT, T1, op_type> >
   static constexpr bool use_iterator   = false;
   static constexpr bool Q_is_generated = true;
   
-  static constexpr bool is_row  = mtSpReductionOp<out_eT, T1, op_type>::is_row;
-  static constexpr bool is_col  = mtSpReductionOp<out_eT, T1, op_type>::is_col;
-  static constexpr bool is_xvec = mtSpReductionOp<out_eT, T1, op_type>::is_xvec;
+  static constexpr bool is_row  = mtSpReduceOp<out_eT, T1, op_type>::is_row;
+  static constexpr bool is_col  = mtSpReduceOp<out_eT, T1, op_type>::is_col;
+  static constexpr bool is_xvec = mtSpReduceOp<out_eT, T1, op_type>::is_xvec;
   
   arma_aligned const SpMat<out_eT> Q;
   
-  inline explicit SpProxy(const mtSpReductionOp<out_eT, T1, op_type>& A)
+  inline explicit SpProxy(const mtSpReduceOp<out_eT, T1, op_type>& A)
     : Q(A)
     {
     arma_debug_sigprint();

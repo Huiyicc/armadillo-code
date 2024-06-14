@@ -368,13 +368,13 @@ class Mat : public Base< eT, Mat<eT> >
   template<typename T1, typename op_type> inline Mat& operator%=(const SpToDOp<T1, op_type>& X);
   template<typename T1, typename op_type> inline Mat& operator/=(const SpToDOp<T1, op_type>& X);
   
-  template<typename T1, typename op_type> inline explicit    Mat(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator= (const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator+=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator-=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator*=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator%=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline Mat& operator/=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline explicit    Mat(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator= (const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator+=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator-=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator*=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator%=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline Mat& operator/=(const mtSpReduceOp<eT, T1, op_type>& X);
   
   template<typename T1, typename T2, typename glue_type> inline             Mat(const Glue<T1, T2, glue_type>& X);
   template<typename T1, typename T2, typename glue_type> inline Mat& operator= (const Glue<T1, T2, glue_type>& X);

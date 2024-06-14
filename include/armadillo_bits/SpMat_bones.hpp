@@ -200,13 +200,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1, typename T2, typename spglue_type> inline SpMat& operator%=(const mtSpGlue<eT, T1, T2, spglue_type>& X);
   template<typename T1, typename T2, typename spglue_type> inline SpMat& operator/=(const mtSpGlue<eT, T1, T2, spglue_type>& X);
   
-  template<typename T1, typename op_type> inline             SpMat(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator= (const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator+=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator-=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator*=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator%=(const mtSpReductionOp<eT, T1, op_type>& X);
-  template<typename T1, typename op_type> inline SpMat& operator/=(const mtSpReductionOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline             SpMat(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator= (const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator+=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator-=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator*=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator%=(const mtSpReduceOp<eT, T1, op_type>& X);
+  template<typename T1, typename op_type> inline SpMat& operator/=(const mtSpReduceOp<eT, T1, op_type>& X);
   
   
   arma_inline       SpSubview_row<eT> row(const uword row_num);

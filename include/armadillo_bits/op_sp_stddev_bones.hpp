@@ -34,7 +34,7 @@ class op_sp_stddev
     };
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReductionOp<typename T1::pod_type, T1, op_sp_stddev>& in);
+  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_stddev>& in);
   
   template<typename T1>
   inline static void apply_slow(Mat<typename T1::pod_type>& out, const SpProxy<T1>& p, const uword norm_type, const uword dim);

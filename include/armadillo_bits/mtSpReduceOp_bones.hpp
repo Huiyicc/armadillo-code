@@ -16,13 +16,13 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup mtSpReductionOp
+//! \addtogroup mtSpReduceOp
 //! @{
 
 
 
 template<typename out_eT, typename T1, typename op_type>
-class mtSpReductionOp : public SpBase< out_eT, mtSpReductionOp<out_eT, T1, op_type> >
+class mtSpReduceOp : public SpBase< out_eT, mtSpReduceOp<out_eT, T1, op_type> >
   {
   public:
   
@@ -35,9 +35,9 @@ class mtSpReductionOp : public SpBase< out_eT, mtSpReductionOp<out_eT, T1, op_ty
   static constexpr bool is_col  = op_type::template traits<T1>::is_col;
   static constexpr bool is_xvec = op_type::template traits<T1>::is_xvec;
   
-  inline explicit mtSpReductionOp(const T1& in_m);
-  inline          mtSpReductionOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
-  inline         ~mtSpReductionOp();
+  inline explicit mtSpReduceOp(const T1& in_m);
+  inline          mtSpReduceOp(const T1& in_m, const uword in_aux_uword_a, const uword in_aux_uword_b);
+  inline         ~mtSpReduceOp();
   
   arma_aligned const T1&   m;            //!< the operand; must be derived from SpBase
   arma_aligned       uword aux_uword_a;  //!< auxiliary data, uword format

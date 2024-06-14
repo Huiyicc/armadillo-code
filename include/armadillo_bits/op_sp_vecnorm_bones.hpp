@@ -33,7 +33,7 @@ class op_sp_vecnorm
     };
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReductionOp<typename T1::pod_type, T1, op_sp_vecnorm>& expr);
+  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>& expr);
   
   template<typename eT>
   inline static void apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword k);
@@ -56,7 +56,7 @@ class op_sp_vecnorm_ext
     };
   
   template<typename T1>
-  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReductionOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>& expr);
+  inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>& expr);
   
   template<typename eT>
   inline static void apply_direct(Mat< typename get_pod_type<eT>::result >& out, const SpMat<eT>& X, const uword method_id);

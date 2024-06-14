@@ -194,12 +194,12 @@ struct unwrap_spmat< mtSpGlue<out_eT, T1, T2, spglue_type> >
 
 
 template<typename out_eT, typename T1, typename op_type>
-struct unwrap_spmat< mtSpReductionOp<out_eT, T1, op_type> >
+struct unwrap_spmat< mtSpReduceOp<out_eT, T1, op_type> >
   {
   typedef SpMat<out_eT> stored_type;
   
   inline
-  unwrap_spmat(const mtSpReductionOp<out_eT, T1, op_type>& A)
+  unwrap_spmat(const mtSpReduceOp<out_eT, T1, op_type>& A)
     : M(A)
     {
     arma_debug_sigprint();
