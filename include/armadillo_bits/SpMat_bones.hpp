@@ -142,9 +142,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   template<typename T1> inline SpMat& operator/=(const Op<T1, op_diagmat>& expr);
   template<typename T1> inline SpMat& operator%=(const Op<T1, op_diagmat>& expr);
   
-  // template<typename T1, typename op_type> inline SpMat(const   SpToDOp<    T1, op_type>& expr);
-  // template<typename T1, typename op_type> inline SpMat(const mtSpToDOp<eT, T1, op_type>& expr);
-  
   //! construction of complex matrix out of two non-complex matrices
   template<typename T1, typename T2>
   inline explicit SpMat(const SpBase<pod_type, T1>& A, const SpBase<pod_type, T2>& B);
