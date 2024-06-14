@@ -49,7 +49,7 @@ class SpRow : public SpMat<eT>
   
   inline SpRow(const Row<eT>& X);  // for backwards compatibility
   
-  template<typename T1> inline            SpRow(const Base<eT,T1>& X);
+  template<typename T1> inline explicit   SpRow(const Base<eT,T1>& X);
   template<typename T1> inline SpRow& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpRow(const SpBase<eT,T1>& X);

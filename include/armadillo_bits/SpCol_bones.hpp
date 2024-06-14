@@ -49,7 +49,7 @@ class SpCol : public SpMat<eT>
   
   inline SpCol(const Col<eT>& X);  // for backwards compatibility
   
-  template<typename T1> inline            SpCol(const Base<eT,T1>& X);
+  template<typename T1> inline explicit   SpCol(const Base<eT,T1>& X);
   template<typename T1> inline SpCol& operator=(const Base<eT,T1>& X);
   
   template<typename T1> inline            SpCol(const SpBase<eT,T1>& X);
