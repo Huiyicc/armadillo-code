@@ -20,6 +20,19 @@
 //! @{
 
 
+// NOTE: mtSpReduceOp is dedicated for reduction operations on sparse matrices,
+// NOTE: including sum(), min(), max(), mean(), var(), stddev(),
+// NOTE  where the entire sparse matrix is reduced to a vector.
+// NOTE: 
+// NOTE: Even though it would make more sense for mtSpReduceOp to be derived from Base
+// NOTE: (as it's more efficient to store the resulting vectors in dense format),
+// NOTE: mtSpReduceOp is derived from SpBase so the default user-accessible output is in sparse storage format.
+// NOTE. This is to mimic the behaviour of Octave and to keep compatibility with existing user code.
+// NOTE: 
+// NOTE: However, for simplicity and efficiency, each mtSpReduceOp op_type::apply() function
+// NOTE: must output to a dense matrix, ie. apply(Mat, ...).
+// NOTE: The SpMat class handles mtSpReduceOp by converting the dense output to a sparse representation.
+// NOTE: The Mat class has an explicit constructor to efficiently handle mtSpReduceOp.
 
 template<typename out_eT, typename T1, typename op_type>
 class mtSpReduceOp : public SpBase< out_eT, mtSpReduceOp<out_eT, T1, op_type> >
