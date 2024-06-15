@@ -21,11 +21,6 @@
 
 
 // NOTE: SpToDOp is dedicated for unary operations on sparse matrices that result in dense matrices.
-// NOTE: The default user-accessible output is in dense format.
-// NOTE: However, for ease of use and to increase efficiency,
-// NOTE: the SpMat class has an explicit constructor to handle SpToDOp.
-// NOTE: Each SpToDOp op_type::apply() function must have two forms:
-// NOTE: apply(Mat, ...) and apply(SpMat, ...).
 
 template<typename T1, typename op_type>
 class SpToDOp : public Base< typename T1::elem_type, SpToDOp<T1, op_type> >

@@ -21,16 +21,9 @@
 
 
 class op_sp_vecnorm
+  : public traits_op_xvec
   {
   public:
-  
-  template<typename T1>
-  struct traits
-    {
-    static constexpr bool is_row  = false;
-    static constexpr bool is_col  = false;
-    static constexpr bool is_xvec = true;
-    };
   
   template<typename T1>
   inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm>& expr);
@@ -44,16 +37,9 @@ class op_sp_vecnorm
 
 
 class op_sp_vecnorm_ext
+  : public traits_op_xvec
   {
   public:
-  
-  template<typename T1>
-  struct traits
-    {
-    static constexpr bool is_row  = false;
-    static constexpr bool is_col  = false;
-    static constexpr bool is_xvec = true;
-    };
   
   template<typename T1>
   inline static void apply(Mat<typename T1::pod_type>& out, const mtSpReduceOp<typename T1::pod_type, T1, op_sp_vecnorm_ext>& expr);

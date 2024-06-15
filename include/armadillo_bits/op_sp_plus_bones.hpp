@@ -23,23 +23,12 @@
 
 // Add a scalar to a sparse matrix; this will return a dense matrix.
 class op_sp_plus
+  : public traits_op_passthru
   {
   public:
   
   template<typename T1>
-  struct traits
-    {
-    static constexpr bool is_row  = T1::is_row;
-    static constexpr bool is_col  = T1::is_col;
-    static constexpr bool is_xvec = T1::is_xvec;
-    };
-  
-  template<typename T1>
   inline static void apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_plus>& in);
-  
-  // force apply into an SpMat<>
-  template<typename T1>
-  inline static void apply(SpMat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_plus>& in);
   
   // used for the optimization of sparse % (sparse + scalar)
   template<typename eT, typename T2, typename T3>
