@@ -32,13 +32,7 @@ op_sp_plus::apply(Mat<typename T1::elem_type>& out, const SpToDOp<T1,op_sp_plus>
   out.set_size(P.get_n_rows(), P.get_n_cols());
   out.fill(in.aux);
   
-  typename SpProxy<T1>::const_iterator_type it     = P.begin();
-  typename SpProxy<T1>::const_iterator_type it_end = P.end();
-  
-  for(; it != it_end; ++it)
-    {
-    out.at(it.row(), it.col()) += (*it);
-    }
+  out += P.Q;
   }
 
 
