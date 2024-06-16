@@ -62,6 +62,8 @@ class SpCol : public SpMat<eT>
   arma_warn_unused inline const SpOp<SpCol<eT>,spop_htrans> ht() const;
   arma_warn_unused inline const SpOp<SpCol<eT>,spop_strans> st() const;
   
+  arma_warn_unused inline const SpToDOp<SpCol<eT>,op_sp_as_dense> as_dense() const;
+  
   inline void shed_row (const uword row_num);
   inline void shed_rows(const uword in_row1, const uword in_row2);
   

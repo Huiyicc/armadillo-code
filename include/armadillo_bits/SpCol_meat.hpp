@@ -244,6 +244,16 @@ SpCol<eT>::st() const
 
 
 
+template<typename eT>
+inline
+const SpToDOp<SpCol<eT>,op_sp_as_dense>
+SpCol<eT>::as_dense() const
+  {
+  return SpToDOp<SpCol<eT>,op_sp_as_dense>(*this);
+  }
+
+
+
 //! remove specified row
 template<typename eT>
 inline

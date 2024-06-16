@@ -138,7 +138,7 @@ class spglue_min;
 class spglue_rel_lt;
 class spglue_rel_gt;
 
-
+class op_sp_as_dense;
 
 class op_internal_equ;
 class op_internal_plus;

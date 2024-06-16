@@ -246,6 +246,16 @@ SpRow<eT>::st() const
 
 
 
+template<typename eT>
+inline
+const SpToDOp<SpRow<eT>,op_sp_as_dense>
+SpRow<eT>::as_dense() const
+  {
+  return SpToDOp<SpRow<eT>,op_sp_as_dense>(*this);
+  }
+
+
+
 //! remove specified columns
 template<typename eT>
 inline
