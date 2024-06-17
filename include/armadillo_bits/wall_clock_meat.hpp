@@ -44,9 +44,9 @@ wall_clock::tic()
   {
   arma_debug_sigprint();
   
-  chrono_time1 = std::chrono::steady_clock::now();
-  
   valid = true;
+  
+  chrono_time1 = std::chrono::steady_clock::now();
   }
 
 
