@@ -4382,26 +4382,15 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.
@@ -4468,26 +4457,15 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
       }
     }
   
-  uword cur_index = 0;
-  uword count     = 0;  
-  
-  for(uword lcol = 0; lcol < in_cols; ++lcol)
-  for(uword lrow = 0; lrow < in_rows; ++lrow)
+  for(uword i=0; i<new_n_nonzero; ++i)
     {
-    if(count == indices[cur_index])
-      {
-      access::rw(row_indices[cur_index]) = lrow;
-      access::rw(col_ptrs[lcol + 1])++;
-      ++cur_index;
-      }
+    const uword index = indices[i];
     
-    ++count;
-    }
-  
-  if(cur_index != new_n_nonzero)
-    {
-    // Fix size to correct size.
-    mem_resize(cur_index);
+    const uword lcol = index / in_rows;
+    const uword lrow = index % in_rows;
+    
+    access::rw(row_indices[i]) = lrow;
+    access::rw(col_ptrs[lcol + 1])++;
     }
   
   // Sum column pointers.
