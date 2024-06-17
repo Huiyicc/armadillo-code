@@ -36,22 +36,22 @@
 // is_col           = boolean to indicate Q object can be treated a column vector
 // is_xvec          = boolean to indicate Q object is a vector with unknown orientation
 // 
-// Q                = object that can be unwrapped via the unwrap family of classes (ie. Q must be convertible to Mat)
+// Q                = object that can be unwrapped via unwrap family of classes (ie. Q must be convertible to Mat)
 // 
-// get_n_rows()     = return the number of rows in Q
-// get_n_cols()     = return the number of columns in Q
-// get_n_elem()     = return the number of elements in Q
+// get_n_rows()     = return number of rows in Q
+// get_n_cols()     = return number of columns in Q
+// get_n_elem()     = return number of elements in Q
 // 
-// operator[i]      = linear element accessor; valid only if the 'use_at' boolean is false
-// at(row,col)      = access elements via (row,col); valid only if the 'use_at' boolean is true
-// at_alt(i)        = aligned linear element accessor; valid only if the 'use_at' boolean is false and is_aligned() returns true
+// operator[i]      = linear element accessor; valid only if 'use_at' boolean is false
+// at(row,col)      = access elements via (row,col); valid only if 'use_at' boolean is true
+// at_alt(i)        = aligned linear element accessor; valid only if 'use_at' boolean is false and is_aligned() returns true
 // 
-// get_ea()         = return the object that provides linear access to elements via operator[i]
-// get_aligned_ea() = return the object that provides linear access to elements via at_alt(i); valid only if is_aligned() returns true
+// get_ea()         = return object that provides linear access to elements via operator[i]
+// get_aligned_ea() = return object that provides linear access to elements via at_alt(i); valid only if is_aligned() returns true
 // 
-// is_alias(X)      = return true/false indicating whether the Q object aliases matrix X
-// has_overlap(X)   = return true/false indicating whether the Q object has overlap with subview X
-// is_aligned()     = return true/false indicating whether the Q object has aligned memory
+// is_alias(X)      = return true/false to indicate Q object aliases matrix X
+// has_overlap(X)   = return true/false to indicate Q object has overlap with subview X
+// is_aligned()     = return true/false to indicate Q object has aligned memory
 
 
 
