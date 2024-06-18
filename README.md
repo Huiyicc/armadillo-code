@@ -464,9 +464,6 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 * ensmallen: C++ library for non-linear numerical optimisation (L-BFGS, SGD, CMA-ES, etc)  
   https://ensmallen.org/
 
-* Bandicoot: C++ library for accelerated linear algebra on GPUs  
-  https://coot.sourceforge.io
-
 * MLPACK: extensive library of machine learning algorithms  
   https://mlpack.org
 
