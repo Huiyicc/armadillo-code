@@ -4399,6 +4399,8 @@ SpMat<eT>::sprandu(const uword in_rows, const uword in_cols, const double densit
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
   
+  (*this).remove_zeros();
+  
   return *this;
   }
 
@@ -4473,6 +4475,8 @@ SpMat<eT>::sprandn(const uword in_rows, const uword in_cols, const double densit
     {
     access::rw(col_ptrs[lcol]) += col_ptrs[lcol - 1];
     }
+  
+  (*this).remove_zeros();
   
   return *this;
   }
