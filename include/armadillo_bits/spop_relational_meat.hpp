@@ -175,6 +175,8 @@ spop_rel_gteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
+  // TODO: optimisation for spmat >= positive_nonzero_value
+  
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k >= tmp); return; }
   
   if(arma_config::warn_level >= 2)
@@ -219,6 +221,8 @@ spop_rel_lt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
+  // TODO: optimisation for spmat < 0
+  
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp < k); return; }
   
   if(arma_config::warn_level >= 2)
@@ -262,6 +266,10 @@ spop_rel_gt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_p
   
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
+  
+  // TODO: optimisation for spmat > 0  -> this is equivalent to spones(A)
+  
+  // TODO: optimisation for spmat > positive_nonzero_value
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp > k); return; }
   
