@@ -45,6 +45,23 @@ spop_rel_lt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_pr
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k < tmp); return; }
   
+  if(k > eT(0))
+    {
+    arma_debug_print("optimisation: k > 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( k < (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
+  
   if(arma_config::warn_level >= 2)
     {
     const uword A_n_zeros = A.n_elem - A.n_nonzero;
@@ -88,6 +105,23 @@ spop_rel_gt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_pr
   const SpMat<eT>& A =   U.M;
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k > tmp); return; }
+  
+  if(k < eT(0))
+    {
+    arma_debug_print("optimisation: k < 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( k > (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
@@ -133,6 +167,23 @@ spop_rel_lteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lte
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k <= tmp); return; }
   
+  if(k > eT(0))
+    {
+    arma_debug_print("optimisation: k > 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( k <= (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
+  
   if(arma_config::warn_level >= 2)
     {
     const uword A_n_zeros = A.n_elem - A.n_nonzero;
@@ -175,9 +226,24 @@ spop_rel_gteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  // TODO: optimisation for spmat >= positive_nonzero_value
-  
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k >= tmp); return; }
+  
+  if(k < eT(0))
+    {
+    arma_debug_print("optimisation: k < 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( k >= (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
@@ -221,9 +287,24 @@ spop_rel_lt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  // TODO: optimisation for spmat < 0
-  
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp < k); return; }
+  
+  if(k < eT(0))
+    {
+    arma_debug_print("optimisation: k < 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( (*it) < k )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
@@ -267,11 +348,24 @@ spop_rel_gt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  // TODO: optimisation for spmat > 0  -> this is equivalent to spones(A)
-  
-  // TODO: optimisation for spmat > positive_nonzero_value
-  
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp > k); return; }
+  
+  if(k > eT(0))
+    {
+    arma_debug_print("optimisation: k > 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( (*it) > k )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
@@ -317,6 +411,23 @@ spop_rel_lteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp <= k); return; }
   
+  if(k < eT(0))
+    {
+    arma_debug_print("optimisation: k < 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( (*it) <= k )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
+  
   if(arma_config::warn_level >= 2)
     {
     const uword A_n_zeros = A.n_elem - A.n_nonzero;
@@ -360,6 +471,23 @@ spop_rel_gteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt
   const SpMat<eT>& A =   U.M;
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp >= k); return; }
+  
+  if(k > eT(0))
+    {
+    arma_debug_print("optimisation: k > 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( (*it) >= k )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
@@ -405,6 +533,23 @@ spop_rel_eq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_eq>& X)
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp == k); return; }
   
+  if(k != eT(0))
+    {
+    arma_debug_print("optimisation: k != 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      if( (*it) == k )  { out.at(it.row(), it.col()) = uword(1); }
+      }
+    
+    return;
+    }
+  
   if(arma_config::warn_level >= 2)
     {
     const uword A_n_zeros = A.n_elem - A.n_nonzero;
@@ -448,6 +593,23 @@ spop_rel_noteq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_noteq>
   const SpMat<eT>& A =   U.M;
   
   if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp != k); return; }
+  
+  if(k == eT(0))
+    {
+    arma_debug_print("optimisation: k = 0");
+    
+    out.zeros(A.n_rows, A.n_cols);
+    
+    typename SpMat<eT>::const_iterator it     = A.begin();
+    typename SpMat<eT>::const_iterator it_end = A.end();
+    
+    for(; it != it_end; ++it)
+      {
+      out.at(it.row(), it.col()) = uword(1);
+      }
+    
+    return;
+    }
   
   if(arma_config::warn_level >= 2)
     {
