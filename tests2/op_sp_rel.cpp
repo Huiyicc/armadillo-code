@@ -15,6 +15,7 @@
 // limitations under the License.
 // ------------------------------------------------------------------------
 
+#define ARMA_WARN_LEVEL 1
 #include <armadillo>
 
 #include "catch.hpp"
