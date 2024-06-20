@@ -392,7 +392,7 @@ template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
   arma_ignore(junk1);
@@ -400,11 +400,11 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -415,23 +415,23 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
     
     for(uword i=0; i<n_elem; ++i)
       {
-      const eT Ai = A[i];
+      const eT val = A[i];
       
-      bool not_zero;
+      bool condition;
       
-           if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (Ai  == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (Ai  != val); }
-      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  Ai ); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (Ai  <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  Ai ); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (Ai  >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= Ai ); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (Ai  <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= Ai ); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (Ai  >= val); }
-      else { not_zero = false; }
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
       
-      n_nonzero += (not_zero) ? uword(1) : uword(0);
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -442,27 +442,27 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
     for(uword col=0; col < P_n_cols; ++col)
     for(uword row=0; row < P_n_rows; ++row)
       {
-      const eT Pi = P.at(row,col);
+      const eT val = P.at(row,col);
       
-      bool not_zero;
+      bool condition;
       
-           if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (Pi  == val); }
-      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (Pi  != val); }
-      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  Pi ); }
-      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (Pi  <  val); }
-      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  Pi ); }
-      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (Pi  >  val); }
-      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= Pi ); }
-      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (Pi  <= val); }
-      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= Pi ); }
-      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (Pi  >= val); }
-      else { not_zero = false; }
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { condition = (val == k  ); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { condition = (val != k  ); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { condition = (k   <  val); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { condition = (val <  k  ); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { condition = (k   >  val); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { condition = (val >  k  ); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { condition = (k   <= val); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { condition = (val <= k  ); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { condition = (k   >= val); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { condition = (val >= k  ); }
+      else { condition = false; }
       
-      n_nonzero += (not_zero) ? uword(1) : uword(0);
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
@@ -471,7 +471,7 @@ template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
+accu(const mtOp<uword,T1,op_type>& X, const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
   arma_ignore(junk1);
@@ -479,11 +479,11 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
   
   typedef typename T1::elem_type eT;
   
-  const eT val = X.aux;
+  const eT k = X.aux;
   
   const Proxy<T1> P(X.m);
   
-  uword n_nonzero = 0;
+  uword count = 0;
   
   if(Proxy<T1>::use_at == false)
     {
@@ -494,15 +494,15 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
     
     for(uword i=0; i<n_elem; ++i)
       {
-      const eT Ai = A[i];
+      const eT val = A[i];
       
-      bool not_zero;
+      bool condition;
       
-           if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (Ai == val); }
-      else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (Ai != val); }
-      else { not_zero = false; }
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
       
-      n_nonzero += (not_zero) ? uword(1) : uword(0);
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   else
@@ -513,19 +513,19 @@ accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>:
     for(uword col=0; col < P_n_cols; ++col)
     for(uword row=0; row < P_n_rows; ++row)
       {
-      const eT Pi = P.at(row,col);
+      const eT val = P.at(row,col);
       
-      bool not_zero;
+      bool condition;
       
-           if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (Pi == val); }
-      else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (Pi != val); }
-      else { not_zero = false; }
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { condition = (val == k); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { condition = (val != k); }
+      else { condition = false; }
       
-      n_nonzero += (not_zero) ? uword(1) : uword(0);
+      count += (condition) ? uword(1) : uword(0);
       }
     }
   
-  return n_nonzero;
+  return count;
   }
 
 
@@ -1158,6 +1158,7 @@ accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop
   typename SpProxy<T1>::const_iterator_type it_end = P.end();
   
   // take into account all non-zero elements
+  
   for(; it != it_end; ++it)
     {
     const eT val = (*it);
@@ -1223,6 +1224,7 @@ accu(const mtSpOp<uword,T1,spop_type>& X, const typename arma_spop_rel_only<spop
   typename SpProxy<T1>::const_iterator_type it_end = P.end();
   
   // take into account all non-zero elements
+  
   for(; it != it_end; ++it)
     {
     const eT val = (*it);
