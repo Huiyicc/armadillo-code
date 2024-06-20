@@ -1080,4 +1080,327 @@ accu(const SpOp<T1, spop_type>& expr)
 
 
 
+// optimisations for sparse relational operations
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_lt_pre>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(scalar < spmat)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (k < eT(0)) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += (k < (*it)) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_gt_pre>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(scalar > spmat)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (k > eT(0)) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += (k > (*it)) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_lteq_pre>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(scalar <= spmat)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (k <= eT(0)) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += (k <= (*it)) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_gteq_pre>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(scalar >= spmat)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (k >= eT(0)) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += (k >= (*it)) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_lt_post>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat < scalar)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (eT(0) < k) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += ((*it) < k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_gt_post>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat > scalar)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (eT(0) > k) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += ((*it) > k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_lteq_post>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat <= scalar)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (eT(0) <= k) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += ((*it) <= k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_gteq_post>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat >= scalar) ##
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  const uword n_zeros = P.get_n_elem() - P.get_n_nonzero();
+  
+  // take into account all implicit zeros
+  uword count = (eT(0) >= k) ? n_zeros : 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // take into account all non-zero elements
+  for(; it != it_end; ++it)  { count += ((*it) >= k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_eq>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat == scalar)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  // accu(spmat == 0) -> number of zeros
+  if(k == eT(0))  { return P.get_n_elem() - P.get_n_nonzero(); }
+  
+  uword count = 0;
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  for(; it != it_end; ++it)  { count += ((*it) == k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+uword
+accu(const mtSpOp<uword,T1,spop_rel_noteq>& X)
+  {
+  arma_debug_sigprint();
+  
+  // operation: accu(spmat != scalar)
+  
+  typedef typename T1::elem_type eT;
+  
+  const eT k = X.aux;
+  
+  const SpProxy<T1> P(X.m);
+  
+  // accu(spmat != 0) -> number of non-zeros
+  if(k == eT(0))  { return P.get_n_nonzero(); }
+  
+  // start with worst-case scenario: all elements are not equal to k
+  uword count = P.get_n_elem();
+  
+  typename SpProxy<T1>::const_iterator_type it     = P.begin();
+  typename SpProxy<T1>::const_iterator_type it_end = P.end();
+  
+  // decrease the count by the number of elements that are equal to k
+  for(; it != it_end; ++it)  { count -= ((*it) == k) ? uword(1) : uword(0); }
+  
+  return count;
+  }
+
+
+
 //! @}
