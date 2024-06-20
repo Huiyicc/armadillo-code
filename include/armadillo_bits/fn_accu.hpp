@@ -388,14 +388,15 @@ accu(const eGlue<T1,T2,eglue_schur>& expr)
 
 
 
-//! explicit handling of Hamming norm (also known as zero norm)
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_noteq>& X)
+accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_not_cx<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
@@ -414,7 +415,23 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] != val) ? uword(1) : uword(0);
+      const eT Ai = A[i];
+      
+      bool not_zero;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (Ai  == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (Ai  != val); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  Ai ); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (Ai  <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  Ai ); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (Ai  >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= Ai ); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (Ai  <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= Ai ); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (Ai  >= val); }
+      else { not_zero = false; }
+      
+      n_nonzero += (not_zero) ? uword(1) : uword(0);
       }
     }
   else
@@ -422,20 +439,26 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) != val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) != val) ? uword(1) : uword(0);
-        }
+      const eT Pi = P.at(row,col);
+      
+      bool not_zero;
+      
+           if(is_same_type<op_type, op_rel_eq       >::yes)  { not_zero = (Pi  == val); }
+      else if(is_same_type<op_type, op_rel_noteq    >::yes)  { not_zero = (Pi  != val); }
+      else if(is_same_type<op_type, op_rel_lt_pre   >::yes)  { not_zero = (val <  Pi ); }
+      else if(is_same_type<op_type, op_rel_lt_post  >::yes)  { not_zero = (Pi  <  val); }
+      else if(is_same_type<op_type, op_rel_gt_pre   >::yes)  { not_zero = (val >  Pi ); }
+      else if(is_same_type<op_type, op_rel_gt_post  >::yes)  { not_zero = (Pi  >  val); }
+      else if(is_same_type<op_type, op_rel_lteq_pre >::yes)  { not_zero = (val <= Pi ); }
+      else if(is_same_type<op_type, op_rel_lteq_post>::yes)  { not_zero = (Pi  <= val); }
+      else if(is_same_type<op_type, op_rel_gteq_pre >::yes)  { not_zero = (val >= Pi ); }
+      else if(is_same_type<op_type, op_rel_gteq_post>::yes)  { not_zero = (Pi  >= val); }
+      else { not_zero = false; }
+      
+      n_nonzero += (not_zero) ? uword(1) : uword(0);
       }
     }
   
@@ -444,13 +467,15 @@ accu(const mtOp<uword,T1,op_rel_noteq>& X)
 
 
 
-template<typename T1>
+template<typename T1, typename op_type>
 arma_warn_unused
 inline
 uword
-accu(const mtOp<uword,T1,op_rel_eq>& X)
+accu(const mtOp<uword,T1,op_type>& X,  const typename arma_op_rel_only<op_type>::result* junk1 = nullptr, const typename arma_cx_only<typename T1::elem_type>::result* junk2 = nullptr)
   {
   arma_debug_sigprint();
+  arma_ignore(junk1);
+  arma_ignore(junk2);
   
   typedef typename T1::elem_type eT;
   
@@ -469,7 +494,15 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     
     for(uword i=0; i<n_elem; ++i)
       {
-      n_nonzero += (A[i] == val) ? uword(1) : uword(0);
+      const eT Ai = A[i];
+      
+      bool not_zero;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (Ai == val); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (Ai != val); }
+      else { not_zero = false; }
+      
+      n_nonzero += (not_zero) ? uword(1) : uword(0);
       }
     }
   else
@@ -477,20 +510,18 @@ accu(const mtOp<uword,T1,op_rel_eq>& X)
     const uword P_n_cols = P.get_n_cols();
     const uword P_n_rows = P.get_n_rows();
     
-    if(P_n_rows == 1)
+    for(uword col=0; col < P_n_cols; ++col)
+    for(uword row=0; row < P_n_rows; ++row)
       {
-      for(uword col=0; col < P_n_cols; ++col)
-        {
-        n_nonzero += (P.at(0,col) == val) ? uword(1) : uword(0);
-        }
-      }
-    else
-      {
-      for(uword col=0; col < P_n_cols; ++col)
-      for(uword row=0; row < P_n_rows; ++row)
-        {
-        n_nonzero += (P.at(row,col) == val) ? uword(1) : uword(0);
-        }
+      const eT Pi = P.at(row,col);
+      
+      bool not_zero;
+      
+           if(is_same_type<op_type, op_rel_eq   >::yes)  { not_zero = (Pi == val); }
+      else if(is_same_type<op_type, op_rel_noteq>::yes)  { not_zero = (Pi != val); }
+      else { not_zero = false; }
+      
+      n_nonzero += (not_zero) ? uword(1) : uword(0);
       }
     }
   
