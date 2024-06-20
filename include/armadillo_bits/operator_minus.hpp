@@ -247,7 +247,7 @@ operator-
   const SpProxy<T1> pa(x);
   
   const quasi_unwrap<T2> UB(y);
-  const Mat<eT> B      = UB.M;
+  const Mat<eT>& B     = UB.M;
   
   Mat<eT> result = -B;
   
