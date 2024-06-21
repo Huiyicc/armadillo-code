@@ -19,9 +19,10 @@
 //! \addtogroup spop_relational
 //! @{
 
-// NOTE: relational operations between sparse matrices and scalars should only be used
-// NOTE: as an argument to the accu() function,
-// NOTE: which omits the generation of intermediate sparse matrices.
+// NOTE: in general, relational operations between sparse matrices and scalars
+// NOTE: have the risk of producing sparse matrices with most elements as non-zeros.
+// NOTE: these operations should only be used as an argument to the accu() function,
+// NOTE: which aims to omit the generation of intermediate sparse matrices.
 
 
 #undef operator_rel
