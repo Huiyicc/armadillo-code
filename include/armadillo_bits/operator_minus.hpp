@@ -25,7 +25,7 @@
 template<typename T1>
 arma_inline
 typename
-enable_if2< (is_arma_type<T1>::value && is_signed<typename T1::elem_type>::value), const eOp<T1, eop_neg> >::result
+enable_if2< is_arma_type<T1>::value, const eOp<T1, eop_neg> >::result
 operator-
 (const T1& X)
   {
@@ -36,18 +36,33 @@ operator-
 
 
 
-template<typename T1>
-arma_inline
-typename enable_if2< (is_arma_type<T1>::value && (is_signed<typename T1::elem_type>::value == false)), const eOp<T1, eop_scalar_times> >::result
-operator-
-(const T1& X)
-  {
-  arma_debug_sigprint();
-  
-  typedef typename T1::elem_type eT;
-  
-  return eOp<T1, eop_scalar_times>(X, eT(-1));
-  }
+// //! unary -
+// template<typename T1>
+// arma_inline
+// typename
+// enable_if2< (is_arma_type<T1>::value && is_signed<typename T1::elem_type>::value), const eOp<T1, eop_neg> >::result
+// operator-
+// (const T1& X)
+//   {
+//   arma_debug_sigprint();
+//   
+//   return eOp<T1,eop_neg>(X);
+//   }
+// 
+// 
+// 
+// template<typename T1>
+// arma_inline
+// typename enable_if2< (is_arma_type<T1>::value && (is_signed<typename T1::elem_type>::value == false)), const eOp<T1, eop_scalar_times> >::result
+// operator-
+// (const T1& X)
+//   {
+//   arma_debug_sigprint();
+//   
+//   typedef typename T1::elem_type eT;
+//   
+//   return eOp<T1, eop_scalar_times>(X, eT(-1));
+//   }
 
 
 
