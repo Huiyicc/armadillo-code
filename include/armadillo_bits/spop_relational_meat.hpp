@@ -19,13 +19,98 @@
 //! \addtogroup spop_relational
 //! @{
 
-// NOTE: relational operations between sparse matrices and scalars are generally not advised
-// NOTE: due to the risk of producing sparse matrices full of non-zeros, gobbling up memory.
-// NOTE: the implementations below are rudimentary, and only intended for completeness.
-// NOTE: 
 // NOTE: relational operations between sparse matrices and scalars should only be used
-// NOTE: as an argument to the accu() function, which omits the generation of intermediate
-// NOTE: sparse matrices.
+// NOTE: as an argument to the accu() function,
+// NOTE: which omits the generation of intermediate sparse matrices.
+
+
+#undef operator_rel
+
+#undef arma_applier_spmat_pre
+#undef arma_applier_spmat_post
+
+
+#define arma_applier_spmat_pre(operator_rel)\
+  {\
+  const uword zero_comp_val = (k operator_rel eT(0)) ? uword(1) : uword(0);\
+  \
+  const uword n_cols = A.n_cols;\
+  const uword n_rows = A.n_rows;\
+  const uword n_elem = A.n_elem;\
+  \
+  Mat<uword> tmp(n_rows, n_cols);\
+  \
+  typename SpMat<eT>::const_iterator it     = A.begin();\
+  typename SpMat<eT>::const_iterator it_end = A.end();\
+  \
+  uword last_pos = 0;\
+  uword offset   = 0;\
+  \
+  for(; it != it_end; ++it)\
+    {\
+    const uword cur_pos = it.row() + n_rows * it.col();\
+    \
+    if((cur_pos - last_pos) > offset)\
+      {\
+      arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, cur_pos - last_pos - offset);\
+      }\
+    \
+    tmp.at(cur_pos) = (k operator_rel (*it)) ? uword(1) : uword(0);\
+    \
+    last_pos = cur_pos;\
+    offset   = 1;\
+    }\
+  \
+  if(last_pos != (n_elem-1))\
+    {\
+    arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, (n_elem - last_pos));\
+    }\
+  \
+  out = tmp;\
+  }
+
+
+
+#define arma_applier_spmat_post(operator_rel)\
+  {\
+  const uword zero_comp_val = (eT(0) operator_rel k) ? uword(1) : uword(0);\
+  \
+  const uword n_cols = A.n_cols;\
+  const uword n_rows = A.n_rows;\
+  const uword n_elem = A.n_elem;\
+  \
+  Mat<uword> tmp(n_rows, n_cols);\
+  \
+  typename SpMat<eT>::const_iterator it     = A.begin();\
+  typename SpMat<eT>::const_iterator it_end = A.end();\
+  \
+  uword last_pos = 0;\
+  uword offset   = 0;\
+  \
+  for(; it != it_end; ++it)\
+    {\
+    const uword cur_pos = it.row() + n_rows * it.col();\
+    \
+    if((cur_pos - last_pos) > offset)\
+      {\
+      arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, cur_pos - last_pos - offset);\
+      }\
+    \
+    tmp.at(cur_pos) = ((*it) operator_rel k) ? uword(1) : uword(0);\
+    \
+    last_pos = cur_pos;\
+    offset   = 1;\
+    }\
+  \
+  if(last_pos != (n_elem-1))\
+    {\
+    arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, (n_elem - last_pos));\
+    }\
+  \
+  out = tmp;\
+  }
+
+
 
 template<typename T1>
 inline
@@ -43,46 +128,25 @@ spop_rel_lt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_pr
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k < tmp); return; }
-  
   if(k > eT(0))
     {
     arma_debug_print("optimisation: k > 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( k < (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      if( k < (*it) )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (k < eT(0)) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(k < A.at(r,c)) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_pre( < );
     }
   }
 
@@ -104,46 +168,25 @@ spop_rel_gt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_pr
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k > tmp); return; }
-  
   if(k < eT(0))
     {
     arma_debug_print("optimisation: k < 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( k > (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      if( k > (*it) )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (k > eT(0)) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(k > A.at(r,c)) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_pre( > );
     }
   }
 
@@ -165,46 +208,25 @@ spop_rel_lteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k <= tmp); return; }
-  
   if(k > eT(0))
     {
     arma_debug_print("optimisation: k > 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( k <= (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      if( k <= (*it) )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (k <= eT(0)) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(k <= A.at(r,c)) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_pre( <= );
     }
   }
 
@@ -226,46 +248,25 @@ spop_rel_gteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k >= tmp); return; }
-  
   if(k < eT(0))
     {
     arma_debug_print("optimisation: k < 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( k >= (*it) )  { out.at(it.row(), it.col()) = uword(1); }
+      if( k >= (*it) )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (k >= eT(0)) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(k >= A.at(r,c)) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_pre( >= );
     }
   }
 
@@ -287,46 +288,25 @@ spop_rel_lt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp < k); return; }
-  
   if(k < eT(0))
     {
     arma_debug_print("optimisation: k < 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( (*it) < k )  { out.at(it.row(), it.col()) = uword(1); }
+      if( (*it) < k )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) < k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) < k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( < );
     }
   }
 
@@ -348,46 +328,25 @@ spop_rel_gt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp > k); return; }
-  
   if(k > eT(0))
     {
     arma_debug_print("optimisation: k > 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( (*it) > k )  { out.at(it.row(), it.col()) = uword(1); }
+      if( (*it) > k )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) > k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) > k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( > );
     }
   }
 
@@ -409,46 +368,25 @@ spop_rel_lteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp <= k); return; }
-  
   if(k < eT(0))
     {
     arma_debug_print("optimisation: k < 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( (*it) <= k )  { out.at(it.row(), it.col()) = uword(1); }
+      if( (*it) <= k )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) <= k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) <= k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( <= );
     }
   }
 
@@ -470,46 +408,25 @@ spop_rel_gteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp >= k); return; }
-  
   if(k > eT(0))
     {
     arma_debug_print("optimisation: k > 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( (*it) >= k )  { out.at(it.row(), it.col()) = uword(1); }
+      if( (*it) >= k )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) >= k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) >= k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( >= );
     }
   }
 
@@ -531,46 +448,25 @@ spop_rel_eq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_eq>& X)
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp == k); return; }
-  
   if(k != eT(0))
     {
     arma_debug_print("optimisation: k != 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      if( (*it) == k )  { out.at(it.row(), it.col()) = uword(1); }
+      if( (*it) == k )  { tmp.at(it.row(), it.col()) = uword(1); }
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) == k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) == k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( == );
     }
   }
 
@@ -592,48 +488,32 @@ spop_rel_noteq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_noteq>
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp != k); return; }
-  
   if(k == eT(0))
     {
     arma_debug_print("optimisation: k = 0");
     
-    out.zeros(A.n_rows, A.n_cols);
+    SpMat<uword> tmp(A.n_rows, A.n_cols);
     
     typename SpMat<eT>::const_iterator it     = A.begin();
     typename SpMat<eT>::const_iterator it_end = A.end();
     
     for(; it != it_end; ++it)
       {
-      out.at(it.row(), it.col()) = uword(1);
+      tmp.at(it.row(), it.col()) = uword(1);
       }
     
-    return;
+    out.steal_mem(tmp);
     }
-  
-  if(arma_config::warn_level >= 2)
+  else
     {
-    const uword A_n_zeros = A.n_elem - A.n_nonzero;
-    
-    const uword out_nnz_min = (eT(0) != k) ? A_n_zeros : 0;
-    
-    if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
-      {
-      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
-      }
-    }
-  
-  const uword n_rows = A.n_rows;
-  const uword n_cols = A.n_cols;
-  
-  out.zeros(n_rows, n_cols);
-  
-  for(uword c=0; c < n_cols; ++c)
-  for(uword r=0; r < n_rows; ++r)
-    {
-    if(A.at(r,c) != k) { out.at(r,c) = uword(1); }
+    arma_applier_spmat_post( != );
     }
   }
+
+
+
+#undef arma_applier_spmat_pre
+#undef arma_applier_spmat_post
 
 
 
