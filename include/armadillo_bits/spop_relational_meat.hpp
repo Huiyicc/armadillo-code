@@ -43,7 +43,7 @@ spop_rel_lt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_pr
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k < tmp); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k < tmp); return; }
   
   if(k > eT(0))
     {
@@ -70,7 +70,7 @@ spop_rel_lt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_pr
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -104,7 +104,7 @@ spop_rel_gt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_pr
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k > tmp); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k > tmp); return; }
   
   if(k < eT(0))
     {
@@ -131,7 +131,7 @@ spop_rel_gt_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_pr
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -165,7 +165,7 @@ spop_rel_lteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k <= tmp); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k <= tmp); return; }
   
   if(k > eT(0))
     {
@@ -192,7 +192,7 @@ spop_rel_lteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lte
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -226,7 +226,7 @@ spop_rel_gteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gte
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (k >= tmp); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (k >= tmp); return; }
   
   if(k < eT(0))
     {
@@ -253,7 +253,7 @@ spop_rel_gteq_pre::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gte
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -287,7 +287,7 @@ spop_rel_lt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp < k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp < k); return; }
   
   if(k < eT(0))
     {
@@ -314,7 +314,7 @@ spop_rel_lt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt_p
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -348,7 +348,7 @@ spop_rel_gt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_p
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp > k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp > k); return; }
   
   if(k > eT(0))
     {
@@ -375,7 +375,7 @@ spop_rel_gt_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt_p
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -409,7 +409,7 @@ spop_rel_lteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp <= k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp <= k); return; }
   
   if(k < eT(0))
     {
@@ -436,7 +436,7 @@ spop_rel_lteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_lt
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -470,7 +470,7 @@ spop_rel_gteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp >= k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp >= k); return; }
   
   if(k > eT(0))
     {
@@ -497,7 +497,7 @@ spop_rel_gteq_post::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_gt
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -531,7 +531,7 @@ spop_rel_eq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_eq>& X)
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp == k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp == k); return; }
   
   if(k != eT(0))
     {
@@ -558,7 +558,7 @@ spop_rel_eq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_eq>& X)
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
@@ -592,7 +592,7 @@ spop_rel_noteq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_noteq>
   const unwrap_spmat<T1> U(X.m);
   const SpMat<eT>& A =   U.M;
   
-  if(U.is_alias(out))  { const SpMat<eT> tmp(U.M); out = (tmp != k); return; }
+  if(U.is_alias(out))  { const SpMat<eT> tmp(A); out = (tmp != k); return; }
   
   if(k == eT(0))
     {
@@ -619,7 +619,7 @@ spop_rel_noteq::apply(SpMat<uword>& out, const mtSpOp<uword, T1, spop_rel_noteq>
     
     if( (out_nnz_min > (A.n_elem/2)) && (A.n_rows > 1) && (A.n_cols > 1) )
       {
-      arma_warn(2, "relational comparison: resulting sparse matrix has more than 50% non-zeros");
+      arma_warn(2, "relational operation: resulting sparse matrix has more than 50% non-zeros");
       }
     }
   
