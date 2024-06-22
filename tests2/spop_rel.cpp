@@ -21,7 +21,7 @@
 
 using namespace arma;
 
-TEMPLATE_TEST_CASE("spmat_rel_val", "[op_sp_rel]", float, double, int, long)
+TEMPLATE_TEST_CASE("spmat_rel_val", "[spop_rel]", float, double, int, long)
   {
   typedef TestType eT;
 
@@ -82,7 +82,7 @@ TEMPLATE_TEST_CASE("spmat_rel_val", "[op_sp_rel]", float, double, int, long)
 
 
 
-TEMPLATE_TEST_CASE("spcol_rel_val", "[op_sp_rel]", float, double, int, long)
+TEMPLATE_TEST_CASE("spcol_rel_val", "[spop_rel]", float, double, int, long)
   {
   typedef TestType eT;
 
@@ -143,7 +143,7 @@ TEMPLATE_TEST_CASE("spcol_rel_val", "[op_sp_rel]", float, double, int, long)
 
 
 
-TEMPLATE_TEST_CASE("sprow_rel_val", "[op_sp_rel]", float, double, int, long)
+TEMPLATE_TEST_CASE("sprow_rel_val", "[spop_rel]", float, double, int, long)
   {
   typedef TestType eT;
 
@@ -204,7 +204,7 @@ TEMPLATE_TEST_CASE("sprow_rel_val", "[op_sp_rel]", float, double, int, long)
 
 
 
-TEMPLATE_TEST_CASE("spsubview_rel_val_small", "[op_sp_rel]", float, double, int, long)
+TEMPLATE_TEST_CASE("spsubview_rel_val_small", "[spop_rel]", float, double, int, long)
   {
   typedef TestType eT;
 
@@ -265,7 +265,7 @@ TEMPLATE_TEST_CASE("spsubview_rel_val_small", "[op_sp_rel]", float, double, int,
 
 
 
-TEMPLATE_TEST_CASE("spmat_rel_val_vs_mat", "[op_sp_rel]", float, double)
+TEMPLATE_TEST_CASE("spmat_rel_val_vs_mat", "[spop_rel]", float, double)
   {
   typedef TestType eT;
 
@@ -331,7 +331,7 @@ TEMPLATE_TEST_CASE("spmat_rel_val_vs_mat", "[op_sp_rel]", float, double)
 
 
 
-TEMPLATE_TEST_CASE("spsubview_rel_val_vs_mat", "[op_sp_rel]", float, double, int, long)
+TEMPLATE_TEST_CASE("spsubview_rel_val_vs_mat", "[spop_rel]", float, double, int, long)
   {
   typedef TestType eT;
 
@@ -397,7 +397,7 @@ TEMPLATE_TEST_CASE("spsubview_rel_val_vs_mat", "[op_sp_rel]", float, double, int
 
 
 
-TEST_CASE("spmat_rel_empty", "[op_sp_rel]")
+TEST_CASE("spmat_rel_empty", "[spop_rel]")
   {
   sp_mat X;
   sp_umat Y = (X > 0);
@@ -407,7 +407,7 @@ TEST_CASE("spmat_rel_empty", "[op_sp_rel]")
 
 
 
-TEST_CASE("spmat_rel_all_zero", "[op_sp_rel]")
+TEST_CASE("spmat_rel_all_zero", "[spop_rel]")
   {
   sp_mat X(150, 150);
   sp_umat Y = (X != 0);
@@ -415,4 +415,136 @@ TEST_CASE("spmat_rel_all_zero", "[op_sp_rel]")
   REQUIRE( Y.n_rows == 150 );
   REQUIRE( Y.n_cols == 150 );
   REQUIRE( all(all(Y.as_dense() == 0)) );
+  }
+
+
+
+TEMPLATE_TEST_CASE("spmat_rel_accu_mat_comparison", "[spop_rel]", float, double)
+  {
+  typedef TestType eT;
+
+  for (uword trial = 0; trial < 10; ++trial)
+    {
+    SpMat<eT> X;
+    X.sprandn(256, 256, 0.3);
+
+    uword Y1 =  accu(X > 1);
+    uword Y2 =  accu(1 > X);
+    uword Y3 =  accu(X >= 1);
+    uword Y4 =  accu(1 >= X);
+    uword Y5 =  accu(X < 0);
+    uword Y6 =  accu(0 < X);
+    uword Y7 =  accu(X <= -1);
+    uword Y8 =  accu(-1 <= X);
+    uword Y9 =  accu(X == 3);
+    uword Y10 = accu(3 == X);
+    uword Y11 = accu(X == 0);
+    uword Y12 = accu(0 == X);
+    uword Y13 = accu(X != 2);
+    uword Y14 = accu(2 != X);
+    uword Y15 = accu(X != 0);
+    uword Y16 = accu(0 != X);
+
+    Mat<eT> X_ref(X);
+
+    uword Y1_ref =  accu(X_ref > 1);
+    uword Y2_ref =  accu(1 > X_ref);
+    uword Y3_ref =  accu(X_ref >= 1);
+    uword Y4_ref =  accu(1 >= X_ref);
+    uword Y5_ref =  accu(X_ref < 0);
+    uword Y6_ref =  accu(0 < X_ref);
+    uword Y7_ref =  accu(X_ref <= -1);
+    uword Y8_ref =  accu(-1 <= X_ref);
+    uword Y9_ref =  accu(X_ref == 3);
+    uword Y10_ref = accu(3 == X_ref);
+    uword Y11_ref = accu(X_ref == 0);
+    uword Y12_ref = accu(0 == X_ref);
+    uword Y13_ref = accu(X_ref != 2);
+    uword Y14_ref = accu(2 != X_ref);
+    uword Y15_ref = accu(X_ref != 0);
+    uword Y16_ref = accu(0 != X_ref);
+
+    REQUIRE( Y1  == Y1_ref  );
+    REQUIRE( Y2  == Y2_ref  );
+    REQUIRE( Y3  == Y3_ref  );
+    REQUIRE( Y4  == Y4_ref  );
+    REQUIRE( Y5  == Y5_ref  );
+    REQUIRE( Y6  == Y6_ref  );
+    REQUIRE( Y7  == Y7_ref  );
+    REQUIRE( Y8  == Y8_ref  );
+    REQUIRE( Y9  == Y9_ref  );
+    REQUIRE( Y10 == Y10_ref );
+    REQUIRE( Y11 == Y11_ref );
+    REQUIRE( Y12 == Y12_ref );
+    REQUIRE( Y13 == Y13_ref );
+    REQUIRE( Y14 == Y14_ref );
+    REQUIRE( Y15 == Y15_ref );
+    REQUIRE( Y16 == Y16_ref );
+    }
+  }
+
+
+
+TEMPLATE_TEST_CASE("spsubview_rel_accu_mat_comparison", "[spop_rel]", float, double)
+  {
+  typedef TestType eT;
+
+  for (uword trial = 0; trial < 10; ++trial)
+    {
+    SpMat<eT> X;
+    X.sprandn(256, 256, 0.3);
+
+    uword Y1 =  accu(X.submat(10, 15, 173, 211) > 1);
+    uword Y2 =  accu(1 > X.submat(10, 15, 173, 211));
+    uword Y3 =  accu(X.submat(10, 15, 173, 211) >= 1);
+    uword Y4 =  accu(1 >= X.submat(10, 15, 173, 211));
+    uword Y5 =  accu(X.submat(10, 15, 173, 211) < 0);
+    uword Y6 =  accu(0 < X.submat(10, 15, 173, 211));
+    uword Y7 =  accu(X.submat(10, 15, 173, 211) <= -1);
+    uword Y8 =  accu(-1 <= X.submat(10, 15, 173, 211));
+    uword Y9 =  accu(X.submat(10, 15, 173, 211) == 3);
+    uword Y10 = accu(3 == X.submat(10, 15, 173, 211));
+    uword Y11 = accu(X.submat(10, 15, 173, 211) == 0);
+    uword Y12 = accu(0 == X.submat(10, 15, 173, 211));
+    uword Y13 = accu(X.submat(10, 15, 173, 211) != 2);
+    uword Y14 = accu(2 != X.submat(10, 15, 173, 211));
+    uword Y15 = accu(X.submat(10, 15, 173, 211) != 0);
+    uword Y16 = accu(0 != X.submat(10, 15, 173, 211));
+
+    Mat<eT> X_ref(X.submat(10, 15, 173, 211));
+
+    uword Y1_ref =  accu(X_ref > 1);
+    uword Y2_ref =  accu(1 > X_ref);
+    uword Y3_ref =  accu(X_ref >= 1);
+    uword Y4_ref =  accu(1 >= X_ref);
+    uword Y5_ref =  accu(X_ref < 0);
+    uword Y6_ref =  accu(0 < X_ref);
+    uword Y7_ref =  accu(X_ref <= -1);
+    uword Y8_ref =  accu(-1 <= X_ref);
+    uword Y9_ref =  accu(X_ref == 3);
+    uword Y10_ref = accu(3 == X_ref);
+    uword Y11_ref = accu(X_ref == 0);
+    uword Y12_ref = accu(0 == X_ref);
+    uword Y13_ref = accu(X_ref != 2);
+    uword Y14_ref = accu(2 != X_ref);
+    uword Y15_ref = accu(X_ref != 0);
+    uword Y16_ref = accu(0 != X_ref);
+
+    REQUIRE( Y1  == Y1_ref  );
+    REQUIRE( Y2  == Y2_ref  );
+    REQUIRE( Y3  == Y3_ref  );
+    REQUIRE( Y4  == Y4_ref  );
+    REQUIRE( Y5  == Y5_ref  );
+    REQUIRE( Y6  == Y6_ref  );
+    REQUIRE( Y7  == Y7_ref  );
+    REQUIRE( Y8  == Y8_ref  );
+    REQUIRE( Y9  == Y9_ref  );
+    REQUIRE( Y10 == Y10_ref );
+    REQUIRE( Y11 == Y11_ref );
+    REQUIRE( Y12 == Y12_ref );
+    REQUIRE( Y13 == Y13_ref );
+    REQUIRE( Y14 == Y14_ref );
+    REQUIRE( Y15 == Y15_ref );
+    REQUIRE( Y16 == Y16_ref );
+    }
   }
