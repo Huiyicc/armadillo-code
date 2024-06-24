@@ -56,7 +56,7 @@
       arrayops::inplace_set( (tmp.memptr() + last_pos + offset), zero_comp_val, (cur_pos - last_pos - offset) );\
       }\
     \
-    tmp(cur_pos) = (k operator_rel (*it)) ? uword(1) : uword(0);\
+    tmp.at(cur_pos) = (k operator_rel (*it)) ? uword(1) : uword(0);\
     \
     last_pos = cur_pos;\
     offset   = 1;\
