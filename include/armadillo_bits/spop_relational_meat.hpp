@@ -53,18 +53,18 @@
     \
     if((cur_pos - last_pos) > offset)\
       {\
-      arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, cur_pos - last_pos - offset);\
+      arrayops::inplace_set( (tmp.memptr() + last_pos + offset), zero_comp_val, (cur_pos - last_pos - offset) );\
       }\
     \
-    tmp.at(cur_pos) = (k operator_rel (*it)) ? uword(1) : uword(0);\
+    tmp(cur_pos) = (k operator_rel (*it)) ? uword(1) : uword(0);\
     \
     last_pos = cur_pos;\
     offset   = 1;\
     }\
   \
-  if(last_pos != (n_elem-1))\
+  if(last_pos < n_elem)\
     {\
-    arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, (n_elem - last_pos));\
+    arrayops::inplace_set( (tmp.memptr() + last_pos + offset), zero_comp_val, (n_elem - last_pos - offset) );\
     }\
   \
   out = tmp;\
@@ -94,7 +94,7 @@
     \
     if((cur_pos - last_pos) > offset)\
       {\
-      arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, cur_pos - last_pos - offset);\
+      arrayops::inplace_set( (tmp.memptr() + last_pos + offset), zero_comp_val, (cur_pos - last_pos - offset) );\
       }\
     \
     tmp.at(cur_pos) = ((*it) operator_rel k) ? uword(1) : uword(0);\
@@ -103,9 +103,9 @@
     offset   = 1;\
     }\
   \
-  if(last_pos != (n_elem-1))\
+  if(last_pos < n_elem)\
     {\
-    arrayops::inplace_set(tmp.memptr() + last_pos + offset, zero_comp_val, (n_elem - last_pos));\
+    arrayops::inplace_set( (tmp.memptr() + last_pos + offset), zero_comp_val, (n_elem - last_pos - offset) );\
     }\
   \
   out = tmp;\
