@@ -745,13 +745,13 @@ which is one of:
 <ul>
 <table>
 <tbody>
-<tr><td><code>fill::zeros</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 0</td></tr>
+<tr><td><code>fill::zeros</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 0 &nbsp; (default in Armadillo &gt;= 10.5)</td></tr>
 <tr><td><code>fill::ones</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 1</td></tr>
 <tr><td><code>fill::eye</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set the elements on the main diagonal to 1 and off-diagonal elements to 0</td></tr>
 <tr><td><code>fill::randu</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to random values from a uniform distribution in the [0,1] interval</td></tr>
 <tr><td><code>fill::randn</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to random values from a normal/Gaussian distribution with zero mean and unit variance</td></tr>
 <tr><td><code>fill::value(scalar)</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to specified scalar</td></tr>
-<tr><td><code>fill::none</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>do not initialise the elements</td></tr>
+<tr><td><code>fill::none</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>do not initialise the elements &nbsp; (matrix may have garbage values)</td></tr>
 </tbody>
 </table>
 </ul>
@@ -760,11 +760,8 @@ which is one of:
 <li>
 <b>Caveat:</b>
 <ul>
-<li>since Armadillo 10.5, the elements are initialised to zero by default</li>
-<li>
-in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
-</li>
+<li>in Armadillo &gt;= 10.5, the default initialisation is <code>fill::zeros</code></li>
+<li>in Armadillo &lt;= 10.4, the default initialisation is <code>fill::none</code></li>
 </ul>
 </li>
 <br>
@@ -882,29 +879,6 @@ mat H(&amp;aux_mem[0], 4, 6, false);  // use auxiliary memory
 </ul>
 </li>
 <br>
-<!--
-<li><b>Caveat:</b>
-For mathematical correctness, scalars are treated as 1x1 matrices during initialisation.
-As such, the code below <b>will not</b> generate a 5x5 matrix with every element equal to 123.0:
-<ul>
-<pre>
-mat A(5,5);  A = 123.0;
-</pre>
-</ul>
-Use the following code instead:
-<ul>
-<pre>
-mat A(5,5,fill::value(123.0));         // Armadillo 10.6 and newer
-</pre>
-</ul>
-or
-<ul>
-<pre>
-mat A(5,5,fill::none); A.fill(123.0);  // Armadillo 10.5 and older
-</pre>
-</ul>
-<br>
--->
 <li>
 See also:
 <ul>
@@ -1126,11 +1100,8 @@ Constructors:
 <li>
 <b>Caveat:</b>
 <ul>
-<li>since Armadillo 10.5, the elements are initialised to zero by default</li>
-<li>
-in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
-</li>
+<li>in Armadillo &gt;= 10.5, the default initialisation is <code>fill::zeros</code></li>
+<li>in Armadillo &lt;= 10.4, the default initialisation is <code>fill::none</code></li>
 </ul>
 </li>
 <br>
@@ -1221,30 +1192,6 @@ vec z = A.col(5); // extract a column vector
 </ul>
 </li>
 <br>
-<!--
-<li><b>Caveat:</b>
-For mathematical correctness, scalars are treated as 1x1 matrices during initialisation.
-As such, the code below <b>will not</b> generate a column vector with every element equal to 123.0:
-<ul>
-<pre>
-vec v(5);  v = 123.0;
-</pre>
-</ul>
-Use the following code instead:
-<ul>
-<pre>
-vec v(5, fill::value(123.0));         // Armadillo 10.6 and newer
-</pre>
-</ul>
-or
-<ul>
-<pre>
-vec v(5, fill::none); v.fill(123.0);  // Armadillo 10.5 and older
-</pre>
-</ul>
-</li>
-<br>
--->
 <li>See also:
 <ul>
 <li><a href="#element_initialisation">element initialisation</a></li>
@@ -1401,11 +1348,8 @@ Constructors:
 <li>
 <b>Caveat:</b>
 <ul>
-<li>since Armadillo 10.5, the elements are initialised to zero by default</li>
-<li>
-in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
-</li>
+<li>in Armadillo &gt;= 10.5, the default initialisation is <code>fill::zeros</code></li>
+<li>in Armadillo &lt;= 10.4, the default initialisation is <code>fill::none</code></li>
 </ul>
 </li>
 <br>
@@ -1495,30 +1439,6 @@ rowvec z = A.row(5); // extract a row vector
 </ul>
 </li>
 <br>
-<!--
-<li>
-<b>Caveat:</b>
-For mathematical correctness, scalars are treated as 1x1 matrices during initialisation.
-As such, the code below <b>will not</b> generate a row vector with every element equal to 123.0:
-<ul>
-<pre>
-rowvec r(5);  r = 123.0;
-</pre>
-</ul>
-Use the following code instead:
-<ul>
-<pre>
-rowvec r(5, fill::value(123.0));         // Armadillo 10.6 and newer
-</pre>
-</ul>
-or
-<ul>
-<pre>
-rowvec r(5, fill::none); r.fill(123.0);  // Armadillo 10.5 and older
-</pre>
-</ul>
-<br>
--->
 <li>See also:
 <ul>
 <li><a href="#element_initialisation">element initialisation</a></li>
@@ -1681,12 +1601,12 @@ which is one of:
 <ul>
 <table>
 <tbody>
-<tr><td><code>fill::zeros</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 0</td></tr>
+<tr><td><code>fill::zeros</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 0 &nbsp; (default in Armadillo &gt;= 10.5)</td></tr>
 <tr><td><code>fill::ones</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to 1</td></tr>
 <tr><td><code>fill::randu</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to random values from a uniform distribution in the [0,1] interval</td></tr>
 <tr><td><code>fill::randn</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to random values from a normal/Gaussian distribution with zero mean and unit variance</td></tr>
 <tr><td><code>fill::value(scalar)</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>set all elements to specified scalar</td></tr>
-<tr><td><code>fill::none</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>do not initialise the elements</td></tr>
+<tr><td><code>fill::none</code></td><td>&nbsp;&mapsto;&nbsp;</td><td>do not initialise the elements &nbsp; (cube may have garbage values)</td></tr>
 </tbody>
 </table>
 </ul>
@@ -1695,11 +1615,8 @@ which is one of:
 <li>
 <b>Caveat:</b>
 <ul>
-<li>since Armadillo 10.5, the elements are initialised to zero by default</li>
-<li>
-in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
-</li>
+<li>in Armadillo &gt;= 10.5, the default initialisation is <code>fill::zeros</code></li>
+<li>in Armadillo &lt;= 10.4, the default initialisation is <code>fill::none</code></li>
 </ul>
 </li>
 <br>
@@ -1801,29 +1718,6 @@ c.slice(0) = randu&lt;mat&gt;(10,20); // wrong size
 </pre>
 </ul>
 </li>
-<!--
-<li>
-For mathematical correctness, scalars are treated as 1x1x1 cubes during initialisation.
-As such, the code below <b>will not</b> generate a cube with every element equal to 123.0:
-<ul>
-<pre>
-cube c(5,6,7);  c = 123.0;
-</pre>
-</ul>
-Use the following code instead:
-<ul>
-<pre>
-cube c(5,6,7,fill::value(123.0));         // Armadillo 10.6 and newer
-</pre>
-</ul>
-or
-<ul>
-<pre>
-cube c(5,6,7,fill::none); c.fill(123.0);  // Armadillo 10.5 and older
-</pre>
-</ul>
-<br>
--->
 </ul>
 <li>
 See also:
