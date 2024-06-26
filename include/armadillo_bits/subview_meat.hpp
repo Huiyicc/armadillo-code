@@ -1609,7 +1609,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
       {
       arma_debug_print("subview::extract(): copying col (going across rows)");
       
-      // in.colptr(0) the first column of the subview, taking into account any row offset
+      // in.colptr(0) is the first column of the subview, taking into account any row offset
       arrayops::copy( out.memptr(), in.colptr(0), n_rows );
       }
     else
