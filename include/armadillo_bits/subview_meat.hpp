@@ -1607,7 +1607,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
     {
     if(n_cols == 1)   // a column vector
       {
-      arma_debug_print("subview::extract(): copying col (going across rows)");
+      arma_debug_print("subview::extract(): copying col");
       
       // in.colptr(0) is the first column of the subview, taking into account any row offset
       arrayops::copy( out.memptr(), in.colptr(0), n_rows );
@@ -1615,7 +1615,7 @@ subview<eT>::extract(Mat<eT>& out, const subview<eT>& in)
     else
     if(n_rows == 1)   // a row vector
       {
-      arma_debug_print("subview::extract(): copying row (going across columns)");
+      arma_debug_print("subview::extract(): copying row)");
       
       eT* out_mem = out.memptr();
       
@@ -1687,7 +1687,7 @@ subview<eT>::plus_inplace(Mat<eT>& out, const subview<eT>& in)
       {
       const eT tmp1 = X.at(row, start_col+i);
       const eT tmp2 = X.at(row, start_col+j);
-        
+      
       out_mem[i] += tmp1;
       out_mem[j] += tmp2;
       }
@@ -1735,7 +1735,7 @@ subview<eT>::minus_inplace(Mat<eT>& out, const subview<eT>& in)
       {
       const eT tmp1 = X.at(row, start_col+i);
       const eT tmp2 = X.at(row, start_col+j);
-        
+      
       out_mem[i] -= tmp1;
       out_mem[j] -= tmp2;
       }
@@ -1783,7 +1783,7 @@ subview<eT>::schur_inplace(Mat<eT>& out, const subview<eT>& in)
       {
       const eT tmp1 = X.at(row, start_col+i);
       const eT tmp2 = X.at(row, start_col+j);
-        
+      
       out_mem[i] *= tmp1;
       out_mem[j] *= tmp2;
       }
@@ -1831,7 +1831,7 @@ subview<eT>::div_inplace(Mat<eT>& out, const subview<eT>& in)
       {
       const eT tmp1 = X.at(row, start_col+i);
       const eT tmp2 = X.at(row, start_col+j);
-        
+      
       out_mem[i] /= tmp1;
       out_mem[j] /= tmp2;
       }
