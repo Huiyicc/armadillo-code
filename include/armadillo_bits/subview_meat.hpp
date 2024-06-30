@@ -3361,11 +3361,22 @@ template<typename eT>
 template<typename T1>
 inline
 void
-subview_col<eT>::operator=(const Base<eT,T1>& X)
+subview_col<eT>::operator=(const Base<eT,T1>& expr)
   {
   arma_debug_sigprint();
   
-  subview<eT>::operator=(X);
+  if( (is_Mat<T1>::value || is_Mat<typename Proxy<T1>::stored_type>::value) && (Proxy<T1>::has_subview == false) && (quasi_unwrap<T1>::has_subview == false) )
+    {
+    const quasi_unwrap<T1> U(expr.get_ref());
+    
+    arma_conform_assert_same_size(subview<eT>::n_rows, uword(1), U.M.n_rows, U.M.n_cols, "copy into submatrix");
+    
+    arrayops::copy(const_cast<eT*>(colmem), U.M.memptr(), subview<eT>::n_rows);
+    }
+  else
+    {
+    subview<eT>::operator=(expr);
+    }
   }
 
 
