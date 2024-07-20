@@ -1062,7 +1062,7 @@ diskio::save_coord_ascii(const Mat<eT>& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -1125,7 +1125,7 @@ diskio::save_coord_ascii(const Mat< std::complex<T> >& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -3065,7 +3065,7 @@ diskio::save_coord_ascii(const SpMat<eT>& x, std::ostream& f)
     }
   
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
@@ -3128,7 +3128,7 @@ diskio::save_coord_ascii(const SpMat< std::complex<T> >& x, std::ostream& f)
     f.put('\n');
     }
   
-  // make sure it's possible to figure out the matrix size later
+  // make sure it's possible to determine the matrix size
   if( (x.n_rows > 0) && (x.n_cols > 0) )
     {
     const uword max_row = (x.n_rows > 0) ? x.n_rows-1 : 0;
