@@ -148,7 +148,7 @@ arma_inline
 bool
 memory::is_aligned(const eT* mem)
   {
-  #if (defined(__cpp_lib_assume_aligned) || defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)) && !defined(ARMA_DONT_CHECK_ALIGNMENT)
+  #if (defined(ARMA_HAVE_GCC_ASSUME_ALIGNED) || defined(__cpp_lib_assume_aligned)) && !defined(ARMA_DONT_CHECK_ALIGNMENT)
     {
     return (sizeof(std::size_t) >= sizeof(eT*)) ? ((std::size_t(mem) & 0x0F) == 0) : false;
     }
@@ -168,13 +168,13 @@ arma_inline
 void
 memory::mark_as_aligned(eT*& mem)
   {
-  #if defined(__cpp_lib_assume_aligned)
-    {
-    mem = (eT*)std::assume_aligned<16>(mem);
-    }
-  #elif defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
+  #if defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
     {
     mem = (eT*)__builtin_assume_aligned(mem, 16);
+    }
+  #elif defined(__cpp_lib_assume_aligned)
+    {
+    mem = (eT*)std::assume_aligned<16>(mem);
     }
   #else
     {
@@ -190,13 +190,13 @@ arma_inline
 void
 memory::mark_as_aligned(const eT*& mem)
   {
-  #if defined(__cpp_lib_assume_aligned)
-    {
-    mem = (const eT*)std::assume_aligned<16>(mem);
-    }
-  #elif defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
+  #if defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
     {
     mem = (const eT*)__builtin_assume_aligned(mem, 16);
+    }
+  #elif defined(__cpp_lib_assume_aligned)
+    {
+    mem = (const eT*)std::assume_aligned<16>(mem);
     }
   #else
     {
