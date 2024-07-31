@@ -148,7 +148,7 @@ arma_inline
 bool
 memory::is_aligned(const eT* mem)
   {
-  #if (defined(ARMA_HAVE_ICC_ASSUME_ALIGNED) || defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)) && !defined(ARMA_DONT_CHECK_ALIGNMENT)
+  #if (defined(__cpp_lib_assume_aligned) || defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)) && !defined(ARMA_DONT_CHECK_ALIGNMENT)
     {
     return (sizeof(std::size_t) >= sizeof(eT*)) ? ((std::size_t(mem) & 0x0F) == 0) : false;
     }
@@ -168,9 +168,9 @@ arma_inline
 void
 memory::mark_as_aligned(eT*& mem)
   {
-  #if defined(ARMA_HAVE_ICC_ASSUME_ALIGNED)
+  #if defined(__cpp_lib_assume_aligned)
     {
-    __assume_aligned(mem, 16);
+    mem = (eT*)std::assume_aligned<16>(mem);
     }
   #elif defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
     {
@@ -181,21 +181,6 @@ memory::mark_as_aligned(eT*& mem)
     arma_ignore(mem);
     }
   #endif
-  
-  // TODO: look into C++20 std::assume_aligned() defined in <memory>
-  // TODO: https://en.cppreference.com/w/cpp/memory/assume_aligned
-  // TODO: feature-test macro: __cpp_lib_assume_aligned
-  
-  // TODO: MSVC?  __assume( (mem & 0x0F) == 0 );
-  //
-  // http://comments.gmane.org/gmane.comp.gcc.patches/239430
-  // GCC __builtin_assume_aligned is similar to ICC's __assume_aligned,
-  // so for lvalue first argument ICC's __assume_aligned can be emulated using
-  // #define __assume_aligned(lvalueptr, align) lvalueptr = __builtin_assume_aligned (lvalueptr, align) 
-  //
-  // http://www.inf.ethz.ch/personal/markusp/teaching/263-2300-ETH-spring11/slides/class19.pdf
-  // http://software.intel.com/sites/products/documentation/hpc/composerxe/en-us/cpp/lin/index.htm
-  // http://d3f8ykwhia686p.cloudfront.net/1live/intel/CompilerAutovectorizationGuide.pdf
   }
 
 
@@ -205,9 +190,9 @@ arma_inline
 void
 memory::mark_as_aligned(const eT*& mem)
   {
-  #if defined(ARMA_HAVE_ICC_ASSUME_ALIGNED)
+  #if defined(__cpp_lib_assume_aligned)
     {
-    __assume_aligned(mem, 16);
+    mem = (const eT*)std::assume_aligned<16>(mem);
     }
   #elif defined(ARMA_HAVE_GCC_ASSUME_ALIGNED)
     {
