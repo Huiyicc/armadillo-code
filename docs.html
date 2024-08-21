@@ -19149,7 +19149,7 @@ Some options can also be specified by explicitly defining them <b>before</b> inc
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Disable going through the run-time Armadillo wrapper library (<i>libarmadillo.so</i>) when calling LAPACK, BLAS, ARPACK, SuperLU and HDF5 functions.
+Disable going through the run-time Armadillo wrapper library (<i>libarmadillo.so</i>) when calling LAPACK, BLAS, ARPACK, and SuperLU functions.
 You will need to directly link with BLAS, LAPACK, etc (eg. <code><i>-lblas -llapack</i></code>)
     </td>
   </tr>
@@ -19700,7 +19700,7 @@ Append an underscore to BLAS and LAPACK function names (eg. dgemm_ vs dgemm). En
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Use "long" instead of "int" when calling BLAS and LAPACK functions
+Use "long" instead of "int" when calling BLAS and LAPACK functions; the "long" type is a 64 bit integer type on Linux
     </td>
   </tr>
   <tr>
@@ -19722,7 +19722,7 @@ Use "long" instead of "int" when calling BLAS and LAPACK functions
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Use "long&nbsp;long" instead of "int" when calling BLAS and LAPACK functions
+Use "long&nbsp;long" instead of "int" when calling BLAS and LAPACK functions; the "long long" type is a 64 bit integer type on all platforms
     </td>
   </tr>
   <tr>
@@ -19860,10 +19860,12 @@ You may also need to enable one or more of the following options:
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-Use 64 bit integers. Automatically enabled when using a 64-bit platform, except when using Armadillo in the R environment (via RcppArmadillo).
+Use 64 bit integers for matrix and vector sizes.
+Automatically enabled when using a 64-bit platform, except when using Armadillo in the R environment (via RcppArmadillo).
 Useful if matrices/vectors capable of holding more than 4 billion elements are required.
 <!-- Your machine and compiler must have support for 64 bit integers (eg. via "long" or "long&nbsp;long"). -->
-This can also be enabled by adding <i>#define&nbsp;ARMA_64BIT_WORD</i> before each instance of <i>#include&nbsp;&lt;armadillo&gt;</i>
+This can also be enabled by adding <code>#define&nbsp;ARMA_64BIT_WORD</code> before each instance of <code>#include&nbsp;&lt;armadillo&gt;</code>.
+<br>See also the <code>ARMA_BLAS_LONG_LONG</code> option.
     </td>
   </tr>
   <tr>
