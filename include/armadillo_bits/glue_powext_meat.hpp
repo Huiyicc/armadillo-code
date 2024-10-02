@@ -36,6 +36,49 @@ glue_powext::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_pow
   const Mat<eT>& A = UA.M;
   const Mat<eT>& B = UB.M;
   
+  if( (A.is_vec() == false) && ((T2::is_row || B.is_rowvec()) || (T2::is_col || B.is_colvec())) )
+    {
+    // rudimentary handling of broadcasting operations
+    // mainly for compat with previous ill-designed direct handling of .each_row() and .each_col()
+    
+    Mat<eT> BB;
+    
+    if(T2::is_row || B.is_rowvec())
+      {
+      arma_conform_assert_same_size(A.n_rows, A.n_cols, A.n_rows, B.n_cols, "element-wise pow()");
+      
+      BB.set_size(A.n_rows, B.n_cols);
+      
+      BB.each_row() = B;
+      }
+    else
+    if(T2::is_col || B.is_colvec())
+      {
+      arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, A.n_cols, "element-wise pow()");
+      
+      BB.set_size(B.n_rows, A.n_cols);
+      
+      BB.each_col() = B;
+      }
+    
+    const bool UA_bad_alias = UA.is_alias(out) && (UA.has_subview);  // allow inplace operation
+    
+    if(UA_bad_alias)
+      {
+      Mat<eT> tmp;
+      
+      glue_powext::apply(tmp, A, BB);
+      
+      out.steal_mem(tmp);
+      }
+    else
+      {
+      glue_powext::apply(out, A, BB);
+      }
+    
+    return;
+    }
+  
   arma_conform_assert_same_size(A, B, "element-wise pow()");
   
   const bool UA_bad_alias = UA.is_alias(out) && (UA.has_subview);  // allow inplace operation
@@ -97,116 +140,6 @@ glue_powext::apply(Mat<eT>& out, const Mat<eT>& A, const Mat<eT>& B)
 
 
 
-template<typename parent, unsigned int mode, typename T2>
-inline
-Mat<typename parent::elem_type>
-glue_powext::apply
-  (
-  const subview_each1<parent,mode>&          X,
-  const Base<typename parent::elem_type,T2>& Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  typedef typename parent::elem_type eT;
-  
-  const parent& A = X.P;
-  
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
-  
-  Mat<eT> out(A_n_rows, A_n_cols, arma_nozeros_indicator());
-  
-  const quasi_unwrap<T2> tmp(Y.get_ref());
-  const Mat<eT>& B     = tmp.M;
-  
-  X.check_size(B);
-  
-  const eT* B_mem = B.memptr();
-  
-  if(mode == 0) // each column
-    {
-    if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-      {
-      #if defined(ARMA_USE_OPENMP)
-        {
-        const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_cols) );
-        
-        #pragma omp parallel for schedule(static) num_threads(n_threads)
-        for(uword i=0; i < A_n_cols; ++i)
-          {
-          const eT*   A_mem =   A.colptr(i);
-                eT* out_mem = out.colptr(i);
-          
-          for(uword row=0; row < A_n_rows; ++row)
-            {
-            out_mem[row] = eop_aux::pow(A_mem[row], B_mem[row]);
-            }
-          }
-        }
-      #endif
-      }
-    else
-      {
-      for(uword i=0; i < A_n_cols; ++i)
-        {
-        const eT*   A_mem =   A.colptr(i);
-              eT* out_mem = out.colptr(i);
-        
-        for(uword row=0; row < A_n_rows; ++row)
-          {
-          out_mem[row] = eop_aux::pow(A_mem[row], B_mem[row]);
-          }
-        }
-      }
-    }
-  
-  if(mode == 1) // each row
-    {
-    if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-      {
-      #if defined(ARMA_USE_OPENMP)
-        {
-        const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_cols) );
-        
-        #pragma omp parallel for schedule(static) num_threads(n_threads)
-        for(uword i=0; i < A_n_cols; ++i)
-          {
-          const eT*   A_mem =   A.colptr(i);
-                eT* out_mem = out.colptr(i);
-          
-          const eT B_val = B_mem[i];
-          
-          for(uword row=0; row < A_n_rows; ++row)
-            {
-            out_mem[row] = eop_aux::pow(A_mem[row], B_val);
-            }
-          }
-        }
-      #endif
-      }
-    else
-      {
-      for(uword i=0; i < A_n_cols; ++i)
-        {
-        const eT*   A_mem =   A.colptr(i);
-              eT* out_mem = out.colptr(i);
-        
-        const eT B_val = B_mem[i];
-        
-        for(uword row=0; row < A_n_rows; ++row)
-          {
-          out_mem[row] = eop_aux::pow(A_mem[row], B_val);
-          }
-        }
-      }
-    }
-  
-  return out;
-  }
-
-
-
 template<typename T1, typename T2>
 inline
 void
@@ -221,6 +154,22 @@ glue_powext::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1, T2, glu
   
   const Cube<eT>& A = UA.M;
   const Cube<eT>& B = UB.M;
+  
+  if((A.n_slices != 1) && (B.n_slices == 1))
+    {
+    // rudimentary handling of broadcasting operations
+    // mainly for compat with previous ill-designed direct handling of .each_slice()
+    
+    arma_conform_assert_same_size(A.n_rows, A.n_cols, A.n_slices, B.n_rows, B.n_cols, A.n_slices, "element-wise pow()");
+    
+    Cube<eT> BB(B.n_rows, B.n_cols, A.n_slices, arma_nozeros_indicator());
+    
+    BB.each_slice() = B.slice(0);
+    
+    glue_powext::apply(out, A, BB);
+    
+    return;
+    }
   
   arma_conform_assert_same_size(A, B, "element-wise pow()");
   
@@ -276,72 +225,6 @@ glue_powext::apply(Cube<eT>& out, const Cube<eT>& A, const Cube<eT>& B)
       out_mem[i] = eop_aux::pow(A_mem[i], B_mem[i]);
       }
     }
-  }
-
-
-
-template<typename eT, typename T2>
-inline
-Cube<eT>
-glue_powext::apply
-  (
-  const subview_cube_each1<eT>& X,
-  const Base<eT,T2>&            Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  const Cube<eT>& A = X.P;
-  
-  const uword A_n_rows   = A.n_rows;
-  const uword A_n_cols   = A.n_cols;
-  const uword A_n_slices = A.n_slices;
-  
-  Cube<eT> out(A_n_rows, A_n_cols, A_n_slices, arma_nozeros_indicator());
-  
-  const quasi_unwrap<T2> tmp(Y.get_ref());
-  const Mat<eT>& B     = tmp.M;
-  
-  X.check_size(B);
-  
-  const eT*   B_mem    = B.memptr();
-  const uword B_n_elem = B.n_elem;
-  
-  if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-    {
-    #if defined(ARMA_USE_OPENMP)
-      {
-      const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_slices) );
-      
-      #pragma omp parallel for schedule(static) num_threads(n_threads)
-      for(uword s=0; s < A_n_slices; ++s)
-        {
-        const eT*   A_slice_mem =   A.slice_memptr(s);
-              eT* out_slice_mem = out.slice_memptr(s);
-        
-        for(uword i=0; i < B_n_elem; ++i)
-          {
-          out_slice_mem[i] = eop_aux::pow(A_slice_mem[i], B_mem[i]);
-          }
-        }
-      }
-    #endif
-    }
-  else
-    {
-    for(uword s=0; s < A_n_slices; ++s)
-      {
-      const eT*   A_slice_mem =   A.slice_memptr(s);
-            eT* out_slice_mem = out.slice_memptr(s);
-      
-      for(uword i=0; i < B_n_elem; ++i)
-        {
-        out_slice_mem[i] = eop_aux::pow(A_slice_mem[i], B_mem[i]);
-        }
-      }
-    }
-  
-  return out;
   }
 
 
@@ -426,117 +309,6 @@ glue_powext_cx::apply(Mat< std::complex<T> >& out, const Mat< std::complex<T> >&
 
 
 
-template<typename parent, unsigned int mode, typename T2>
-inline
-Mat<typename parent::elem_type>
-glue_powext_cx::apply
-  (
-  const subview_each1<parent,mode>&      X,
-  const Base<typename T2::elem_type,T2>& Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  typedef typename parent::elem_type eT;
-  typedef typename parent::pod_type   T;
-  
-  const parent& A = X.P;
-  
-  const uword A_n_rows = A.n_rows;
-  const uword A_n_cols = A.n_cols;
-  
-  Mat<eT> out(A_n_rows, A_n_cols, arma_nozeros_indicator());
-  
-  const quasi_unwrap<T2> tmp(Y.get_ref());
-  const Mat<T>& B      = tmp.M;
-  
-  X.check_size(B);
-  
-  const T* B_mem = B.memptr();
-  
-  if(mode == 0) // each column
-    {
-    if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-      {
-      #if defined(ARMA_USE_OPENMP)
-        {
-        const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_cols) );
-        
-        #pragma omp parallel for schedule(static) num_threads(n_threads)
-        for(uword i=0; i < A_n_cols; ++i)
-          {
-          const eT*   A_mem =   A.colptr(i);
-                eT* out_mem = out.colptr(i);
-          
-          for(uword row=0; row < A_n_rows; ++row)
-            {
-            out_mem[row] = std::pow(A_mem[row], B_mem[row]);
-            }
-          }
-        }
-      #endif
-      }
-    else
-      {
-      for(uword i=0; i < A_n_cols; ++i)
-        {
-        const eT*   A_mem =   A.colptr(i);
-              eT* out_mem = out.colptr(i);
-        
-        for(uword row=0; row < A_n_rows; ++row)
-          {
-          out_mem[row] = std::pow(A_mem[row], B_mem[row]);
-          }
-        }
-      }
-    }
-  
-  if(mode == 1) // each row
-    {
-    if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-      {
-      #if defined(ARMA_USE_OPENMP)
-        {
-        const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_cols) );
-        
-        #pragma omp parallel for schedule(static) num_threads(n_threads)
-        for(uword i=0; i < A_n_cols; ++i)
-          {
-          const eT*   A_mem =   A.colptr(i);
-                eT* out_mem = out.colptr(i);
-          
-          const eT B_val = B_mem[i];
-          
-          for(uword row=0; row < A_n_rows; ++row)
-            {
-            out_mem[row] = std::pow(A_mem[row], B_val);
-            }
-          }
-        }
-      #endif
-      }
-    else
-      {
-      for(uword i=0; i < A_n_cols; ++i)
-        {
-        const eT*   A_mem =   A.colptr(i);
-              eT* out_mem = out.colptr(i);
-        
-        const eT B_val = B_mem[i];
-        
-        for(uword row=0; row < A_n_rows; ++row)
-          {
-          out_mem[row] = std::pow(A_mem[row], B_val);
-          }
-        }
-      }
-    }
-  
-  return out;
-  }
-
-
-
 template<typename T1, typename T2>
 inline
 void
@@ -599,74 +371,6 @@ glue_powext_cx::apply(Cube< std::complex<T> >& out, const Cube< std::complex<T> 
       out_mem[i] = std::pow(A_mem[i], B_mem[i]);
       }
     }
-  }
-
-
-
-template<typename T, typename T2>
-inline
-Cube< std::complex<T> >
-glue_powext_cx::apply
-  (
-  const subview_cube_each1< std::complex<T> >& X,
-  const Base<T,T2>&                            Y
-  )
-  {
-  arma_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  const Cube<eT>& A = X.P;
-  
-  const uword A_n_rows   = A.n_rows;
-  const uword A_n_cols   = A.n_cols;
-  const uword A_n_slices = A.n_slices;
-  
-  Cube<eT> out(A_n_rows, A_n_cols, A_n_slices, arma_nozeros_indicator());
-  
-  const quasi_unwrap<T2> tmp(Y.get_ref());
-  const Mat<T>& B      = tmp.M;
-  
-  X.check_size(B);
-  
-  const T*    B_mem    = B.memptr();
-  const uword B_n_elem = B.n_elem;
-  
-  if( arma_config::openmp && mp_gate<eT>::eval(A.n_elem) )
-    {
-    #if defined(ARMA_USE_OPENMP)
-      {
-      const int n_threads = int( (std::min)(uword(mp_thread_limit::get()), A_n_slices) );
-      
-      #pragma omp parallel for schedule(static) num_threads(n_threads)
-      for(uword s=0; s < A_n_slices; ++s)
-        {
-        const eT*   A_slice_mem =   A.slice_memptr(s);
-              eT* out_slice_mem = out.slice_memptr(s);
-        
-        for(uword i=0; i < B_n_elem; ++i)
-          {
-          out_slice_mem[i] = std::pow(A_slice_mem[i], B_mem[i]);
-          }
-        }
-      }
-    #endif
-    }
-  else
-    {
-    for(uword s=0; s < A_n_slices; ++s)
-      {
-      const eT*   A_slice_mem =   A.slice_memptr(s);
-            eT* out_slice_mem = out.slice_memptr(s);
-      
-      for(uword i=0; i < B_n_elem; ++i)
-        {
-        out_slice_mem[i] = std::pow(A_slice_mem[i], B_mem[i]);
-        }
-      }
-    }
-  
-  return out;
   }
 
 

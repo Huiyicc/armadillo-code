@@ -82,6 +82,26 @@ pow
 
 
 
+// TODO
+// template<typename T1, typename T2>
+// arma_warn_unused
+// inline
+// Cube<eT>
+// pow
+//   (
+//   const BaseCube<typename T1::elem_type, T1>& X,
+//   const Base    <typename T1::elem_type, T2>& Y
+//   )
+//   {
+//   arma_debug_sigprint();
+//   
+//   typedef typename T1::elem_type eT;
+//   
+//   ...
+//   }
+
+
+
 template<typename T1, typename T2>
 arma_warn_unused
 inline
