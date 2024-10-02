@@ -109,6 +109,7 @@ pow
 
 
 
+// TODO: simplify via unwrapping X
 template<typename parent, unsigned int mode, typename T2>
 arma_deprecated
 inline
@@ -126,6 +127,7 @@ pow
 
 
 
+// TODO: simplify via unwrapping X
 template<typename parent, unsigned int mode, typename T2>
 arma_deprecated
 inline
@@ -148,6 +150,7 @@ pow
 
 
 
+// TODO: simplify via unwrapping X
 template<typename eT, typename T2>
 arma_deprecated
 inline
@@ -165,6 +168,7 @@ pow
 
 
 
+// TODO: simplify via unwrapping X
 template<typename T, typename T2>
 arma_deprecated
 inline
