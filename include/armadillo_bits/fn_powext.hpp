@@ -43,19 +43,24 @@ pow
 
 
 
-template<typename parent, unsigned int mode, typename T2>
-arma_deprecated
+template<typename T1, typename T2>
+arma_warn_unused
 inline
-Mat<typename parent::elem_type>
+typename
+enable_if2
+  <
+  ( is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes ),
+  const mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>
+  >::result
 pow
   (
-  const subview_each1<parent,mode>&          X,
-  const Base<typename parent::elem_type,T2>& Y
+  const T1&                              X,
+  const Base<typename T1::pod_type, T2>& Y
   )
   {
   arma_debug_sigprint();
   
-  return glue_powext::apply(X,Y);
+  return mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>(X, Y.get_ref());
   }
 
 
@@ -77,45 +82,46 @@ pow
 
 
 
-template<typename eT, typename T2>
-arma_deprecated
+template<typename T1, typename T2>
+arma_warn_unused
 inline
-Cube<eT>
+const mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>
 pow
   (
-  const subview_cube_each1<eT>& X,
-  const Base<eT,T2>&            Y
+  const BaseCube< std::complex<typename T1::pod_type>, T1>& X,
+  const BaseCube<              typename T1::pod_type , T2>& Y
   )
   {
   arma_debug_sigprint();
   
-  return glue_powext::apply(X,Y);
+  return mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>(X.get_ref(), Y.get_ref());
   }
 
 
 
 //
+//
+//
 
 
 
-template<typename T1, typename T2>
-arma_warn_unused
+// deprecated forms
+
+
+
+template<typename parent, unsigned int mode, typename T2>
+arma_deprecated
 inline
-typename
-enable_if2
-  <
-  ( is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes ),
-  const mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>
-  >::result
+Mat<typename parent::elem_type>
 pow
   (
-  const T1&                              X,
-  const Base<typename T1::pod_type, T2>& Y
+  const subview_each1<parent,mode>&          X,
+  const Base<typename parent::elem_type,T2>& Y
   )
   {
   arma_debug_sigprint();
   
-  return mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx>(X, Y.get_ref());
+  return glue_powext::apply(X,Y);
   }
 
 
@@ -142,19 +148,19 @@ pow
 
 
 
-template<typename T1, typename T2>
-arma_warn_unused
+template<typename eT, typename T2>
+arma_deprecated
 inline
-const mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>
+Cube<eT>
 pow
   (
-  const BaseCube< std::complex<typename T1::pod_type>, T1>& X,
-  const BaseCube<              typename T1::pod_type , T2>& Y
+  const subview_cube_each1<eT>& X,
+  const Base<eT,T2>&            Y
   )
   {
   arma_debug_sigprint();
   
-  return mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>(X.get_ref(), Y.get_ref());
+  return glue_powext::apply(X,Y);
   }
 
 
