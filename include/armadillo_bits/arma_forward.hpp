@@ -243,18 +243,6 @@ struct traits_glue_or
   };
 
 
-struct traits_glue_first_arg
-  {
-  template<typename T1, typename T2>
-  struct traits
-    {
-    static constexpr bool is_row  = T1::is_row;
-    static constexpr bool is_col  = T1::is_col;
-    static constexpr bool is_xvec = T1::is_xvec;
-    };
-  };
-
-
 
 template<const bool, const bool, const bool, const bool> class gemm;
 template<const bool, const bool, const bool>             class gemv;
