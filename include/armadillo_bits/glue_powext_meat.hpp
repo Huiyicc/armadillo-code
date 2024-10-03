@@ -36,14 +36,16 @@ glue_powext::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_pow
   const Mat<eT>& A = UA.M;
   const Mat<eT>& B = UB.M;
   
-  if( (A.is_vec() == false) && ((T2::is_row || B.is_rowvec()) || (T2::is_col || B.is_colvec())) )
+  const bool same_size = ((A.n_rows == B.n_rows) && (A.n_cols == B.n_cols));
+  
+  if( (same_size == false) && (B.is_rowvec() || B.is_colvec()) )
     {
     // rudimentary handling of broadcasting operations
     // mainly for compat with previous ill-designed direct handling of .each_row() and .each_col()
     
     Mat<eT> BB;
     
-    if(T2::is_row || B.is_rowvec())
+    if(B.is_rowvec())
       {
       arma_conform_assert_same_size(A.n_rows, A.n_cols, A.n_rows, B.n_cols, "element-wise pow()");
       
@@ -52,7 +54,7 @@ glue_powext::apply(Mat<typename T1::elem_type>& out, const Glue<T1, T2, glue_pow
       BB.each_row() = B;
       }
     else
-    if(T2::is_col || B.is_colvec())
+    if(B.is_colvec())
       {
       arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, A.n_cols, "element-wise pow()");
       
@@ -154,22 +156,6 @@ glue_powext::apply(Cube<typename T1::elem_type>& out, const GlueCube<T1, T2, glu
   
   const Cube<eT>& A = UA.M;
   const Cube<eT>& B = UB.M;
-  
-  if((A.n_slices != 1) && (B.n_slices == 1))
-    {
-    // rudimentary handling of broadcasting operations
-    // mainly for compat with previous ill-designed direct handling of .each_slice()
-    
-    arma_conform_assert_same_size(A.n_rows, A.n_cols, A.n_slices, B.n_rows, B.n_cols, A.n_slices, "element-wise pow()");
-    
-    Cube<eT> BB(B.n_rows, B.n_cols, A.n_slices, arma_nozeros_indicator());
-    
-    BB.each_slice() = B.slice(0);
-    
-    glue_powext::apply(out, A, BB);
-    
-    return;
-    }
   
   arma_conform_assert_same_size(A, B, "element-wise pow()");
   

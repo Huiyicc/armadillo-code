@@ -82,23 +82,34 @@ pow
 
 
 
-// TODO
-// template<typename T1, typename T2>
-// arma_warn_unused
-// inline
-// Cube<eT>
-// pow
-//   (
-//   const BaseCube<typename T1::elem_type, T1>& X,
-//   const Base    <typename T1::elem_type, T2>& Y
-//   )
-//   {
-//   arma_debug_sigprint();
-//   
-//   typedef typename T1::elem_type eT;
-//   
-//   ...
-//   }
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+Cube<typename T1::elem_type>
+pow
+  (
+  const BaseCube<typename T1::elem_type, T1>& X,
+  const Base    <typename T1::elem_type, T2>& Y
+  )
+  {
+  arma_debug_sigprint();
+  
+  // rudimentary handling of broadcasting operations
+  // mainly for compat with previous ill-designed direct handling of .each_slice()
+  
+  typedef typename T1::elem_type eT;
+  
+  Cube<eT> A = X.get_ref();
+  
+  const unwrap<T2>   UY(Y.get_ref());
+  const Mat<eT>& B = UY.M;
+  
+  arma_conform_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "element-wise pow()");
+  
+  A.each_slice( [](Mat<eT>& S){ S = pow(S, B); } );
+  
+  return A;
+  }
 
 
 
