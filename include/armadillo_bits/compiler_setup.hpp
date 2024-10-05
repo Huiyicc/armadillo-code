@@ -314,7 +314,7 @@
 
 #if defined(_MSC_VER)
   
-  #if (_MSC_VER < 1900)
+  #if (_MSC_VER < 1910)
     #error "*** newer compiler required ***"
   #endif
   
