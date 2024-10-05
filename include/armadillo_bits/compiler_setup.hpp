@@ -168,6 +168,10 @@
   // gcc 6.1 has proper C++14 support and fixes an OpenMP related bug:
   // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57580
   
+  #if (ARMA_GCC_VERSION < 80100)
+    #pragma message("INFO: support for GCC versions older than 8.1 is deprecated"
+  #endif
+  
   #define ARMA_GOOD_COMPILER
   
   #undef  arma_hot
