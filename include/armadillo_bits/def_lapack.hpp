@@ -871,12 +871,14 @@ extern "C"
   void arma_fortran(arma_dsytrf)(const char* uplo, const blas_int* n, double*   a, const blas_int* lda, blas_int* ipiv, double*   work, const blas_int* lwork, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_csytrf)(const char* uplo, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ipiv, blas_cxf* work, const blas_int* lwork, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_zsytrf)(const char* uplo, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ipiv, blas_cxd* work, const blas_int* lwork, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
+  // TODO: replace csytrf/zsytrf with chetrf/zhetrf
   
   // inverse of symmetric matrix (using pre-computed factorisation)
   void arma_fortran(arma_ssytri)(const char* uplo, const blas_int* n, float*    a, const blas_int* lda, blas_int* ipiv, float*    work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_dsytri)(const char* uplo, const blas_int* n, double*   a, const blas_int* lda, blas_int* ipiv, double*   work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_csytri)(const char* uplo, const blas_int* n, blas_cxf* a, const blas_int* lda, blas_int* ipiv, blas_cxf* work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
   void arma_fortran(arma_zsytri)(const char* uplo, const blas_int* n, blas_cxd* a, const blas_int* lda, blas_int* ipiv, blas_cxd* work, blas_int* info, blas_len uplo_len) ARMA_NOEXCEPT;
+  // TODO: replace csytri/zsytri with chetri/zhetri
   
 #else
   

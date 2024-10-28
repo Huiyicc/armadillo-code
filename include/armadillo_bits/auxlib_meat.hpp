@@ -242,6 +242,7 @@ auxlib::inv_tr_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond, c
 
 
 
+// TODO: create specialisation for complex hermitian matrices, which replaces sytrf/sytri with hetrf/hetri
 template<typename eT>
 inline
 bool
