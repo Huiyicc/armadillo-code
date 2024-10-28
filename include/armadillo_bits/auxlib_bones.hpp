@@ -46,6 +46,9 @@ class auxlib
   template<typename eT>
   inline static bool inv_sym(Mat<eT>& A);
   
+  template<typename T>
+  inline static bool inv_sym(Mat< std::complex<T> >& A);
+  
   template<typename eT>
   inline static bool inv_sympd(Mat<eT>& A, bool& out_sympd_state);
   
