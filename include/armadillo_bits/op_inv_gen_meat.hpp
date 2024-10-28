@@ -221,6 +221,8 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   if(arma_config::optimise_sym)
     {
+    arma_debug_print("op_inv_gen_rcond: sym optimisation");
+    
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
     
@@ -388,29 +390,23 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  // TODO: refactor to use auxlib::inv_sym_rcond()
-  
-  const bool try_sympd = arma_config::optimise_sym && ((auxlib::crippled_lapack(out)) ? false : sym_helper::guess_sympd(out));
-  
-  if(try_sympd)
+  if(arma_config::optimise_sym)
     {
-    arma_debug_print("op_inv_gen_rcond: attempting sympd optimisation");
+    bool is_approx_sym   = false;
+    bool is_approx_sympd = false;
     
-    out_state.is_sym = true;
+    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, out);
     
-    Mat<eT> tmp = out;
+    if(is_approx_sym)
+      {
+      arma_debug_print("op_inv_gen_rcond: sym optimisation");
+      
+      out_state.is_sym = true;
     
-    bool sympd_state = false;
+      return auxlib::inv_sym_rcond(out, out_state.rcond);
+      }
     
-    const bool status = auxlib::inv_sympd_rcond(tmp, sympd_state, out_state.rcond);
-    
-    if(status)  { out.steal_mem(tmp); return true; }
-    
-    if((status == false) && (sympd_state == true))  { return false; }
-    
-    arma_debug_print("op_inv_gen_rcond: sympd optimisation failed");
-    
-    // fallthrough if optimisation failed
+    // fallthrough if not symmetric
     }
   
   return auxlib::inv_rcond(out, out_state.rcond);

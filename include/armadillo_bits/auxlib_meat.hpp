@@ -312,7 +312,7 @@ auxlib::inv_sym(Mat< std::complex<T> >& A)
   {
   arma_debug_sigprint();
   
-  // NOTE: the function name is required for overloading, but is a misnomer: it processes hermitian complex matrices
+  // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
 
   if(A.is_empty())  { return true; }
   
@@ -365,6 +365,158 @@ auxlib::inv_sym(Mat< std::complex<T> >& A)
     {
     arma_ignore(A);
     arma_stop_logic_error("inv_sym(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
+auxlib::inv_sym_rcond(Mat<eT>& A, eT& out_rcond)
+  {
+  arma_debug_sigprint();
+  
+  out_rcond = eT(0);
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    arma_conform_assert_blas_size(A);
+    
+    char     norm_id  = '1';
+    char     uplo     = 'L';
+    blas_int n        = blas_int(A.n_rows);
+    blas_int lda      = blas_int(A.n_rows);
+    blas_int lwork    = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::sycon() requirements
+    blas_int info     = 0;
+    eT       norm_val = eT(0);
+    
+    podarray<blas_int>  ipiv(A.n_rows);
+    podarray<blas_int> iwork(A.n_rows);
+    
+    eT        work_query[2] = {};
+    blas_int lwork_query    = -1;
+    
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::lansy()");
+    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &lda, work.memptr());
+    
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::sycon()");
+    lapack::sycon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), iwork.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::sytri()");
+    lapack::sytri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(A);
+    arma_ignore(out_rcond);
+    arma_stop_logic_error("inv_sym_rcond(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T>
+inline
+bool
+auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
+  {
+  arma_debug_sigprint();
+  
+  // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
+  
+  out_rcond = T(0);
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename std::complex<T> eT;
+    
+    arma_conform_assert_blas_size(A);
+    
+    char     norm_id  = '1';
+    char     uplo     = 'L';
+    blas_int n        = blas_int(A.n_rows);
+    blas_int lda      = blas_int(A.n_rows);
+    blas_int lwork    = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::hecon() requirements
+    blas_int info     = 0;
+    T        norm_val = T(0);
+    
+    podarray<blas_int>       ipiv(A.n_rows);
+    podarray<T>        lanhe_work(A.n_rows);
+    
+    eT        work_query[2] = {};
+    blas_int lwork_query    = -1;
+    
+    arma_debug_print("lapack::hetrf()");
+    lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return false; }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::lanhe()");
+    norm_val = (has_blas_float_bug<T>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &lda, lanhe_work.memptr());
+    
+    arma_debug_print("lapack::hetrf()");
+    lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::hecon()");
+    lapack::hecon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::hetri()");
+    lapack::hetri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(A);
+    arma_ignore(out_rcond);
+    arma_stop_logic_error("inv_sym_rcond(): use of LAPACK must be enabled");
     return false;
     }
   #endif
