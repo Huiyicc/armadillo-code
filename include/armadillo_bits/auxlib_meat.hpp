@@ -245,6 +245,69 @@ auxlib::inv_tr_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond, c
 template<typename eT>
 inline
 bool
+auxlib::inv_sym(Mat<eT>& A)
+  {
+  arma_debug_sigprint();
+  
+  if(A.is_empty())  { return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    arma_conform_assert_blas_size(A);
+    
+    char     uplo  = 'L';
+    blas_int n     = blas_int(A.n_rows);
+    blas_int lda   = blas_int(A.n_rows);
+    blas_int lwork = (std::max)(blas_int(podarray_prealloc_n_elem::val), n);
+    blas_int info  = 0;
+    
+    podarray<blas_int> ipiv(A.n_rows);
+    
+    if(n > 16)
+      {
+      eT        work_query[2] = {};
+      blas_int lwork_query    = -1;
+      
+      arma_debug_print("lapack::sytrf()");
+      lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+      
+      if(info != 0)  { return false; }
+      
+      blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+      
+      lwork = (std::max)(lwork_proposed, lwork);
+      }
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::sytri()");
+    lapack::sytri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
+    
+    if(info != 0)  { return false; }
+    
+    A = symmatl(A);
+    
+    return true;
+    }
+  #else
+    {
+    arma_ignore(A);
+    arma_stop_logic_error("inv_sym(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename eT>
+inline
+bool
 auxlib::inv_sympd(Mat<eT>& A, bool& out_sympd_state)
   {
   arma_debug_sigprint();

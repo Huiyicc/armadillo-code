@@ -44,6 +44,9 @@ class auxlib
   inline static bool inv_tr_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond, const uword layout);
   
   template<typename eT>
+  inline static bool inv_sym(Mat<eT>& A);
+  
+  template<typename eT>
   inline static bool inv_sympd(Mat<eT>& A, bool& out_sympd_state);
   
   template<typename eT>
