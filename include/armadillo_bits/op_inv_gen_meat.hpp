@@ -185,7 +185,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
-    arma_debug_print("op_inv_gen_full: detected diagonal matrix");
+    arma_debug_print("op_inv_gen_full: diag optimisation");
     
     eT* colmem = out.memptr();
     
@@ -216,19 +216,24 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
   
   if(is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat)
     {
+    arma_debug_print("op_inv_gen_full: tri optimisation");
+    
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
   if(arma_config::optimise_sym)
     {
-    arma_debug_print("op_inv_gen_rcond: sym optimisation");
-    
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
     
     sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, out);
     
-    if(is_approx_sym)  { return auxlib::inv_sym(out); }
+    if(is_approx_sym)
+      {
+      arma_debug_print("op_inv_gen_full: sym optimisation");
+      
+      return auxlib::inv_sym(out);
+      }
     
     // fallthrough if not symmetric
     }
@@ -341,7 +346,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
   
   if(is_op_diagmat<T1>::value || out.is_diagmat())
     {
-    arma_debug_print("op_inv_gen_rcond: detected diagonal matrix");
+    arma_debug_print("op_inv_gen_rcond: diag optimisation");
     
     out_state.is_diag = true;
     
@@ -387,6 +392,8 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
   
   if(is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat)
     {
+    arma_debug_print("op_inv_gen_rcond: tri optimisation");
+    
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
