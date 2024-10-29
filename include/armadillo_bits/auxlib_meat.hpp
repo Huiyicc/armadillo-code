@@ -387,13 +387,14 @@ auxlib::inv_sym_rcond(Mat<eT>& A, eT& out_rcond)
     {
     arma_conform_assert_blas_size(A);
     
-    char     norm_id  = '1';
-    char     uplo     = 'L';
-    blas_int n        = blas_int(A.n_rows);
-    blas_int lda      = blas_int(A.n_rows);
-    blas_int lwork    = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::sycon() requirements
-    blas_int info     = 0;
-    eT       norm_val = eT(0);
+    char     norm_id   = '1';
+    char     uplo      = 'L';
+    blas_int n         = blas_int(A.n_rows);
+    blas_int lda       = blas_int(A.n_rows);
+    blas_int lwork     = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::sycon() requirements
+    blas_int info      = 0;
+    eT       norm_val  = eT(0);
+    eT       tmp_rcond = eT(0);
     
     podarray<blas_int>  ipiv(A.n_rows);
     podarray<blas_int> iwork(A.n_rows);
@@ -421,9 +422,11 @@ auxlib::inv_sym_rcond(Mat<eT>& A, eT& out_rcond)
     if(info != 0)  { return false; }
     
     arma_debug_print("lapack::sycon()");
-    lapack::sycon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), iwork.memptr(), &info);
+    lapack::sycon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &tmp_rcond, work.memptr(), iwork.memptr(), &info);
     
     if(info != 0)  { return false; }
+    
+    out_rcond = tmp_rcond;
     
     arma_debug_print("lapack::sytri()");
     lapack::sytri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
@@ -465,13 +468,14 @@ auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
     
     arma_conform_assert_blas_size(A);
     
-    char     norm_id  = '1';
-    char     uplo     = 'L';
-    blas_int n        = blas_int(A.n_rows);
-    blas_int lda      = blas_int(A.n_rows);
-    blas_int lwork    = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::hecon() requirements
-    blas_int info     = 0;
-    T        norm_val = T(0);
+    char     norm_id   = '1';
+    char     uplo      = 'L';
+    blas_int n         = blas_int(A.n_rows);
+    blas_int lda       = blas_int(A.n_rows);
+    blas_int lwork     = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::hecon() requirements
+    blas_int info      = 0;
+    T        norm_val  = T(0);
+    T        tmp_rcond = T(0);
     
     podarray<blas_int>       ipiv(A.n_rows);
     podarray<T>        lanhe_work(A.n_rows);
@@ -499,9 +503,11 @@ auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
     if(info != 0)  { return false; }
     
     arma_debug_print("lapack::hecon()");
-    lapack::hecon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), &info);
+    lapack::hecon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &tmp_rcond, work.memptr(), &info);
     
     if(info != 0)  { return false; }
+    
+    out_rcond = tmp_rcond;
     
     arma_debug_print("lapack::hetri()");
     lapack::hetri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);

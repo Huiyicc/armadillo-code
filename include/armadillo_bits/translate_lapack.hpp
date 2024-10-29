@@ -1441,11 +1441,11 @@ namespace lapack
     arma_type_check(( is_supported_blas_type<T>::value == false ));
     
     #if defined(ARMA_USE_FORTRAN_HIDDEN_ARGS)
-           if( is_cx_float<T>::value)  { typedef float  pod_T; typedef blas_cxf cx_T; arma_fortran(arma_checon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info, 1); }
-      else if(is_cx_double<T>::value)  { typedef double pod_T; typedef blas_cxd cx_T; arma_fortran(arma_zhecon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info, 1); }
+           if( is_float<T>::value)  { typedef float  pod_T; typedef blas_cxf cx_T; arma_fortran(arma_checon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info, 1); }
+      else if(is_double<T>::value)  { typedef double pod_T; typedef blas_cxd cx_T; arma_fortran(arma_zhecon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info, 1); }
     #else
-           if( is_cx_float<T>::value)  { typedef float  pod_T; typedef blas_cxf cx_T; arma_fortran(arma_checon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info); }
-      else if(is_cx_double<T>::value)  { typedef double pod_T; typedef blas_cxd cx_T; arma_fortran(arma_zhecon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info); }
+           if( is_float<T>::value)  { typedef float  pod_T; typedef blas_cxf cx_T; arma_fortran(arma_checon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info); }
+      else if(is_double<T>::value)  { typedef double pod_T; typedef blas_cxd cx_T; arma_fortran(arma_zhecon)(uplo, n, (cx_T*)a, lda, ipiv, (const pod_T*)anorm, (pod_T*)rcond, (cx_T*)work, info); }
     #endif
     }
   
