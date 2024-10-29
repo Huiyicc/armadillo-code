@@ -6477,47 +6477,57 @@ auxlib::rcond(Mat< std::complex<T> >& A)
 template<typename eT>
 inline
 eT
-auxlib::rcond_sympd(Mat<eT>& A, bool& calc_ok)
+auxlib::rcond_sym(Mat<eT>& A)
   {
   #if defined(ARMA_USE_LAPACK)
     {
     arma_conform_assert_blas_size(A);
     
-    calc_ok = false;
+    char     norm_id   = '1';
+    char     uplo      = 'L';
+    blas_int n         = blas_int(A.n_rows);
+    blas_int lda       = blas_int(A.n_rows);
+    blas_int lwork     = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::sycon() requirements
+    blas_int info      = 0;
+    eT       norm_val  = eT(0);
+    eT       out_rcond = eT(0);
     
-    char     norm_id  = '1';
-    char     uplo     = 'L';
-    blas_int n        = blas_int(A.n_rows);  // assuming square matrix
-    blas_int lda      = blas_int(A.n_rows);
-    eT       norm_val = eT(0);
-    eT       rcond    = eT(0);
-    blas_int info     = blas_int(0);
+    podarray<blas_int>  ipiv(A.n_rows);
+    podarray<blas_int> iwork(A.n_rows);
     
-    podarray<eT>        work(3*A.n_rows);
-    podarray<blas_int> iwork(  A.n_rows);
+    eT        work_query[2] = {};
+    blas_int lwork_query    = -1;
+    
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return eT(0); }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     arma_debug_print("lapack::lansy()");
     norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lansy(&norm_id, &uplo, &n, A.memptr(), &lda, work.memptr());
     
-    arma_debug_print("lapack::potrf()");
-    lapack::potrf(&uplo, &n, A.memptr(), &lda, &info);
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
     
-    if(info != blas_int(0))  { return eT(0); }
+    if(info != 0)  { return eT(0); }
     
-    arma_debug_print("lapack::pocon()");
-    lapack::pocon(&uplo, &n, A.memptr(), &lda, &norm_val, &rcond, work.memptr(), iwork.memptr(), &info);
+    arma_debug_print("lapack::sycon()");
+    lapack::sycon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), iwork.memptr(), &info);
     
-    if(info != blas_int(0))  { return eT(0); }
+    if(info != 0)  { return eT(0); }
     
-    calc_ok = true;
-    
-    return rcond;
+    return out_rcond;
     }
   #else
     {
     arma_ignore(A);
-    calc_ok = false;
-    arma_stop_logic_error("rcond(): use of LAPACK must be enabled");
+    arma_stop_logic_error("rcond_sym(): use of LAPACK must be enabled");
     return eT(0);
     }
   #endif
@@ -6528,57 +6538,61 @@ auxlib::rcond_sympd(Mat<eT>& A, bool& calc_ok)
 template<typename T>
 inline
 T
-auxlib::rcond_sympd(Mat< std::complex<T> >& A, bool& calc_ok)
+auxlib::rcond_sym(Mat< std::complex<T> >& A)
   {
-  #if defined(ARMA_CRIPPLED_LAPACK)
-    {
-    arma_debug_print("auxlib::rcond_sympd(): redirecting to auxlib::rcond() due to crippled LAPACK");
-    
-    calc_ok = true;
-    
-    return auxlib::rcond(A);
-    }
-  #elif defined(ARMA_USE_LAPACK)
+  // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
+  
+  #if defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
     arma_conform_assert_blas_size(A);
     
-    calc_ok = false;
+    char     norm_id   = '1';
+    char     uplo      = 'L';
+    blas_int n         = blas_int(A.n_rows);
+    blas_int lda       = blas_int(A.n_rows);
+    blas_int lwork     = (std::max)(blas_int(podarray_prealloc_n_elem::val), 2*n);  // 2*n due to lapack::hecon() requirements
+    blas_int info      = 0;
+    T        norm_val  = T(0);
+    T        out_rcond = T(0);
     
-    char     norm_id  = '1';
-    char     uplo     = 'L';
-    blas_int n        = blas_int(A.n_rows);  // assuming square matrix
-    blas_int lda      = blas_int(A.n_rows);
-    T        norm_val = T(0);
-    T        rcond    = T(0);
-    blas_int info     = blas_int(0);
+    podarray<blas_int>       ipiv(A.n_rows);
+    podarray<T>        lanhe_work(A.n_rows);
     
-    podarray<eT>  work(2*A.n_rows);
-    podarray< T> rwork(  A.n_rows);
+    eT        work_query[2] = {};
+    blas_int lwork_query    = -1;
+    
+    arma_debug_print("lapack::hetrf()");
+    lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+    
+    if(info != 0)  { return T(0); }
+    
+    blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+    
+    lwork = (std::max)(lwork_proposed, lwork);
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
     
     arma_debug_print("lapack::lanhe()");
-    norm_val = (has_blas_float_bug<eT>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &lda, rwork.memptr());
+    norm_val = (has_blas_float_bug<T>::value) ? auxlib::norm1_sym(A) : lapack::lanhe(&norm_id, &uplo, &n, A.memptr(), &lda, lanhe_work.memptr());
     
-    arma_debug_print("lapack::potrf()");
-    lapack::potrf(&uplo, &n, A.memptr(), &lda, &info);
+    arma_debug_print("lapack::hetrf()");
+    lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
     
-    if(info != blas_int(0))  { return T(0); }
+    if(info != 0)  { return T(0); }
     
-    arma_debug_print("lapack::cx_pocon()");
-    lapack::cx_pocon(&uplo, &n, A.memptr(), &lda, &norm_val, &rcond, work.memptr(), rwork.memptr(), &info);
+    arma_debug_print("lapack::hecon()");
+    lapack::hecon(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &norm_val, &out_rcond, work.memptr(), &info);
     
-    if(info != blas_int(0))  { return T(0); }
+    if(info != 0)  { return T(0); }
     
-    calc_ok = true;
-    
-    return rcond;
+    return out_rcond;
     }
   #else
     {
     arma_ignore(A);
-    calc_ok = false;
-    arma_stop_logic_error("rcond(): use of LAPACK must be enabled");
+    arma_stop_logic_error("rcond_sym(): use of LAPACK must be enabled");
     return T(0);
     }
   #endif

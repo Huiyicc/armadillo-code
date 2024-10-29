@@ -400,10 +400,10 @@ class auxlib
   inline static  T rcond(Mat< std::complex<T> >& A);
   
   template<typename eT>
-  inline static eT rcond_sympd(Mat<eT>& A, bool& calc_ok);
+  inline static eT rcond_sym(Mat<eT>& A);
   
-  template<typename T>
-  inline static  T rcond_sympd(Mat< std::complex<T> >& A, bool& calc_ok);
+  template<typename  T>
+  inline static  T rcond_sym(Mat< std::complex<T> >& A);
   
   template<typename eT>
   inline static eT rcond_trimat(const Mat<eT>& A, const uword layout);
