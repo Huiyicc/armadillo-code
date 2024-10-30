@@ -62,10 +62,10 @@ class auxlib
   inline static bool inv_sympd(Mat<eT>& out, const Mat<eT>& X);
   
   template<typename eT>
-  inline static bool inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond);
+  inline static bool inv_sympd_rcond(Mat<eT>& A, eT& out_rcond);
   
   template<typename T>
-  inline static bool inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out_rcond);
+  inline static bool inv_sympd_rcond(Mat< std::complex<T> >& A, T& out_rcond);
   
   
   //

@@ -428,6 +428,8 @@ auxlib::inv_sym_rcond(Mat<eT>& A, eT& out_rcond)
     
     out_rcond = tmp_rcond;
     
+    if(arma_isnan(out_rcond))  { return false; }
+    
     arma_debug_print("lapack::sytri()");
     lapack::sytri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
     
@@ -508,6 +510,8 @@ auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
     if(info != 0)  { return false; }
     
     out_rcond = tmp_rcond;
+    
+    if(arma_isnan(out_rcond))  { return false; }
     
     arma_debug_print("lapack::hetri()");
     lapack::hetri(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &info);
@@ -598,11 +602,9 @@ auxlib::inv_sympd(Mat<eT>& out, const Mat<eT>& X)
 template<typename eT>
 inline
 bool
-auxlib::inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond)
+auxlib::inv_sympd_rcond(Mat<eT>& A, eT& out_rcond)
   {
   arma_debug_sigprint();
-  
-  out_sympd_state = false;
   
   if(A.is_empty())  { return true; }
   
@@ -628,8 +630,6 @@ auxlib::inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond)
     
     if(info != 0)  { out_rcond = eT(0); return false; }
     
-    out_sympd_state = true;
-    
     out_rcond = auxlib::lu_rcond_sympd<T>(A, norm_val);
     
     if(arma_isnan(out_rcond))  { return false; }
@@ -646,7 +646,6 @@ auxlib::inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond)
   #else
     {
     arma_ignore(A);
-    arma_ignore(out_sympd_state);
     arma_ignore(out_rcond);
     arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
     return false;
@@ -659,18 +658,15 @@ auxlib::inv_sympd_rcond(Mat<eT>& A, bool& out_sympd_state, eT& out_rcond)
 template<typename T>
 inline
 bool
-auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out_rcond)
+auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, T& out_rcond)
   {
   arma_debug_sigprint();
-  
-  out_sympd_state = false;
   
   if(A.is_empty())  { return true; }
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
     arma_ignore(A);
-    arma_ignore(out_sympd_state);
     arma_ignore(out_rcond);
     return false;
     }
@@ -694,8 +690,6 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out
     
     if(info != 0)  { out_rcond = T(0); return false; }
     
-    out_sympd_state = true;
-    
     out_rcond = auxlib::lu_rcond_sympd<T>(A, norm_val);
     
     if(arma_isnan(out_rcond))  { return false; }
@@ -712,7 +706,6 @@ auxlib::inv_sympd_rcond(Mat< std::complex<T> >& A, bool& out_sympd_state, T& out
   #else
     {
     arma_ignore(A);
-    arma_ignore(out_sympd_state);
     arma_ignore(out_rcond);
     arma_stop_logic_error("inv_sympd_rcond(): use LAPACK must be enabled");
     return false;
