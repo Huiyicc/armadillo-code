@@ -46,7 +46,7 @@ auxlib::inv(Mat<eT>& A)
     
     if(info != 0)  { return false; }
     
-    if(n > 16)
+    if(n > podarray_prealloc_n_elem::val)
       {
       eT        work_query[2] = {};
       blas_int lwork_query    = -1;
@@ -130,7 +130,7 @@ auxlib::inv_rcond(Mat<eT>& A, typename get_pod_type<eT>::result& out_rcond)
     
     out_rcond = auxlib::lu_rcond<T>(A, norm_val);
     
-    if(n > 16)
+    if(n > podarray_prealloc_n_elem::val)
       {
       eT        work_query[2] = {};
       blas_int lwork_query    = -1;
@@ -263,7 +263,7 @@ auxlib::inv_sym(Mat<eT>& A)
     
     podarray<blas_int> ipiv(A.n_rows);
     
-    if(n > 16)
+    if(n > podarray_prealloc_n_elem::val)
       {
       eT        work_query[2] = {};
       blas_int lwork_query    = -1;
@@ -330,7 +330,7 @@ auxlib::inv_sym(Mat< std::complex<T> >& A)
     
     podarray<blas_int> ipiv(A.n_rows);
     
-    if(n > 16)
+    if(n > podarray_prealloc_n_elem::val)
       {
       eT        work_query[2] = {};
       blas_int lwork_query    = -1;
