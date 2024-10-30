@@ -89,7 +89,7 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  if(arma_config::optimise_sym)
+  if( (arma_config::optimise_sym) && (A.n_rows >= 100) )   // empirically selected threshold (roughly covers real and cx); OpenBLAS 0.3.26 on AMD 7640U
     {
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
