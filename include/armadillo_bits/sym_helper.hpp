@@ -327,6 +327,10 @@ analyse_matrix_worker(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>&
   {
   arma_debug_sigprint();
   
+  // NOTE: the names "is_approx_sym" and "is_approx_sympd" are used for consistency 
+  // NOTE: with the non-complex version of this function, but are misnomers;
+  // NOTE: this function detects hermitian matrices (not simply symmetric matrices).
+  
   typedef typename get_pod_type<eT>::result T;
   
   is_approx_sym   = true;
@@ -347,7 +351,12 @@ analyse_matrix_worker(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>&
     const  T  A_jj_real = std::real(A_jj);
     const  T  A_jj_imag = std::imag(A_jj);
     
-    if( (A_jj_real <= T(0)) || (std::abs(A_jj_imag) > tol) )  { is_approx_sympd = false; }
+    // ORIGINAL CHECK
+    // if( (A_jj_real <= T(0)) || (std::abs(A_jj_imag) > tol) )  { is_approx_sympd = false; }
+    
+    if(std::abs(A_jj_imag) > tol)  { is_approx_sym = false; return; }
+    
+    if(A_jj_real <= T(0))  { is_approx_sympd = false; }
     
     max_diag = (A_jj_real > max_diag) ? A_jj_real : max_diag;
     
