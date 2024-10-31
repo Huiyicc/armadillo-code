@@ -6548,8 +6548,9 @@ auxlib::rcond_sym(Mat< std::complex<T> >& A)
   
   #if defined(ARMA_CRIPPLED_LAPACK)
     {
-    arma_ignore(A);
-    return T(0);
+    arma_debug_print("auxlib::rcond_sym(): redirecting to auxlib::rcond() due to crippled LAPACK");
+    
+    return auxlib::rcond(A);
     }
   #elif defined(ARMA_USE_LAPACK)
     {
