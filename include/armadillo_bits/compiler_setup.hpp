@@ -481,7 +481,7 @@
 // NOTE: option 'ARMA_IGNORE_DEPRECATED_MARKER' will be removed
 // NOTE: disabling deprecation messages is counter-productive
 
-#if defined(ARMA_IGNORE_DEPRECATED_MARKER) && (!defined(ARMA_DONT_IGNORE_DEPRECATED_MARKER)) && (!defined(ARMA_DEBUG))
+#if defined(ARMA_IGNORE_DEPRECATED_MARKER)
   #undef  arma_deprecated
   #define arma_deprecated
 
