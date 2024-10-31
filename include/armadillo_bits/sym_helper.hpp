@@ -456,6 +456,133 @@ analyse_matrix(bool& is_approx_sym, bool& is_approx_sympd, const Mat<eT>& A)
 
 
 
+//
+
+
+
+template<typename eT>
+inline
+typename enable_if2<is_cx<eT>::no, bool>::result
+is_approx_sym(const Mat<eT>& A)
+  {
+  arma_debug_sigprint();
+  
+  const eT tol = eT(100) * std::numeric_limits<eT>::epsilon();  // allow some leeway
+  
+  const uword N = A.n_rows;
+  
+  const eT* A_mem = A.memptr();
+  const eT* A_col = A_mem;
+  
+  const uword Nm1 = N-1;
+  
+  for(uword j=0; j < Nm1; ++j)
+    {
+    const uword jp1      = j+1;
+    const eT*   A_ji_ptr = &(A_mem[j + jp1*N]);  // &(A.at(j,jp1));
+    
+    for(uword i=jp1; i < N; ++i)
+      {
+      const eT A_ij = A_col[i];
+      const eT A_ji = (*A_ji_ptr);
+      
+      const eT A_ij_abs = (std::abs)(A_ij);
+      const eT A_ji_abs = (std::abs)(A_ji);
+      
+      const eT A_delta   = (std::abs)(A_ij - A_ji);
+      const eT A_abs_max = (std::max)(A_ij_abs, A_ji_abs);
+      
+      if( (A_delta > tol) && (A_delta > (A_abs_max*tol)) )  { return false; }
+      
+      A_ji_ptr += N;
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
+  }
+
+
+
+template<typename eT>
+inline
+typename enable_if2<is_cx<eT>::yes, bool>::result
+is_approx_sym(const Mat<eT>& A)
+  {
+  arma_debug_sigprint();
+  
+  // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
+  
+  typedef typename get_pod_type<eT>::result T;
+  
+  const T tol = T(100) * std::numeric_limits<T>::epsilon();  // allow some leeway
+  
+  const uword N = A.n_rows;
+  
+  const eT* A_mem = A.memptr();
+  const eT* A_col = A_mem;
+  
+  for(uword j=0; j < N; ++j)
+    {
+    const eT& A_jj      = A_col[j];
+    const  T  A_jj_imag = std::imag(A_jj);
+    
+    if(std::abs(A_jj_imag) > tol)  { return false; }
+    
+    A_col += N;
+    }
+  
+  A_col = A_mem;
+  
+  const uword Nm1 = N-1;
+  
+  for(uword j=0; j < Nm1; ++j)
+    {
+    const uword jp1      = j+1;
+    const eT*   A_ji_ptr = &(A_mem[j + jp1*N]);  // &(A.at(j,jp1));
+    
+    for(uword i=jp1; i < N; ++i)
+      {
+      const eT& A_ij      = A_col[i];
+      const  T  A_ij_real = std::real(A_ij);
+      const  T  A_ij_imag = std::imag(A_ij);
+      
+      const T A_ij_real_abs = (std::abs)(A_ij_real);
+      const T A_ij_imag_abs = (std::abs)(A_ij_imag);
+      
+      const eT& A_ji      = (*A_ji_ptr);
+      const  T  A_ji_real = std::real(A_ji);
+      const  T  A_ji_imag = std::imag(A_ji);
+      
+      const T A_ji_real_abs = (std::abs)(A_ji_real);
+      const T A_ji_imag_abs = (std::abs)(A_ji_imag);
+      
+      const T A_real_delta   = (std::abs)(A_ij_real - A_ji_real);
+      const T A_real_abs_max = (std::max)(A_ij_real_abs, A_ji_real_abs);
+      
+      if( (A_real_delta > tol) && (A_real_delta > (A_real_abs_max*tol)) )  { return false; }
+      
+      const T A_imag_delta   = (std::abs)(A_ij_imag + A_ji_imag);  // take into account complex conjugate
+      const T A_imag_abs_max = (std::max)(A_ij_imag_abs, A_ji_imag_abs);
+      
+      if( (A_imag_delta > tol) && (A_imag_delta > (A_imag_abs_max*tol)) )  { return false; }
+      
+      A_ji_ptr += N;
+      }
+    
+    A_col += N;
+    }
+  
+  return true;
+  }
+
+
+
+//
+
+
+
 template<typename eT>
 inline
 bool

@@ -221,21 +221,11 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && (sym_helper::is_approx_sym(out)) )
     {
-    bool is_approx_sym   = false;
-    bool is_approx_sympd = false;
+    arma_debug_print("op_inv_gen_full: symmetric/hermitian optimisation");
     
-    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, out);
-    
-    if(is_approx_sym)
-      {
-      arma_debug_print("op_inv_gen_full: sym optimisation");
-      
-      return auxlib::inv_sym(out);
-      }
-    
-    // fallthrough if not symmetric
+    return auxlib::inv_sym(out);
     }
   
   return auxlib::inv(out);
@@ -397,23 +387,13 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) && (sym_helper::is_approx_sym(out)) )
     {
-    bool is_approx_sym   = false;
-    bool is_approx_sympd = false;
+    arma_debug_print("op_inv_gen_rcond: symmetric/hermitian optimisation");
     
-    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, out);
+    out_state.is_sym = true;
     
-    if(is_approx_sym)
-      {
-      arma_debug_print("op_inv_gen_rcond: sym optimisation");
-      
-      out_state.is_sym = true;
-      
-      return auxlib::inv_sym_rcond(out, out_state.rcond);
-      }
-    
-    // fallthrough if not symmetric
+    return auxlib::inv_sym_rcond(out, out_state.rcond);
     }
   
   return auxlib::inv_rcond(out, out_state.rcond);
