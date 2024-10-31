@@ -464,7 +464,13 @@ auxlib::inv_sym_rcond(Mat< std::complex<T> >& A, T& out_rcond)
   
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_ignore(A);
+    arma_ignore(out_rcond);
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
@@ -6535,7 +6541,12 @@ auxlib::rcond_sym(Mat< std::complex<T> >& A)
   {
   // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_ignore(A);
+    return T(0);
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     

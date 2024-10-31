@@ -397,7 +397,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
     return auxlib::inv_tr_rcond(out, out_state.rcond, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if(arma_config::optimise_sym)
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) )
     {
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;
@@ -409,7 +409,7 @@ op_inv_gen_rcond::apply_direct(Mat<typename T1::elem_type>& out, op_inv_gen_stat
       arma_debug_print("op_inv_gen_rcond: sym optimisation");
       
       out_state.is_sym = true;
-    
+      
       return auxlib::inv_sym_rcond(out, out_state.rcond);
       }
     
