@@ -221,7 +221,7 @@ op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out, const Base<typen
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
     }
   
-  if(arma_config::optimise_sym)
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) )
     {
     bool is_approx_sym   = false;
     bool is_approx_sympd = false;

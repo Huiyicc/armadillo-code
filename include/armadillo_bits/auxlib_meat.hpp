@@ -313,10 +313,15 @@ auxlib::inv_sym(Mat< std::complex<T> >& A)
   arma_debug_sigprint();
   
   // NOTE: the function name is required for overloading, but is a misnomer: it processes complex hermitian matrices
-
+  
   if(A.is_empty())  { return true; }
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_ignore(A);
+    return false;
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename std::complex<T> eT;
     
