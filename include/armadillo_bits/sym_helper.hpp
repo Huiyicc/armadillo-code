@@ -249,7 +249,7 @@ guess_sympd(const Mat<eT>& A, const uword min_n_rows)
 template<typename eT>
 inline
 typename enable_if2<is_cx<eT>::no, bool>::result
-is_approx_sym(const Mat<eT>& A)
+is_approx_sym_worker(const Mat<eT>& A)
   {
   arma_debug_sigprint();
   
@@ -294,7 +294,7 @@ is_approx_sym(const Mat<eT>& A)
 template<typename eT>
 inline
 typename enable_if2<is_cx<eT>::yes, bool>::result
-is_approx_sym(const Mat<eT>& A)
+is_approx_sym_worker(const Mat<eT>& A)
   {
   arma_debug_sigprint();
   
@@ -361,6 +361,22 @@ is_approx_sym(const Mat<eT>& A)
     }
   
   return true;
+  }
+
+
+
+template<typename eT>
+inline
+bool
+is_approx_sym(const Mat<eT>& A)
+  {
+  arma_debug_sigprint();
+  
+  // analyse matrices with size >= 4x4
+  
+  if((A.n_rows != A.n_cols) || (A.n_rows < uword(4)))  { return false; }
+  
+  return is_approx_sym_worker(A);
   }
 
 
