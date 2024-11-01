@@ -133,12 +133,16 @@ guess_sympd_worker(const Mat<eT>& A)
   for(uword j=0; j < N; ++j)
     {
     const eT& A_jj      = A_col[j];
-    const  T  A_jj_real = std::real(A_jj);
-    const  T  A_jj_imag = std::imag(A_jj);
+    const  T  A_jj_r    = std::real(A_jj  );
+    const  T  A_jj_i    = std::imag(A_jj  );
+    const  T  A_jj_rabs =  std::abs(A_jj_r);
+    const  T  A_jj_iabs =  std::abs(A_jj_i);
     
-    if( (A_jj_real <= T(0)) || (std::abs(A_jj_imag) > tol) )  { return false; }
+    if(A_jj_r    <= T(0)     )  { return false; }  // real should be positive
+    if(A_jj_iabs >  tol      )  { return false; }  // imag should be approx zero
+    if(A_jj_iabs >  A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
     
-    max_diag = (A_jj_real > max_diag) ? A_jj_real : max_diag;
+    max_diag = (A_jj_r > max_diag) ? A_jj_r : max_diag;
     
     A_col += N;
     }
@@ -309,12 +313,19 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  // ensure diagonal has approx real-only elements
   for(uword j=0; j < N; ++j)
     {
     const eT& A_jj      = A_col[j];
-    const  T  A_jj_imag = std::imag(A_jj);
+    const  T  A_jj_r    = std::real(A_jj  );
+    const  T  A_jj_i    = std::imag(A_jj  );
+    const  T  A_jj_rabs =  std::abs(A_jj_r);
+    const  T  A_jj_iabs =  std::abs(A_jj_i);
     
-    if(std::abs(A_jj_imag) > tol)  { return false; }
+    if(A_jj_iabs > tol      )  { return false; }  // imag should be approx zero
+    if(A_jj_iabs > A_jj_rabs)  { return false; }  // corner case: real and imag are close to zero, and imag is dominant
+    
+    if(arma_isfinite(A_jj_r) == false)  { return false; }
     
     A_col += N;
     }
