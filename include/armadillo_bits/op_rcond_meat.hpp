@@ -89,10 +89,10 @@ op_rcond::apply(const Base<typename T1::elem_type, T1>& X)
     return auxlib::rcond_trimat(A, layout);
     }
   
-  if( (A.n_rows >= 100) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && (sym_helper::is_approx_sym(A)) )
+  // // empirically selected threshold (roughly covers real and cx); OpenBLAS 0.3.26 on AMD 7640U
+  // if( (A.n_rows >= 100) && (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && (sym_helper::is_approx_sym(A)) )
+  if( (arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) && (sym_helper::is_approx_sym(A)) )
     {
-    // empirically selected threshold (roughly covers real and cx); OpenBLAS 0.3.26 on AMD 7640U
-    
     arma_debug_print("op_rcond::apply(): symmetric/hermitian optimisation");
     
     return auxlib::rcond_sym(A);
