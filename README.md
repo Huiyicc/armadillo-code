@@ -461,11 +461,11 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 16: Related Software Using Armadillo
 
-* ensmallen: C++ library for non-linear numerical optimisation (L-BFGS, SGD, CMA-ES, etc)  
-  https://ensmallen.org/
-
 * MLPACK: extensive library of machine learning algorithms  
   https://mlpack.org
+
+* ensmallen: C++ library for numerical optimisation (L-BFGS, SGD, CMA-ES, etc)  
+  https://ensmallen.org/
 
 * RcppArmadillo: integration of Armadillo with R  
   https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
