@@ -264,6 +264,17 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  for(uword j=0; j < N; ++j)
+    {
+    const eT& A_jj = A_col[j];
+    
+    if(arma_isfinite(A_jj) == false)  { return false; }
+    
+    A_col += N;
+    }
+  
+  A_col = A_mem;
+  
   const uword Nm1 = N-1;
   
   for(uword j=0; j < Nm1; ++j)
