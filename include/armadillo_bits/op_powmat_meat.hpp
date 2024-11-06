@@ -207,11 +207,11 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     return true;
     }
   
-  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(A);
+  const bool try_sym = arma_config::optimise_sym && sym_helper::is_approx_sym(A);
   
-  if(try_sympd)
+  if(try_sym)
     {
-    arma_debug_print("op_powmat_cx: attempting sympd optimisation");
+    arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation");
     
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
@@ -229,7 +229,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
       return true;
       }
     
-    arma_debug_print("op_powmat_cx: sympd optimisation failed");
+    arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation failed");
     
     // fallthrough if optimisation failed
     }
