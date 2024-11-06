@@ -198,7 +198,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     
     podarray<out_eT> tmp(N);  // use temporary array in case we have aliasing
     
-    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow( std::complex<in_T>(A.at(i,i)), y) ; }
+    for(uword i=0; i<N; ++i)  { tmp[i] = eop_aux::pow( std::complex<in_T>(A.at(i,i)), y ); }
     
     out.zeros(N,N);
     
@@ -220,11 +220,15 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     
     if(eig_status)
       {
-      eigval = pow(eigval, y);
+      Col<out_eT> cx_eigval_pow(N, arma_nozeros_indicator());
       
-      const Mat<in_eT> tmp = diagmat(eigval) * eigvec.t();
+      for(uword i=0; i<N; ++i)  { cx_eigval_pow[i] = eop_aux::pow( std::complex<in_T>(eigval[i]), y ); }
       
-      out = conv_to< Mat<out_eT> >::from(eigvec * tmp);
+      const Mat<out_eT> cx_eigvec = conv_to< Mat<out_eT> >::from(eigvec);
+      
+      const Mat<out_eT> tmp = cx_eigvec * diagmat(cx_eigval_pow);
+      
+      out = tmp * cx_eigvec.t();
       
       return true;
       }
