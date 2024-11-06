@@ -212,7 +212,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
   if(try_sym)
     {
     arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation");
-            
+    
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
     
