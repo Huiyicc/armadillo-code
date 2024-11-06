@@ -96,7 +96,7 @@ op_powmat::apply_direct_positive(Mat<eT>& out, const Mat<eT>& X, const uword y)
   
   if(X.is_diagmat())
     {
-    arma_debug_print("op_powmat: detected diagonal matrix");
+    arma_debug_print("op_powmat: diag optimisation");
     
     podarray<eT> tmp(N);  // use temporary array in case we have aliasing
     
@@ -194,7 +194,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
   
   if(A.is_diagmat())
     {
-    arma_debug_print("op_powmat_cx: detected diagonal matrix");
+    arma_debug_print("op_powmat_cx: diag optimisation");
     
     podarray<out_eT> tmp(N);  // use temporary array in case we have aliasing
     
