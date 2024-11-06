@@ -212,7 +212,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
   if(try_sym)
     {
     arma_debug_print("op_powmat_cx: symmetric/hermitian optimisation");
-    
+            
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
     
@@ -220,15 +220,34 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     
     if(eig_status)
       {
-      Col<out_eT> cx_eigval_pow(N, arma_nozeros_indicator());
+      bool all_pos = true;
       
-      for(uword i=0; i<N; ++i)  { cx_eigval_pow[i] = eop_aux::pow( std::complex<in_T>(eigval[i]), y ); }
+      for(uword i=0; i<N; ++i)  { all_pos = (eigval[i] <= in_T(0)) ? false : all_pos; }
       
-      const Mat<out_eT> cx_eigvec = conv_to< Mat<out_eT> >::from(eigvec);
-      
-      const Mat<out_eT> tmp = cx_eigvec * diagmat(cx_eigval_pow);
-      
-      out = tmp * cx_eigvec.t();
+      if(all_pos)
+        {
+        arma_debug_print("op_powmat_cx: all_pos = true");
+        
+        eigval = pow(eigval, y);
+        
+        const Mat<in_eT> tmp = eigvec * diagmat(eigval);
+        
+        out = conv_to< Mat<out_eT> >::from(tmp  * eigvec.t());
+        }
+      else
+        {
+        arma_debug_print("op_powmat_cx: all_pos = false");
+        
+        Col<out_eT> cx_eigval_pow(N, arma_nozeros_indicator());
+        
+        for(uword i=0; i<N; ++i)  { cx_eigval_pow[i] = eop_aux::pow( std::complex<in_T>(eigval[i]), y ); }
+        
+        const Mat<out_eT> cx_eigvec = conv_to< Mat<out_eT> >::from(eigvec);
+        
+        const Mat<out_eT> tmp = cx_eigvec * diagmat(cx_eigval_pow);
+        
+        out = tmp * cx_eigvec.t();
+        }
       
       return true;
       }
