@@ -220,7 +220,7 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     
     if(eig_status)
       {
-      eigval = pow(eigval, y);
+      eigval = pow(eigval, y);  // BUG: when in_eT is real, this will produce NaN for negative eigenvalues and non-integer exponent
       
       const Mat<in_eT> tmp = diagmat(eigval) * eigvec.t();
       
