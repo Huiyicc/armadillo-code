@@ -342,20 +342,19 @@ See the documentation for more information on the above defines.
 
 On Linux-based systems, MKL might be installed in a non-standard location such as `/opt`
 which can cause problems during linking.
-Before installing Armadillo, the system should know where the MKL libraries are located.
-For example, `/opt/intel/mkl/lib/intel64/`.
-This can be achieved by setting the `LD_LIBRARY_PATH` environment variable,
-or for a more permanent solution, adding the directory locations to `/etc/ld.so.conf`.
-It may also be possible to store a text file with the locations
-in the `/etc/ld.so.conf.d` directory. For example, `/etc/ld.so.conf.d/mkl.conf`.
-If `/etc/ld.so.conf` is modified or `/etc/ld.so.conf.d/mkl.conf` is created,
-`/sbin/ldconfig` must be run afterwards.
+Examples: `/opt/intel/oneapi/mkl/latest/lib`, `/opt/intel/mkl/lib/intel64/`.
 
-Below is an example of `/etc/ld.so.conf.d/mkl.conf`
-where Intel MKL is installed in `/opt/intel`
+Before installing Armadillo, the system must know where the MKL libraries are located.
+This can be achieved via several ways:
 
-    /opt/intel/lib/intel64  
-    /opt/intel/mkl/lib/intel64  
+1. By setting the `LD_LIBRARY_PATH` environment variable.
+
+2. By adding the MKL library directory locations to the `/etc/ld.so.conf` text file,
+   followed by running `/sbin/ldconfig`.
+
+3. By creating a text file named `/etc/ld.so.conf.d/mkl.conf`
+   which contains the MKL library directory locations,
+   followed by running `/sbin/ldconfig`.
 
 If MKL is installed and it is persistently giving problems during linking,
 Support for MKL can be disabled by editing the CMakeLists.txt file,
