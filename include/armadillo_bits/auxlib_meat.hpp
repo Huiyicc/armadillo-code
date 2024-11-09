@@ -4561,6 +4561,145 @@ auxlib::solve_square_refine(Mat< std::complex<typename T1::pod_type> >& out, typ
 template<typename T1>
 inline
 bool
+auxlib::solve_sym_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_type>& A, const Base<typename T1::pod_type,T1>& B_expr)
+  {
+  arma_debug_sigprint();
+  
+  out = B_expr.get_ref();
+  
+  const uword B_n_rows = out.n_rows;
+  const uword B_n_cols = out.n_cols;
+  
+  arma_conform_check( (A.n_rows != B_n_rows), "solve(): number of rows in given matrices must be the same", [&](){ out.soft_reset(); } );
+  
+  if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type eT;
+    
+    arma_conform_assert_blas_size(A);
+    
+    char     uplo  = 'L';
+    blas_int n     = blas_int(A.n_rows);
+    blas_int lda   = blas_int(A.n_rows);
+    blas_int ldb   = blas_int(out.n_rows);
+    blas_int nrhs  = blas_int(out.n_cols);
+    blas_int lwork = (std::max)(blas_int(podarray_prealloc_n_elem::val), n);
+    blas_int info  = 0;
+    
+    podarray<blas_int> ipiv(A.n_rows);
+    
+    if(n > blas_int(podarray_prealloc_n_elem::val))
+      {
+      eT        work_query[2] = {};
+      blas_int lwork_query    = -1;
+      
+      arma_debug_print("lapack::sytrf()");
+      lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+      
+      if(info != 0)  { return false; }
+      
+      blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+      
+      lwork = (std::max)(lwork_proposed, lwork);
+      }
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::sytrf()");
+    lapack::sytrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::sytrs()");
+    lapack::sytrs(&uplo, &n, &nrhs, A.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T1>
+inline
+bool
+auxlib::solve_sym_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std::complex<typename T1::pod_type> >& A, const Base< std::complex<typename T1::pod_type>, T1 >& B_expr)
+  {
+  arma_debug_sigprint();
+  
+  out = B_expr.get_ref();
+  
+  const uword B_n_rows = out.n_rows;
+  const uword B_n_cols = out.n_cols;
+  
+  arma_conform_check( (A.n_rows != B_n_rows), "solve(): number of rows in given matrices must be the same", [&](){ out.soft_reset(); } );
+  
+  if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
+  
+  #if defined(ARMA_USE_LAPACK)
+    {
+    typedef typename T1::pod_type  T;
+    typedef std::complex<T>       eT;
+    
+    arma_conform_assert_blas_size(A);
+    
+    char     uplo  = 'L';
+    blas_int n     = blas_int(A.n_rows);
+    blas_int lda   = blas_int(A.n_rows);
+    blas_int ldb   = blas_int(out.n_rows);
+    blas_int nrhs  = blas_int(out.n_cols);
+    blas_int lwork = (std::max)(blas_int(podarray_prealloc_n_elem::val), n);
+    blas_int info  = 0;
+    
+    podarray<blas_int> ipiv(A.n_rows);
+    
+    if(n > blas_int(podarray_prealloc_n_elem::val))
+      {
+      eT        work_query[2] = {};
+      blas_int lwork_query    = -1;
+      
+      arma_debug_print("lapack::hetrf()");
+      lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), &work_query[0], &lwork_query, &info);
+      
+      if(info != 0)  { return false; }
+      
+      blas_int lwork_proposed = static_cast<blas_int>( access::tmp_real(work_query[0]) );
+      
+      lwork = (std::max)(lwork_proposed, lwork);
+      }
+    
+    podarray<eT> work( static_cast<uword>(lwork) );
+    
+    arma_debug_print("lapack::hetrf()");
+    lapack::hetrf(&uplo, &n, A.memptr(), &lda, ipiv.memptr(), work.memptr(), &lwork, &info);
+    
+    if(info != 0)  { return false; }
+    
+    arma_debug_print("lapack::hetrs()");
+    lapack::hetrs(&uplo, &n, &nrhs, A.memptr(), &lda, ipiv.memptr(), out.memptr(), &ldb, &info);
+    
+    return (info == 0);
+    }
+  #else
+    {
+    arma_stop_logic_error("solve(): use of LAPACK must be enabled");
+    return false;
+    }
+  #endif
+  }
+
+
+
+template<typename T1>
+inline
+bool
 auxlib::solve_sympd_fast(Mat<typename T1::elem_type>& out, Mat<typename T1::elem_type>& A, const Base<typename T1::elem_type,T1>& B_expr)
   {
   arma_debug_sigprint();
