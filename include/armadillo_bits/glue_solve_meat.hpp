@@ -146,7 +146,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     {
     if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
       {
-      if(is_cx<eT>::no)   { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not symmetric"); }
+      if(is_cx<eT>::no )  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not symmetric"); }
       if(is_cx<eT>::yes)  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not hermitian"); }
       }
     
