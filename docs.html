@@ -13771,7 +13771,8 @@ the solution can be computed faster by explicitly indicating that <i>A</i> is tr
 <tr><td><code>solve_opts::no_trimat</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for triangular matrices</td></tr>
 <tr><td><code>solve_opts::no_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for symmetric/hermitian positive definite matrices</td></tr>
 -->
-<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>skip the standard solver and directly use of the approximate solver</td></tr>
+<tr><td><code>solve_opts::force_sym</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the symmetric solver, bypassing the generic solver</td></tr>
+<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the approximate solver, bypassing the generic solver</td></tr>
 </tbody>
 </table>
 <br>
@@ -13779,7 +13780,7 @@ the above settings can be combined using the <code>+</code> operator; for exampl
 </li>
 <br>
 <li>
-If a rank deficient system is detected and the <i><code>solve_opts::no_approx</code></i> option is <b>not</b> enabled, a warning is emitted and an approximate solution is attempted;
+If a rank deficient system is detected and the <code>solve_opts::no_approx</code> option is <b>not</b> enabled, a warning is emitted and an approximate solution is attempted;
 <br>since Armadillo 10.4, this warning can be disabled by setting <a href="#config_hpp">ARMA_WARN_LEVEL</a> to 1 before including the armadillo header:
 <br><code>#define ARMA_WARN_LEVEL 1</code>
 <br><code>#include&nbsp;&lt;armadillo&gt;</code>
@@ -13788,9 +13789,9 @@ If a rank deficient system is detected and the <i><code>solve_opts::no_approx</c
 <li>
 <b>Caveats:</b>
 <ul>
-<li>using <i><code>solve_opts::fast</code></i> will speed up finding the solution, but for poorly conditioned systems the solution may have lower quality</li>
-<li>not all SPD matrices are automatically detected; to skip the analysis step and directly indicate that matrix <i>A</i> is likely SPD, use <code>solve_opts::likely_sympd</code></li>
-<li>using <i><code>solve_opts::force_approx</code></i> is only advised if the system is known to be rank deficient; the approximate solver is considerably slower</li>
+<li>using <code>solve_opts::fast</code> will speed up finding the solution, but for poorly conditioned systems the solution may have lower quality</li>
+<li>not all SPD matrices are automatically detected; to bypass the analysis step and directly indicate that matrix <i>A</i> is likely SPD, use <code>solve_opts::likely_sympd</code></li>
+<li>using <code>solve_opts::force_approx</code> is only advised if the system is known to be rank deficient; the approximate solver is considerably slower</li>
 </ul>
 </li>
 <br>
@@ -20134,7 +20135,7 @@ List of additions and changes for each version:
 <ul>
 <li>faster handling of symmetric matrices by <a href="#inv">inv()</a>, <a href="#rcond">rcond()</a>, <a href="#powmat">powmat()</a></li>
 <li>faster handling of hermitian matrices by <a href="#inv">inv()</a>, <a href="#rcond">rcond()</a>, <a href="#powmat">powmat()</a>, <a href="#cond">cond()</a>, <a href="#pinv">pinv()</a>, <a href="#rank">rank()</a></li>
-<li>...</li>
+<li>added <code>solve_opts::force_sym</code> option to <a href="#solve">solve()</a> to force the use of the symmetric solver</li>
 </ul>
 </li>
 <br>
