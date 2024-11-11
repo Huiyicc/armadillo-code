@@ -13744,7 +13744,7 @@ The number of rows in <i>A</i> and <i>B</i> must be the same
 </li>
 <br>
 <li>
-By default, matrix <i>A</i> is analysed to automatically determine whether it is a general matrix, band matrix, diagonal matrix, or symmetric/hermitian matrix;
+By default, matrix <i>A</i> is analysed to automatically determine whether it is a general matrix, band matrix, diagonal matrix, or symmetric/hermitian positive definite (SPD) matrix;
 based on the detected matrix structure, a specialised solver is used for faster execution;
 if no solution is found, an approximate solver is automatically used as a fallback;
 see the <a href="armadillo_solver_2020.pdf">associated paper</a> for more details
@@ -13789,7 +13789,7 @@ If a rank deficient system is detected and the <i><code>solve_opts::no_approx</c
 <b>Caveats:</b>
 <ul>
 <li>using <i><code>solve_opts::fast</code></i> will speed up finding the solution, but for poorly conditioned systems the solution may have lower quality</li>
-<li>using <i><code>solve_opts::likely_sympd</code></i> will skip the matrix analysis step and force the use of a specialised solver for symmetric/hermitian positive definite matrices</li>
+<li>not all SPD matrices are automatically detected; to skip the analysis step and directly indicate that matrix <i>A</i> is likely SPD, use <code>solve_opts::likely_sympd</code></li>
 <li>using <i><code>solve_opts::force_approx</code></i> is only advised if the system is known to be rank deficient; the approximate solver is considerably slower</li>
 </ul>
 </li>
