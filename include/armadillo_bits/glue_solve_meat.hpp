@@ -147,9 +147,9 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       if(is_cx<eT>::yes)  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not hermitian"); }
       }
     
-    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver"               ); }
-    if(equilibrate)   { arma_warn(2, "solve(): combination of options 'force_sym' and 'equilibrate' not implemented yet"); }
-    if(refine)        { arma_warn(2, "solve(): combination of options 'force_sym' and 'refine' not implemented yet"     ); }
+    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver"                                      ); }
+    if(equilibrate)   { arma_warn(2, "solve(): option 'force_sym' ignored as option 'equilibrate' is active (combination not implemented yet)" ); }
+    if(refine)        { arma_warn(2, "solve(): option 'force_sym' ignored as option 'refine' is active (combination not implemented yet)"      ); }
     }
   
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
@@ -178,12 +178,13 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     uword KL = 0;
     uword KU = 0;
     
-    const bool is_band  = arma_config::optimise_band && ((no_band || force_sym || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32)));
+    const bool is_band = arma_config::optimise_band && ( (no_band || force_sym || auxlib::crippled_lapack(A)) ? false : band_helper::is_band(KL, KU, A, uword(32)) );
     
     const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || force_sym || is_band           ) ? false : trimat_helper::is_triu(A);
     const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd || force_sym || is_band || is_triu) ? false : trimat_helper::is_tril(A);
     
-    const bool try_sympd = arma_config::optimise_sym && ((no_sympd || force_sym || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))));
+    const bool is_sym    = arma_config::optimise_sym && ( (refine || equilibrate || likely_sympd || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : is_sym_expr<T1>::eval(A_expr.get_ref()) );
+    const bool try_sympd = arma_config::optimise_sym && ( (          no_sympd    || is_sym       || force_sym || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))) );
     
     if(fast)
       {
@@ -191,13 +192,6 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       
       arma_debug_print("glue_solve_gen_full::apply(): fast mode");
       
-      if(force_sym)
-        {
-        arma_debug_print("glue_solve_gen_full::apply(): fast + force_sym");
-        
-        status = auxlib::solve_sym_fast(out, A, B_expr.get_ref());  // A is overwritten
-        }
-      else
       if(is_band)
         {
         if( (KL == 1) && (KU == 1) )
@@ -222,6 +216,13 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
         const uword layout = (is_triu) ? uword(0) : uword(1);
         
         status = auxlib::solve_trimat_fast(out, A, B_expr.get_ref(), layout);
+        }
+      else
+      if(force_sym || is_sym)
+        {
+        arma_debug_print("glue_solve_gen_full::apply(): fast + sym");
+        
+        status = auxlib::solve_sym_fast(out, A, B_expr.get_ref());  // A is overwritten
         }
       else
       if(try_sympd)
@@ -261,6 +262,10 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
         
         status = auxlib::solve_band_refine(out, rcond, A, KL, KU, B_expr, equilibrate);
         }
+      // else
+      // if(force_sym || is_sym)  // TODO: implement auxlib::solve_sym_refine()
+      //   {
+      //   }
       else
       if(try_sympd)
         {
@@ -293,13 +298,6 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       
       arma_debug_print("glue_solve_gen_full::apply(): default mode");
       
-      if(force_sym)
-        {
-        arma_debug_print("glue_solve_gen_full::apply(): rcond + force_sym");
-        
-        status = auxlib::solve_sym_rcond(out, rcond, A, B_expr.get_ref());  // A is overwritten
-        }
-      else
       if(is_band)
         {
         arma_debug_print("glue_solve_gen_full::apply(): rcond + band");
@@ -315,6 +313,13 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
         const uword layout = (is_triu) ? uword(0) : uword(1);
         
         status = auxlib::solve_trimat_rcond(out, rcond, A, B_expr.get_ref(), layout);
+        }
+      else
+      if(force_sym || is_sym)
+        {
+        arma_debug_print("glue_solve_gen_full::apply(): rcond + sym");
+        
+        status = auxlib::solve_sym_rcond(out, rcond, A, B_expr.get_ref());  // A is overwritten
         }
       else
       if(try_sympd)
@@ -345,6 +350,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     if(equilibrate)   { arma_warn(2,  "solve(): option 'equilibrate' ignored for non-square matrix"  ); }
     if(refine)        { arma_warn(2,  "solve(): option 'refine' ignored for non-square matrix"       ); }
     if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for non-square matrix" ); }
+    if(force_sym)     { arma_warn(2,  "solve(): option 'force_sym' ignored for non-square matrix"    ); }
     
     if(fast)
       {
