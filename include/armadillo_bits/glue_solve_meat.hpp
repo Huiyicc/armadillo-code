@@ -142,9 +142,11 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     return auxlib::solve_approx_svd(actual_out, A, B_expr.get_ref());  // A is overwritten
     }
   
-  if((force_sym) && (arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))
+  if(force_sym)
     {
-    arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not symmetric");
+    if((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false))  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not symmetric"); }
+    
+    if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for forced symmetric solver" ); }
     }
   
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
