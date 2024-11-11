@@ -167,8 +167,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || is_band           ) ? false : trimat_helper::is_triu(A);
     const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd || is_band || is_triu) ? false : trimat_helper::is_tril(A);
     
-    const bool try_sympd = arma_config::optimise_sym && ((    no_sympd || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : likely_sympd                          );
-    const bool  is_sym   = arma_config::optimise_sym && ((likely_sympd || is_band || is_triu || is_tril || auxlib::crippled_lapack(A)) ? false : sym_helper::is_approx_sym(A,uword(16)));
+    const bool try_sympd = arma_config::optimise_sym && ((no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril) ? false : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))));
     
     if(fast)
       {
@@ -218,13 +217,6 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
           
           status = auxlib::solve_square_fast(out, A, B_expr.get_ref());  // A is overwritten
           }
-        }
-      else
-      if(is_sym)
-        {
-        arma_debug_print("glue_solve_gen_full::apply(): fast + is_sym");
-        
-        return auxlib::solve_sym_fast(out, A, B_expr.get_ref());  // A is overwritten
         }
       else
         {
