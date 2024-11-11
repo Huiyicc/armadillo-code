@@ -120,9 +120,6 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     arma_conform_check( (fast      && equilibrate ), "solve(): options 'fast' and 'equilibrate' are mutually exclusive"      );
     arma_conform_check( (fast      && refine      ), "solve(): options 'fast' and 'refine' are mutually exclusive"           );
     arma_conform_check( (no_sympd  && likely_sympd), "solve(): options 'no_sympd' and 'likely_sympd' are mutually exclusive" );
-    
-    arma_conform_check( (force_sym && equilibrate ), "solve(): combination of options 'force_sym' and 'equilibrate' not implemented yet");
-    arma_conform_check( (force_sym && refine      ), "solve(): combination of options 'force_sym' and 'refine' not implemented yet"     );
     }
   
   Mat<eT> A = A_expr.get_ref();
@@ -133,11 +130,11 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
     
     arma_conform_check( no_approx, "solve(): options 'no_approx' and 'force_approx' are mutually exclusive" );
     
-    if(fast)          { arma_warn(2,  "solve(): option 'fast' ignored for forced approximate solution"         ); }
-    if(equilibrate)   { arma_warn(2,  "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
-    if(refine)        { arma_warn(2,  "solve(): option 'refine' ignored for forced approximate solution"       ); }
-    if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
-    if(force_sym)     { arma_warn(2,  "solve(): option 'force_sym' ignored for forced approximate solution"    ); }
+    if(fast)          { arma_warn(2, "solve(): option 'fast' ignored for forced approximate solution"         ); }
+    if(equilibrate)   { arma_warn(2, "solve(): option 'equilibrate' ignored for forced approximate solution"  ); }
+    if(refine)        { arma_warn(2, "solve(): option 'refine' ignored for forced approximate solution"       ); }
+    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced approximate solution" ); }
+    if(force_sym)     { arma_warn(2, "solve(): option 'force_sym' ignored for forced approximate solution"    ); }
     
     return auxlib::solve_approx_svd(actual_out, A, B_expr.get_ref());  // A is overwritten
     }
@@ -150,7 +147,9 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       if(is_cx<eT>::yes)  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not hermitian"); }
       }
     
-    if(likely_sympd)  { arma_warn(2,  "solve(): option 'likely_sympd' ignored for forced symmetric solver" ); }
+    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver"               ); }
+    if(equilibrate)   { arma_warn(2, "solve(): combination of options 'force_sym' and 'equilibrate' not implemented yet"); }
+    if(refine)        { arma_warn(2, "solve(): combination of options 'force_sym' and 'refine' not implemented yet"     ); }
     }
   
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
