@@ -4711,10 +4711,7 @@ auxlib::solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& 
   {
   arma_debug_sigprint();
   
-  typedef typename T1::pod_type eT;
-  
-  out       = B_expr.get_ref();
-  out_rcond = eT(0);
+  out = B_expr.get_ref();
   
   const uword B_n_rows = out.n_rows;
   const uword B_n_cols = out.n_cols;
@@ -4725,6 +4722,10 @@ auxlib::solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& 
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::pod_type eT;
+    
+    out_rcond = eT(0);
+    
     arma_conform_assert_blas_size(A);
     
     char     norm_id   = '1';
@@ -4795,11 +4796,7 @@ auxlib::solve_sym_rcond(Mat< std::complex<typename T1::pod_type> >& out, typenam
   {
   arma_debug_sigprint();
   
-  typedef typename T1::pod_type     T;
-  typedef typename std::complex<T> eT;
-  
-  out       = B_expr.get_ref();
-  out_rcond = T(0);
+  out = B_expr.get_ref();
   
   const uword B_n_rows = out.n_rows;
   const uword B_n_cols = out.n_cols;
@@ -4810,6 +4807,11 @@ auxlib::solve_sym_rcond(Mat< std::complex<typename T1::pod_type> >& out, typenam
   
   #if defined(ARMA_USE_LAPACK)
     {
+    typedef typename T1::pod_type     T;
+    typedef typename std::complex<T> eT;
+    
+    out_rcond = T(0);
+    
     arma_conform_assert_blas_size(A);
     
     char     norm_id   = '1';
