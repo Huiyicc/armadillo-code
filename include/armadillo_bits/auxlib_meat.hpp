@@ -4650,7 +4650,13 @@ auxlib::solve_sym_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std
   
   if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_debug_print("auxlib::solve_sym_fast(): redirecting to auxlib::solve_square_fast() due to crippled LAPACK");
+    
+    return auxlib::solve_square_fast(out, A, B_expr);
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type  T;
     typedef std::complex<T>       eT;
@@ -4720,7 +4726,13 @@ auxlib::solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& 
   
   if(A.is_empty() || out.is_empty())  { out.zeros(A.n_cols, B_n_cols); return true; }
   
-  #if defined(ARMA_USE_LAPACK)
+  #if defined(ARMA_CRIPPLED_LAPACK)
+    {
+    arma_debug_print("auxlib::solve_sym_rcond(): redirecting to auxlib::solve_square_rcond() due to crippled LAPACK");
+    
+    return auxlib::solve_square_rcond(out, out_rcond, A, B_expr);
+    }
+  #elif defined(ARMA_USE_LAPACK)
     {
     typedef typename T1::pod_type eT;
     
