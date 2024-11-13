@@ -4585,7 +4585,7 @@ auxlib::solve_sym_fast(Mat<typename T1::pod_type>& out, Mat<typename T1::pod_typ
     {
     typedef typename T1::pod_type eT;
     
-    arma_conform_assert_blas_size(A);
+    arma_conform_assert_blas_size(A,out);
     
     char     uplo  = 'L';
     blas_int n     = blas_int(A.n_rows);
@@ -4661,7 +4661,7 @@ auxlib::solve_sym_fast(Mat< std::complex<typename T1::pod_type> >& out, Mat< std
     typedef typename T1::pod_type  T;
     typedef std::complex<T>       eT;
     
-    arma_conform_assert_blas_size(A);
+    arma_conform_assert_blas_size(A,out);
     
     char     uplo  = 'L';
     blas_int n     = blas_int(A.n_rows);
@@ -4738,7 +4738,7 @@ auxlib::solve_sym_rcond(Mat<typename T1::pod_type>& out, typename T1::pod_type& 
     
     out_rcond = eT(0);
     
-    arma_conform_assert_blas_size(A);
+    arma_conform_assert_blas_size(A,out);
     
     char     norm_id   = '1';
     char     uplo      = 'L';
@@ -4824,7 +4824,7 @@ auxlib::solve_sym_rcond(Mat< std::complex<typename T1::pod_type> >& out, typenam
     
     out_rcond = T(0);
     
-    arma_conform_assert_blas_size(A);
+    arma_conform_assert_blas_size(A,out);
     
     char     norm_id   = '1';
     char     uplo      = 'L';
