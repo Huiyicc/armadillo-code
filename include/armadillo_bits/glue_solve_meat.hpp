@@ -157,6 +157,8 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   
   const bool is_alias = A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
   
+  if(is_alias)  { arma_debug_print("glue_solve_gen_full::apply(): aliasing detected"); }
+  
   Mat<eT>  tmp;
   Mat<eT>& out = (is_alias) ? tmp : actual_out;
   
@@ -436,6 +438,8 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
   
   const bool is_alias = A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
   
+  if(is_alias)  { arma_debug_print("glue_solve_tri_default::apply(): aliasing detected"); }
+  
   T    rcond  = T(0);
   bool status = false;
   
@@ -551,14 +555,9 @@ glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   
   const uword layout = (triu) ? uword(0) : uword(1);
   
-  bool is_alias = true;
+  const bool is_alias = A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
   
-  if(is_Mat<T2>::value)
-    {
-    const quasi_unwrap<T2> UB(B_expr.get_ref());
-    
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
-    }
+  if(is_alias)  { arma_debug_print("glue_solve_tri_full::apply(): aliasing detected"); }
   
   T    rcond  = T(0);
   bool status = false;
