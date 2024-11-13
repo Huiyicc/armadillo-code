@@ -155,15 +155,7 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
   // so ensure they are not overwritten in case we have aliasing
   
-  bool is_alias = true;  // assume we have aliasing until we can prove otherwise
-  
-  if(is_Mat<T1>::value && is_Mat<T2>::value)
-    {
-    const quasi_unwrap<T1> UA( A_expr.get_ref() );
-    const quasi_unwrap<T2> UB( B_expr.get_ref() );
-    
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
-    }
+  const bool is_alias = A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
   
   Mat<eT>  tmp;
   Mat<eT>& out = (is_alias) ? tmp : actual_out;
@@ -442,14 +434,7 @@ glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, co
   
   const uword layout = (triu) ? uword(0) : uword(1);
   
-  bool is_alias = true;
-  
-  if(is_Mat<T2>::value)
-    {
-    const quasi_unwrap<T2> UB(B_expr.get_ref());
-    
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
-    }
+  const bool is_alias = A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
   
   T    rcond  = T(0);
   bool status = false;

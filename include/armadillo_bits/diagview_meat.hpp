@@ -1022,4 +1022,17 @@ diagview<eT>::randn()
 
 
 
+template<typename eT>
+template<typename eT2>
+inline
+bool
+diagview<eT>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return m.is_alias(X);
+  }
+
+
+
 //! @}

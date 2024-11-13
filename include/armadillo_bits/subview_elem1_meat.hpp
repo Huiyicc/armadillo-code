@@ -950,4 +950,17 @@ subview_elem1<eT,T1>::div_inplace(Mat<eT>& out, const subview_elem1& in)
 
 
 
+template<typename eT, typename T1>
+template<typename eT2>
+inline
+bool
+subview_elem1<eT,T1>::is_alias(const Mat<eT2>& X) const
+  {
+  arma_debug_sigprint();
+  
+  return (m.is_alias(X) || a.get_ref().is_alias(X));
+  }
+
+
+
 //! @}
