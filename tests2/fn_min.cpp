@@ -442,7 +442,7 @@ TEST_CASE("fn_min_sp_cx_incomplete_subview_row_min_test")
     {
     sp_cx_rowvec x;  x.sprandn(1, r, 0.3);
 
-    uword x_min;         = x.index_min();
+    uword x_min          = x.index_min();
     uword x_subview_min1 = x.submat(0, 1, 0, r - 2).index_min();
     uword x_subview_min2 = x.cols(1, r - 2).index_min();
 
