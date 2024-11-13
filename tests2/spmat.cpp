@@ -510,20 +510,14 @@ TEST_CASE("min_max_test")
   a(4, 4) = 0.2;
   a(5, 4) = 8.3;
 
-  uword index, row, col;
   REQUIRE( a.min() == Approx(-0.2) );
-  REQUIRE( a.min(index) == Approx(-0.2) );
-  REQUIRE( index == 27 );
-  REQUIRE( a.min(row, col) == Approx(-0.2) );
-  REQUIRE( row == 3 );
-  REQUIRE( col == 4 );
-
-  REQUIRE( a.max() == Approx(9.8) );
-  REQUIRE( a.max(index) == Approx(9.8) );
-  REQUIRE( index == 19 );
-  REQUIRE( a.max(row, col) == Approx(9.8) );
-  REQUIRE( row == 1 );
-  REQUIRE( col == 3 );
+  REQUIRE( a.max() == Approx( 9.8) );
+  
+  uword index1 = a.index_min();
+  uword index2 = a.index_max();
+  
+  REQUIRE( index1 == 27 );
+  REQUIRE( index2 == 19 );
   }
 
 TEST_CASE("swap_row_test")
