@@ -147,9 +147,9 @@ glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT,T1>& A_expr, const
       if(is_cx<eT>::yes)  { arma_warn(1, "solve(): option 'force_sym' enabled, but given matrix is not hermitian"); }
       }
     
-    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver"                                      ); }
-    if(equilibrate)   { arma_warn(2, "solve(): option 'force_sym' ignored as option 'equilibrate' is active (combination not implemented yet)" ); }
-    if(refine)        { arma_warn(2, "solve(): option 'force_sym' ignored as option 'refine' is active (combination not implemented yet)"      ); }
+    if(likely_sympd)  { arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver"                                       ); }
+    if(equilibrate)   { arma_warn(2, "solve(): option 'force_sym' ignored as option 'equilibrate' is enabled (combination not implemented yet)" ); }
+    if(refine)        { arma_warn(2, "solve(): option 'force_sym' ignored as option 'refine' is enabled (combination not implemented yet)"      ); }
     }
   
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate solution required),
