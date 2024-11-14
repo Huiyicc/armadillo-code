@@ -13744,7 +13744,7 @@ The number of rows in <i>A</i> and <i>B</i> must be the same
 </li>
 <br>
 <li>
-By default, matrix <i>A</i> is analysed to automatically determine whether it is a general matrix, band matrix, diagonal matrix, or symmetric/hermitian positive definite (SPD) matrix;
+By default, matrix <i>A</i> is analysed to automatically determine whether it is a general matrix, band matrix, diagonal matrix, or symmetric/hermitian positive definite (sympd) matrix;
 based on the detected matrix structure, a specialised solver is used for faster execution;
 if no solution is found, an approximate solver is automatically used as a fallback;
 see the <a href="armadillo_solver_2020.pdf">associated paper</a> for more details
@@ -13763,7 +13763,7 @@ the solution can be computed faster by explicitly indicating that <i>A</i> is tr
 <tr><td><code>solve_opts::fast</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>fast mode: disable determining solution quality via rcond, disable iterative refinement, disable equilibration</td></tr>
 <tr><td><code>solve_opts::refine</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>apply iterative refinement to improve solution quality &nbsp; (matrix <i>A</i> must be square)</td></tr>
 <tr><td><code>solve_opts::equilibrate</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>equilibrate the system before solving &nbsp; (matrix <i>A</i> must be square)</td></tr>
-<tr><td><code>solve_opts::likely_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>indicate that matrix <i>A</i> is likely symmetric/hermitian positive definite</td></tr>
+<tr><td><code>solve_opts::likely_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>indicate that matrix <i>A</i> is likely symmetric/hermitian positive definite (sympd)</td></tr>
 <tr><td><code>solve_opts::allow_ugly</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>keep solutions of systems that are singular to working precision</td></tr>
 <tr><td><code>solve_opts::no_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not find approximate solutions for rank deficient systems</td></tr>
 <!--
@@ -13771,8 +13771,8 @@ the solution can be computed faster by explicitly indicating that <i>A</i> is tr
 <tr><td><code>solve_opts::no_trimat</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for triangular matrices</td></tr>
 <tr><td><code>solve_opts::no_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for symmetric/hermitian positive definite matrices</td></tr>
 -->
-<tr><td><code>solve_opts::force_sym</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the symmetric/hermitian solver, bypassing the generic solver</td></tr>
-<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the approximate solver, bypassing the generic solver</td></tr>
+<tr><td><code>solve_opts::force_sym</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the symmetric/hermitian solver (not limited to sympd matrices)</td></tr>
+<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the approximate solver</td></tr>
 </tbody>
 </table>
 <br>
@@ -13790,7 +13790,7 @@ If a rank deficient system is detected and the <code>solve_opts::no_approx</code
 <b>Caveats:</b>
 <ul>
 <li>using <code>solve_opts::fast</code> will speed up finding the solution, but for poorly conditioned systems the solution may have lower quality</li>
-<li>not all SPD matrices are automatically detected; to bypass the analysis step and directly indicate that matrix <i>A</i> is likely SPD, use <code>solve_opts::likely_sympd</code></li>
+<li>not all sympd matrices are automatically detected; to directly indicate that matrix <i>A</i> is likely sympd, use <code>solve_opts::likely_sympd</code></li>
 <li>using <code>solve_opts::force_approx</code> is only advised if the system is known to be rank deficient; the approximate solver is considerably slower</li>
 </ul>
 </li>
