@@ -13771,8 +13771,8 @@ the solution can be computed faster by explicitly indicating that <i>A</i> is tr
 <tr><td><code>solve_opts::no_trimat</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for triangular matrices</td></tr>
 <tr><td><code>solve_opts::no_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use specialised solver for symmetric/hermitian positive definite matrices</td></tr>
 -->
-<tr><td><code>solve_opts::force_sym</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the symmetric/hermitian solver (not limited to sympd matrices)</td></tr>
-<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force the use of the approximate solver</td></tr>
+<tr><td><code>solve_opts::force_sym</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force use of the symmetric/hermitian solver (not limited to sympd matrices)</td></tr>
+<tr><td><code>solve_opts::force_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>force use of the approximate solver</td></tr>
 </tbody>
 </table>
 <br>
@@ -20135,7 +20135,7 @@ List of additions and changes for each version:
 <ul>
 <li>faster handling of symmetric matrices by <a href="#inv">inv()</a>, <a href="#rcond">rcond()</a>, <a href="#powmat">powmat()</a></li>
 <li>faster handling of hermitian matrices by <a href="#inv">inv()</a>, <a href="#rcond">rcond()</a>, <a href="#powmat">powmat()</a>, <a href="#cond">cond()</a>, <a href="#pinv">pinv()</a>, <a href="#rank">rank()</a></li>
-<li>added <code>solve_opts::force_sym</code> option to <a href="#solve">solve()</a> to force the use of the symmetric solver</li>
+<li>added <code>solve_opts::force_sym</code> option to <a href="#solve">solve()</a> to force use of the symmetric/hermitian solver (not limited to sympd matrices)</li>
 <li>more efficient handling of compound expressions by <a href="#solve">solve()</a></li>
 </ul>
 </li>
