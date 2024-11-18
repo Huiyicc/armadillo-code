@@ -216,7 +216,19 @@ op_powmat_cx::apply_direct(Mat< std::complex<typename T1::pod_type> >& out, cons
     Col<in_T>  eigval;
     Mat<in_eT> eigvec;
     
-    const bool eig_status = eig_sym(eigval, eigvec, A);
+    bool eig_status = eig_sym(eigval, eigvec, A);
+    
+    if(eig_status)
+      {
+      // NOTE: when in_eT is real, pow(eigval, y) will produce NaN for negative eigenvalues and non-integer exponent;
+      // NOTE: the all_pos check is a workaround
+      
+      bool all_pos = true;
+      
+      for(uword i=0; i < eigval.n_elem; ++i)  { all_pos = (eigval[i] <= in_T(0)) ? false : all_pos; }
+      
+      if(all_pos == false)  { eig_status = false; }
+      }
     
     if(eig_status)
       {
