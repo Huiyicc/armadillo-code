@@ -7668,6 +7668,8 @@ inline
 void_ptr
 ptr_cast(blas_int (*function)(const T*, const T*, const T*))
   {
+  // TODO: investigate replacement of union-based conversion with method based on std::memcpy() or C++20 bit_cast
+  
   union converter
     {
     blas_int (*fn)(const T*, const T*, const T*);
@@ -7689,6 +7691,8 @@ inline
 void_ptr
 ptr_cast(blas_int (*function)(const std::complex<T>*, const std::complex<T>*))
   {
+  // TODO: investigate replacement of union-based conversion with method based on std::memcpy() or C++20 bit_cast
+  
   union converter
     {
     blas_int (*fn)(const std::complex<T>*, const std::complex<T>*);

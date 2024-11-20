@@ -267,6 +267,8 @@ arma_rng::set_seed_random()
     {
     try
       {
+      // TODO: replace union-based conversion with method based on std::memcpy() or C++20 bit_cast
+      
       union
         {
         seed_type     a;
@@ -296,6 +298,8 @@ arma_rng::set_seed_random()
     auto since_epoch_usec = std::chrono::duration_cast<std::chrono::microseconds>(tp_now.time_since_epoch()).count();
     
     seed3 = static_cast<seed_type>( since_epoch_usec & 0xFFFF );
+    
+    // TODO: replace union-based conversion with method based on std::memcpy() or C++20 bit_cast
     
     union
       {
