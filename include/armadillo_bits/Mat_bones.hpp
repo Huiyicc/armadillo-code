@@ -533,20 +533,11 @@ class Mat : public Base< eT, Mat<eT> >
   arma_cold inline void      reset();
   arma_cold inline void soft_reset();
   
-  
   template<typename T1> inline void set_real(const Base<pod_type,T1>& X);
   template<typename T1> inline void set_imag(const Base<pod_type,T1>& X);
   
-  
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
-  
-  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
-  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
-  
-  arma_frown("use .index_min() with ind2sub() instead") inline eT min(uword& row_of_min_val, uword& col_of_min_val) const;
-  arma_frown("use .index_max() with ind2sub() instead") inline eT max(uword& row_of_max_val, uword& col_of_max_val) const;
-  
   
   arma_cold inline bool save(const std::string   name, const file_type type = arma_binary) const;
   arma_cold inline bool save(const hdf5_name&    spec, const file_type type = hdf5_binary) const;
