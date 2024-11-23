@@ -7759,6 +7759,106 @@ Mat<eT>::max() const
 
 
 
+template<typename eT>
+inline
+eT
+Mat<eT>::min(uword& index_of_min_val) const
+  {
+  arma_debug_sigprint();
+  
+  if(n_elem == 0)
+    {
+    arma_conform_check(true, "Mat::min(): object has no elements");
+    
+    index_of_min_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  
+  return op_min::direct_min(memptr(), n_elem, index_of_min_val);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::max(uword& index_of_max_val) const
+  {
+  arma_debug_sigprint();
+  
+  if(n_elem == 0)
+    {
+    arma_conform_check(true, "Mat::max(): object has no elements");
+    
+    index_of_max_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  
+  return op_max::direct_max(memptr(), n_elem, index_of_max_val);
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::min(uword& row_of_min_val, uword& col_of_min_val) const
+  {
+  arma_debug_sigprint();
+  
+  if(n_elem == 0)
+    {
+    arma_conform_check(true, "Mat::min(): object has no elements");
+    
+    row_of_min_val = uword(0);
+    col_of_min_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  
+  uword iq;
+  
+  eT val = op_min::direct_min(memptr(), n_elem, iq);
+  
+  row_of_min_val = iq % n_rows;
+  col_of_min_val = iq / n_rows;
+  
+  return val;
+  }
+
+
+
+template<typename eT>
+inline
+eT
+Mat<eT>::max(uword& row_of_max_val, uword& col_of_max_val) const
+  {
+  arma_debug_sigprint();
+  
+  if(n_elem == 0)
+    {
+    arma_conform_check(true, "Mat::max(): object has no elements");
+    
+    row_of_max_val = uword(0);
+    col_of_max_val = uword(0);
+    
+    return Datum<eT>::nan;
+    }
+  
+  uword iq;
+  
+  eT val = op_max::direct_max(memptr(), n_elem, iq);
+  
+  row_of_max_val = iq % n_rows;
+  col_of_max_val = iq / n_rows;
+  
+  return val;
+  }
+
+
+
 //! save the matrix to a file
 template<typename eT>
 inline
