@@ -264,14 +264,20 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   for(uword j=0; j < N; ++j)
     {
     const eT& A_jj = A_col[j];
     
     if(arma_isfinite(A_jj) == false)  { return false; }
     
+    if(std::abs(A_jj) >= tol)  { diag_below_tol = false; }
+    
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   A_col = A_mem;
   
@@ -324,6 +330,8 @@ is_approx_sym_worker(const Mat<eT>& A)
   const eT* A_mem = A.memptr();
   const eT* A_col = A_mem;
   
+  bool diag_below_tol = true;
+  
   // ensure diagonal has approx real-only elements
   for(uword j=0; j < N; ++j)
     {
@@ -338,8 +346,12 @@ is_approx_sym_worker(const Mat<eT>& A)
     
     if(arma_isfinite(A_jj_r) == false)  { return false; }
     
+    if(A_jj_rabs >= tol)  { diag_below_tol = false; }
+    
     A_col += N;
     }
+  
+  if(diag_below_tol)  { return false; }  // assume matrix is suspect if all diagonal elements are close to zero
   
   A_col = A_mem;
   
