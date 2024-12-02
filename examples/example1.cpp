@@ -1,7 +1,9 @@
 #include <iostream>
 #include <armadillo>
 
-using namespace std;
+using std::cout;
+using std::endl;
+
 using namespace arma;
 
 // Armadillo documentation is available at:
